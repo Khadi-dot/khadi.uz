@@ -234,8 +234,7 @@
     const now = Date.now();
     if (now - lastSixSeven < 900) return;
     lastSixSeven = now;
-    Sfx.speak('six', { pitch: 1.3 });
-    Sfx.speak('seven', { pitch: 1.3, queue: true });
+    Sfx.sixSeven();
     Sfx.vineBoom();
     mega('6 7', 'six7');
     rain(['6️⃣', '7️⃣', '🤲'], 40);
@@ -311,7 +310,7 @@
     { emoji: '🔔', label: 'TACO BELL', color: 'var(--pink)', play: () => Sfx.tacoBell() },
     { emoji: '🎺', label: 'SAD TROMBONE', color: 'var(--blue)', play: () => Sfx.sadTrombone() },
     { emoji: '🐄', label: 'PHONK LOOP', color: 'var(--lime)', toggle: true, play: () => Sfx.togglePhonk() },
-    { emoji: '🚽', label: 'SKIBIDI', color: 'var(--cyan)', play: () => say('skibidi dop dop dop, yes yes', { pitch: 1.5, rate: 1.3 }) },
+    { emoji: '🚽', label: 'SKIBIDI', color: 'var(--cyan)', play: () => Sfx.skibidi() },
     { emoji: '🤲', label: 'SIX SEVEN', color: 'var(--yellow)', play: () => sixSeven() },
     { emoji: '❌', label: 'HITMARKER', color: 'var(--red)', play: () => { Sfx.hitmarker(); flash('rgba(255, 255, 255, .2)'); } },
   ];
@@ -367,7 +366,7 @@
       <span class="card-lore">${c.lore}</span>
       <span class="card-meta"><span>AURA ${fmt(c.aura)}</span><span class="speak">🔊 tap to summon</span></span>`;
     el.addEventListener('click', e => {
-      say(c.name, { lang: 'it-IT', rate: 0.95, pitch: 0.9 });
+      Sfx.creature(c.name);
       restartClass(el, 'summoned');
       const [x, y] = pointFrom(e, el);
       pop('🗣️ ' + c.name.split(' ')[0].toUpperCase(), x, y);
@@ -384,27 +383,28 @@
     powers: ['Steals your fries every lunch (fanum tax).', 'Mews so hard that mirrors crack.', 'Turns every number it sees into 67.', 'Plays phonk at 3 AM. Every night.', 'Gains aura by doing absolutely nothing.', 'Only speaks in Italian text-to-speech.', 'Can mog the sun.', 'Teleports every time you blink.', 'Eats plov with a fork and survives.'],
     weaknesses: ['Ohio', 'touching grass', 'the Duolingo owl', 'a 4% phone battery', 'mom saying “we have food at home”', 'reading', 'sunlight', 'homework', 'unseasoned chicken'],
   };
-  let lastFused = '';
+  // every word here has its own recording in sounds/words/
+  let lastFused = [];
   function fuse() {
     const [cName, cEmoji] = pick(FUSE.creatures);
     const [oName, oEmoji] = pick(FUSE.objects);
     const chant = pick(FUSE.chants);
     const patterns = [
-      () => `${oName} ${cName}`,
-      () => `${chant} ${cName}`,
-      () => `${cName} ${oName}`,
-      () => `${chant} ${chant} ${oName}`,
+      [oName, cName],
+      [chant, cName],
+      [cName, oName],
+      [chant, chant, oName],
     ];
-    lastFused = pick(patterns)();
+    lastFused = pick(patterns);
     $('#fuse-art').textContent = cEmoji + oEmoji;
-    $('#fuse-name').textContent = lastFused;
+    $('#fuse-name').textContent = lastFused.join(' ');
     $('#fuse-lore').textContent = `Born in ${pick(FUSE.places)}. ${pick(FUSE.powers)} Only weakness: ${pick(FUSE.weaknesses)}. Aura: ${fmt(randInt(-999, 99999))}.`;
     $('#fuse-speak').hidden = false;
     restartClass($('#fuse-result'), 'new');
-    say(lastFused, { lang: 'it-IT', rate: 0.95, pitch: 0.9 });
+    Sfx.words(lastFused);
   }
   $('#fuse-btn').addEventListener('click', fuse);
-  $('#fuse-speak').addEventListener('click', () => say(lastFused, { lang: 'it-IT', rate: 0.95, pitch: 0.9 }));
+  $('#fuse-speak').addEventListener('click', () => Sfx.words(lastFused));
 
   /* ================= 03 aura scanner ================= */
   const VERDICTS = [
@@ -851,7 +851,7 @@
   const CODES = [
     ['67', sixSeven],
     ['skibidi', () => {
-      say('skibidi', { pitch: 1.6, rate: 1.2 });
+      Sfx.skibidi();
       mega('SKIBIDI', 'skibidi');
       rain(['🚽', '🚽', '🧻', '😮'], 40);
     }],

@@ -80,6 +80,26 @@ kbd {
 
 .small { font-size: 14px; color: var(--muted); margin: 0; }
 
+/* ---------- 3D emoji (icons.js swaps every emoji for one of these) ---------- */
+img.emo {
+  display: inline-block;
+  width: 1.2em; height: 1.2em;
+  margin: 0 .04em;
+  vertical-align: -.25em;
+  object-fit: contain;
+  user-select: none; -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+/* where the emoji is the whole picture, it fills its box exactly */
+.farm .emo, .stickers .emo, .pad-emoji .emo, .card-art .emo, .head .emo, .bowl .emo,
+.scan-idle .emo, .drop .emo, .trail .emo, .mega .emo {
+  display: block;
+  width: 1em; height: 1em;
+  margin: 0;
+}
+.scan-idle .emo { margin: 0 auto; }
+.mega .emo { filter: drop-shadow(8px 8px 0 #000); }
+
 /* ---------- buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -137,7 +157,14 @@ kbd {
 .ticker-viewport { overflow: hidden; flex: 1; }
 .ticker-track { display: flex; width: max-content; padding: 6px 0; animation: marquee 80s linear infinite; }
 .ticker-track span { padding: 0 22px; }
-.ticker-track span::after { content: '💀'; margin-left: 44px; }
+.ticker-track span::after {
+  content: '';
+  display: inline-block;
+  width: 1.2em; height: 1.2em;
+  margin-left: 44px;
+  vertical-align: -.25em;
+  background: url(icons/skull.webp) center / contain no-repeat;
+}
 .ticker:hover .ticker-track { animation-play-state: paused; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
@@ -282,7 +309,7 @@ kbd {
 .farm-stats { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
 .farm-stats b { color: var(--ink); }
 
-.jump { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 34px; }
+.jump { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 34px; }
 .jump a {
   padding: 8px 14px;
   color: #fff; text-decoration: none;
@@ -359,7 +386,7 @@ kbd {
 .card:nth-child(even):hover { transform: rotate(1.5deg) translateY(-4px); }
 .card-art {
   display: flex; align-items: center; justify-content: center;
-  height: 140px;
+  width: 100%; height: 140px;
   background: var(--card);
   border-bottom: 3px solid #000;
   font-size: 66px; line-height: 1;
@@ -397,12 +424,14 @@ kbd {
 }
 .fusion-art {
   flex: none;
-  display: grid; place-items: center;
+  display: flex; align-items: center; justify-content: center;
   width: 112px; height: 112px;
-  font-size: 50px; letter-spacing: -.18em; text-indent: -.18em;
+  font-size: 46px;
   background: var(--yellow);
   border: 3px solid #000; border-radius: 50%;
 }
+.fusion-art .emo { margin: 0; }
+.fusion-art .emo + .emo { margin-left: -.3em; transform: rotate(12deg) translateY(.15em); }
 .fusion-result.new .fusion-art { animation: spinpop .6s cubic-bezier(.2, 1.5, .4, 1); }
 @keyframes spinpop { from { transform: scale(.2) rotate(-200deg); } }
 .fusion-name { margin: 0 0 6px; font: 400 21px/1.15 var(--font-display); }
