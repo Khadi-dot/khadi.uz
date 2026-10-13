@@ -152,7 +152,7 @@ const Sfx = (() => {
   }
 
   // grab the common clips on the first tap so they fire instantly afterwards
-  const PRELOAD = ['vine-boom', 'metal-pipe', 'airhorn', 'bruh', 'taco-bell', 'sad-trombone', 'hitmarker', 'buzzer', 'six-seven', 'skibidi'];
+  const PRELOAD = ['vine-boom', 'metal-pipe', 'airhorn', 'bruh', 'taco-bell', 'sad-trombone', 'hitmarker', 'buzzer', 'six-seven', 'skibidi', 'meow'];
   const warmUp = () => { if (ac()) PRELOAD.forEach(load); };
   ['pointerdown', 'keydown'].forEach(type => window.addEventListener(type, warmUp, { once: true, capture: true }));
 
@@ -270,6 +270,7 @@ const Sfx = (() => {
     buzz: safe(() => play('buzzer', { gain: 0.6 })),
     sixSeven: safe(() => play('six-seven', { group: 'six-seven' })),
     skibidi: safe(() => play('skibidi', { group: 'skibidi' })),
+    meow: safe(() => play('meow')),
     // a creature card's full name, recorded in one take
     creature: safe(name => play('names/' + slug(name), { group: 'voice' })),
     // a fusion lab name, stitched together word by word

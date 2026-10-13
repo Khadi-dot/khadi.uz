@@ -10,14 +10,14 @@ Everything interactive lives on the play page (`play.html`, at khadi.uz/play.htm
 
 | Section | What it does |
 |---|---|
-| **Hero** | Tap the moai to farm aura. Aura and rank are saved in the visitor's browser. |
-| **01 Soundboard** | Vine boom, metal pipe, MLG airhorn, bruh, Taco Bell bong, sad trombone, phonk loop, skibidi, six seven, hitmarker |
+| **Hero** | Tap the moai to farm aura, or pick one of three mystery cards: one gives aura, one takes it, one gives a mega boost, shuffled every round. Aura and rank are saved in the visitor's browser. |
+| **01 Soundboard** | Vine boom, metal pipe, MLG airhorn, bruh, Taco Bell bong, sad trombone, phonk loop, skibidi, six seven, hitmarker, sigma meow |
 | **02 Italian Brainrot** | 12 creature cards that speak their names in an Italian voice, plus a Fusion Lab that invents new creatures |
 | **03 Aura Scanner** | Type any name to get rizz, sigma, cooked and NPC stats. The same name always gives the same result. |
 | **04 Skibidi Smash** | 30-second whack-a-toilet game. The score converts to aura. |
 | **05 Translator** | Turns normal English into Gen Alpha slang, with 3 levels |
 | **06 Dictionary** | Brainrot words explained for parents and teachers |
-| **Subway Mode** | Split screen with an auto-running subway game for your attention span |
+| **Subway Mode** | Split screen with real Subway Surfers gameplay for your attention span, embedded from the official Subway Surfers YouTube channel |
 
 Secret codes (type them anywhere on the play page): `67`, `skibidi`, `sigma`, `ohio`, and the Konami code `↑↑↓↓←→←→BA`.
 
@@ -31,7 +31,7 @@ app.js                everything interactive on the play page
 data.js               the dictionary words and Italian brainrot creatures
 audio.js              plays the sound files, plus text-to-speech for the translator
 icons.js              swaps every emoji for its 3D icon
-subway.js             the split-screen runner game
+subway.js             a drawn runner game, shown in Subway Mode only when the page is opened from disk (YouTube won't play there)
 icons/                3D emoji icons (.webp), favicon, home-screen icon and link-preview image
 sounds/               meme sound effects and the phonk loop
 sounds/names/         the 12 Italian brainrot names, one recording each
@@ -67,5 +67,6 @@ The site is verified in Google Search Console, and `sitemap.xml` lists every pag
 
 - 3D emoji: [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) by Microsoft, MIT license.
 - Phonk loop: ["Phonk Type Beat"](https://freesound.org/people/Koolgs/sounds/785479/) by Koolgs on Freesound, CC0 (public domain).
-- Meme sound effects (vine boom, metal pipe, MLG airhorn, bruh, Taco Bell bong, sad trombone, hitmarker, wrong buzzer, skibidi, six seven): the well-known clips as shared on [myinstants.com](https://www.myinstants.com). They belong to their original creators.
+- Subway Mode gameplay: ["Subway Surfers (2024) - Gameplay [4K 9x16] No Copyright"](https://www.youtube.com/watch?v=QPW3XwBoQlw) and ["Subway Surfers (2026) - Gameplay [4K 16x9] No Copyright"](https://www.youtube.com/watch?v=i0M4ARe9v0Y) by the official Subway Surfers channel, embedded with YouTube's player.
+- Meme sound effects (vine boom, metal pipe, MLG airhorn, bruh, Taco Bell bong, sad trombone, hitmarker, wrong buzzer, skibidi, six seven, deep meow): the well-known clips as shared on [myinstants.com](https://www.myinstants.com). They belong to their original creators.
 - Italian brainrot voices: Microsoft Edge neural text-to-speech (Diego, Italian; Ardi, Indonesian, for Tung Tung Tung Sahur). "Brr" is fed to the voice as "Brùr", otherwise it spells the letters out.

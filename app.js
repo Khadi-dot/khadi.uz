@@ -9,6 +9,13 @@
   const rand = (a, b) => a + Math.random() * (b - a);
   const randInt = (a, b) => Math.floor(rand(a, b + 1));
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const shuffle = arr => {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
   const fmt = n => Math.round(n).toLocaleString('en-US');
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -228,6 +235,71 @@
     restartClass(farm, 'squish');
   });
 
+  /* ================= mystery cards ================= */
+  // Every round the three outcomes are dealt face down in a random order,
+  // with a fresh random amount each, so there's no pattern to learn.
+  const OUTCOMES = [
+    { kind: 'gain', emoji: '🔥', tag: 'W', amount: () => randInt(100, 1000) },
+    { kind: 'lose', emoji: '💀', tag: 'L', amount: () => -randInt(500, 3000) },
+    { kind: 'boost', emoji: '👑', tag: 'MEGA BOOST', amount: () => randInt(5000, 20000) },
+  ];
+  const mysteryRow = $('#mystery');
+  const mcards = [...mysteryRow.querySelectorAll('.mcard')];
+  let dealt = [];
+
+  function deal() {
+    dealt = shuffle(OUTCOMES.slice()).map(o => ({ ...o, n: o.amount() }));
+    mcards.forEach((c, i) => {
+      c.classList.remove('flipped', 'picked', 'missed');
+      c.disabled = false;
+      c.setAttribute('aria-label', `Mystery card ${i + 1}`);
+    });
+    if (!reduceMotion) restartClass(mysteryRow, 'shuffling');
+  }
+
+  function reveal(card, o) {
+    card.dataset.kind = o.kind;
+    card.querySelector('.mcard-back').innerHTML =
+      `<span class="mcard-emoji">${o.emoji}</span><b>${o.n > 0 ? '+' : '−'}${fmt(Math.abs(o.n))}</b><small>${o.tag}</small>`;
+    card.classList.add('flipped');
+  }
+
+  mcards.forEach((card, i) => card.addEventListener('click', e => {
+    if (card.disabled) return;
+    mcards.forEach(c => { c.disabled = true; });
+    const o = dealt[i];
+    const [x, y] = pointFrom(e, card);
+    reveal(card, o);
+    card.classList.add('picked');
+    card.setAttribute('aria-label', `You picked ${o.tag}: ${o.n > 0 ? 'plus' : 'minus'} ${fmt(Math.abs(o.n))} aura`);
+    addAura(o.n, x, y);
+
+    if (o.kind === 'boost') {
+      Sfx.vineBoom();
+      Sfx.crit();
+      mega('MEGA BOOST', 'crit');
+      flash('rgba(255, 225, 77, .45)');
+      rain(['👑', '🔥', '💯', '🗿'], 24);
+      shake();
+      toast(`MEGA BOOST: +${fmt(o.n)} aura 👑`);
+    } else if (o.kind === 'lose') {
+      Sfx.buzz();
+      toast(`${pick(LOSSES)} (−${fmt(-o.n)})`);
+    } else {
+      Sfx.coin(1.3);
+      toast(`W pick: +${fmt(o.n)} aura`);
+    }
+
+    // then show what the other two cards were hiding
+    setTimeout(() => mcards.forEach((c, j) => {
+      if (j === i) return;
+      reveal(c, dealt[j]);
+      c.classList.add('missed');
+    }), 650);
+    setTimeout(deal, 2600);
+  }));
+  deal();
+
   /* ================= big events ================= */
   let lastSixSeven = 0;
   function sixSeven() {
@@ -283,21 +355,53 @@
   $('#btn-67').addEventListener('click', sixSeven);
   $('#btn-ohio').addEventListener('click', toggleOhio);
 
+  // Real gameplay, published free to use by the official Subway Surfers channel:
+  // the tall cut fills the desktop sidebar, the wide cut fills the phone's bottom panel.
+  const SUBWAY_VIDEOS = { tall: 'QPW3XwBoQlw', wide: 'i0M4ARe9v0Y' };
+  const wideSplit = window.matchMedia('(max-width: 900px)');
+  const subwayScreen = $('#subway-screen');
+  // YouTube won't play in a page opened straight from disk, so the drawn runner fills in there
+  const subwayVideo = location.protocol !== 'file:';
   let subwayReady = false;
+  let subwayAura = 0;
+
+  function showGameplay() {
+    const shape = wideSplit.matches ? 'wide' : 'tall';
+    const id = SUBWAY_VIDEOS[shape];
+    subwayScreen.dataset.shape = shape;
+    subwayScreen.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&playsinline=1&rel=0&disablekb=1"
+      title="Subway Surfers gameplay" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  }
+
   function setSubway(on) {
     body.classList.toggle('split', on);
     $('#btn-subway').setAttribute('aria-pressed', String(on));
     if (on) {
-      if (!subwayReady) {
-        Subway.init($('#subway-canvas'), { coin: () => addAura(1) });
-        subwayReady = true;
+      if (subwayVideo) {
+        showGameplay();
+        // watching still farms a little aura, like the coins in the drawn runner
+        subwayAura = setInterval(() => { if (!document.hidden) addAura(1); }, 2000);
+      } else {
+        if (!subwayReady) {
+          Subway.init($('#subway-canvas'), { coin: () => addAura(1) });
+          subwayReady = true;
+        }
+        Subway.start();
       }
-      Subway.start();
       toast('attention span support activated 🧠');
+    } else if (subwayVideo) {
+      subwayScreen.replaceChildren(); // removing the player stops the video
+      clearInterval(subwayAura);
     } else {
       Subway.stop();
     }
   }
+  $('#subway-canvas').hidden = subwayVideo;
+  subwayScreen.hidden = !subwayVideo;
+  // the split moves from the side to the bottom on smaller screens, so swap to the matching cut
+  wideSplit.addEventListener('change', () => {
+    if (subwayVideo && body.classList.contains('split')) showGameplay();
+  });
   $('#btn-subway').addEventListener('click', () => setSubway(!body.classList.contains('split')));
   $('#subway-close').addEventListener('click', () => setSubway(false));
 
@@ -313,6 +417,7 @@
     { emoji: '🚽', label: 'SKIBIDI', color: 'var(--cyan)', play: () => Sfx.skibidi() },
     { emoji: '🤲', label: 'SIX SEVEN', color: 'var(--yellow)', play: () => sixSeven() },
     { emoji: '❌', label: 'HITMARKER', color: 'var(--red)', play: () => { Sfx.hitmarker(); flash('rgba(255, 255, 255, .2)'); } },
+    { emoji: '🐱', label: 'SIGMA MEOW', color: 'var(--pink)', play: () => { Sfx.meow(); shake(); rain(['🐱', '🗿'], 12); } },
   ];
   const padsEl = $('#pads');
   PADS.forEach(p => {
