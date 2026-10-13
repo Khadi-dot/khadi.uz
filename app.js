@@ -338,20 +338,7 @@
   });
 
   /* ================= 02 italian brainrot ================= */
-  const ITALIAN = [
-    { name: 'Tralalero Tralala', art: ['🦈', '👟'], aura: 92000, lore: 'A shark with three legs in fresh sneakers. Runs faster on land than in water. Nobody asked why.' },
-    { name: 'Bombardiro Crocodilo', art: ['🐊', '✈️'], aura: 88500, lore: 'Half crocodile, half bomber plane. Airport security still has no policy for this.' },
-    { name: 'Tung Tung Tung Sahur', art: ['🪵', '🏏'], aura: 99999, lore: 'A wooden log with a bat. Knocks three times before sahur. If you don’t wake up, he comes inside.' },
-    { name: 'Ballerina Cappuccina', art: ['🩰', '☕'], aura: 71000, lore: 'Her head is a cappuccino. Dances like nobody is watching, because everyone is too scared to.' },
-    { name: 'Brr Brr Patapim', art: ['🐒', '🌳'], aura: 64200, lore: 'A forest monkey-tree with a giant nose and giant feet. Says “brr brr” for no reason. Respect it.' },
-    { name: 'Lirili Larila', art: ['🐘', '🌵'], aura: 58000, lore: 'A cactus elephant in sandals who can control time. Wears sandals in the desert. Total sigma.' },
-    { name: 'Chimpanzini Bananini', art: ['🐒', '🍌'], aura: 76700, lore: 'A chimpanzee inside a banana. Or a banana inside a chimpanzee. Scientists are split 50/50.' },
-    { name: 'Cappuccino Assassino', art: ['☕', '🗡️'], aura: 81300, lore: 'A ninja coffee cup with two katanas. Silent. Deadly. Extra foam.' },
-    { name: 'Trippi Troppi', art: ['🦐', '🐱'], aura: 47000, lore: 'A shrimp with a cat face. Or a cat with a shrimp body. Either way, it is staring at you.' },
-    { name: 'Bombombini Gusini', art: ['🪿', '✈️'], aura: 66700, lore: 'A goose fighter jet. Brother of Bombardiro. The family business is honking.' },
-    { name: 'Frigo Camelo', art: ['🐪', '🧊'], aura: 52000, lore: 'A camel with a fridge for a body, wearing boots. Keeps the drinks cold and the vibes colder.' },
-    { name: 'La Vaca Saturno Saturnita', art: ['🐄', '🪐'], aura: 67067, lore: 'A cow with the body of Saturn. Orbits your house at 3 AM. Moo-ves in mysterious ways.' },
-  ];
+  const ITALIAN = KHADI_DATA.italian;
   const CARD_COLORS = ['var(--yellow)', 'var(--cyan)', 'var(--pink)', 'var(--lime)', 'var(--orange)', 'var(--purple)'];
   const cardsEl = $('#cards');
   ITALIAN.forEach((c, i) => {
@@ -803,45 +790,14 @@
   });
 
   /* ================= 06 dictionary ================= */
-  const DICT = [
-    ['skibidi', 'Nonsense word from Skibidi Toilet, a YouTube series about singing heads in toilets fighting men with cameras for heads. Can mean good, bad, or absolutely nothing.', '"that was so skibidi."'],
-    ['rizz', 'Charm. The ability to attract someone. Short for charisma.', '"he has unspoken rizz."'],
-    ['aura', 'Your invisible coolness score. Doing something cringe costs aura. Doing something cold earns it.', '"tripped on stage. −10,000 aura."'],
-    ['aura farming', 'Doing cool things on purpose just to gain aura. Made famous in 2025 by a kid dancing on the front of a racing boat in Indonesia.', '"he isn’t watching the sunset, he’s aura farming."'],
-    ['sigma', 'A lone wolf who is cool without trying. Allegedly at the top of the social ladder.', '"didn’t text back. sigma behavior."'],
-    ['ohio', 'Anything weird, cursed or unexplainable. Nothing personal against the actual state.', '"a cow on the metro? only in Ohio."'],
-    ['67 (six seven)', 'Means nothing at all. Say it with both palms up, moving them up and down. Got so big that Dictionary.com picked it as its Word of the Year for 2025.', '"what’s 60 + 7?" "SIX SEVEN 🤲"'],
-    ['fanum tax', 'Taking a bite of someone else’s food without asking. Named after the streamer Fanum.', '"you got fries? fanum tax."'],
-    ['mewing', 'Pressing your tongue to the roof of your mouth for a sharper jawline. The 🤫🧏 gesture means "can’t talk, I’m mewing."', ''],
-    ['mogging', 'Looking so much better than someone that they disappear next to you.', '"he got mogged by the substitute teacher."'],
-    ['cooked', 'Doomed. In big trouble. No way out.', '"exam tomorrow and I didn’t study. I’m cooked."'],
-    ['bussin', 'Extremely good. Mostly used for food.', '"this plov is bussin."'],
-    ['no cap', 'No lie. "Cap" means a lie, and 🧢 means someone is lying.', '"best somsa in Tashkent, no cap."'],
-    ['mid', 'Average. Mediocre. Nothing special.', '"the movie was mid."'],
-    ['delulu', 'Delusional, usually about a crush or a big dream.', '"she thinks he’ll text back. delulu."'],
-    ['glazing', 'Praising someone way too much.', '"stop glazing the teacher, bro."'],
-    ['crash out', 'To lose it and do something reckless because you’re angry.', '"he lost one game and crashed out."'],
-    ['unc', 'An older person who is out of touch. Can be used against anyone over 22.', '"you still use Facebook? okay unc."'],
-    ['chopped', 'Ugly, messed up, falling apart.', '"my haircut is chopped."'],
-    ['NPC', 'Someone who acts like a background character in a video game. No original thoughts.', '"he said “it is what it is” again. total NPC."'],
-    ['W / L', 'Win / loss. Can be given to people, ideas or entire countries.', '"free plov at the wedding? W."'],
-    ['brainrot', 'Content so dumb it slowly melts your brain. Oxford’s Word of the Year for 2024. You are on a brainrot website right now.', ''],
-    ['italian brainrot', 'AI-made creatures with fake Italian names and robotic narrator voices, like Tralalero Tralala and Bombardiro Crocodilo. Took over the internet in 2025.', ''],
-    ['tung tung tung sahur', 'A wooden log holding a bat. Comes from Indonesia, inspired by people banging drums to wake everyone for sahur, the pre-dawn meal in Ramadan.', ''],
-    ['say less', 'Understood. No more explaining needed.', '"want plov?" "say less."'],
-    ['lowkey / highkey', 'Lowkey = a little, or secretly. Highkey = a lot, openly.', '"lowkey hungry, highkey want somsa."'],
-    ['it’s giving', 'It has the vibe of…', '"your outfit? it’s giving final boss."'],
-    ['sheesh', 'Said when something is impressive. The more e’s, the more impressive.', '"sheeeeeesh."'],
-    ['goated', 'The greatest. From G.O.A.T., greatest of all time.', '"this website is goated."'],
-    ['twin', 'Your best friend. The person who gets you.', '"wsg twin."'],
-  ];
+  const DICT = KHADI_DATA.dict;
   const dictEl = $('#dict');
   const dictEmpty = $('#dict-empty');
   function renderDict(q = '') {
     const query = q.trim().toLowerCase();
-    const list = DICT.filter(([t, d]) => !query || t.toLowerCase().includes(query) || d.toLowerCase().includes(query));
-    dictEl.innerHTML = list.map(([t, d, ex]) =>
-      `<div class="entry"><dt>${t}</dt><dd>${d}${ex ? `<span class="ex">${ex}</span>` : ''}</dd></div>`).join('');
+    const list = DICT.filter(w => !query || w.term.toLowerCase().includes(query) || w.def.toLowerCase().includes(query));
+    dictEl.innerHTML = list.map(w =>
+      `<div class="entry"><dt><a href="${w.link || `meaning/${w.slug}/`}">${w.term}</a></dt><dd>${w.def}${w.ex ? `<span class="ex">${w.ex}</span>` : ''}</dd></div>`).join('');
     dictEmpty.hidden = list.length > 0;
   }
   renderDict();

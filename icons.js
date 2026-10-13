@@ -25,8 +25,13 @@
     '🍚': 'cooked-rice', '🚐': 'minibus', '🚗': 'automobile', '🍉': 'watermelon', '👑': 'crown',
     '😜': 'winking-face-with-tongue', '😝': 'squinting-face-with-tongue', '🫨': 'shaking-face', '🏆': 'trophy',
     '🧏': 'deaf-person', '🧢': 'billed-cap', '🧻': 'roll-of-paper', '✨': 'sparkles', '🤓': 'nerd-face',
-    '🤌': 'pinched-fingers',
+    '🤌': 'pinched-fingers', '👴': 'old-man', '🍩': 'doughnut', '🦄': 'unicorn', '🍳': 'cooking', '🐐': 'goat',
+    '🫂': 'people-hugging', '🔪': 'kitchen-knife', '🤐': 'zipper-mouth-face', '👀': 'eyes', '💅': 'nail-polish',
+    '🥶': 'cold-face', '🚣': 'person-rowing-boat',
   };
+
+  // icons/ sits next to this script, so pages in subfolders find it too
+  const base = new URL('icons/', document.currentScript.src).href;
 
   // emoji often carry an invisible U+FE0F, so look them up without it
   const strip = s => s.replace(/️/g, '');
@@ -48,7 +53,7 @@
   function icon(emoji) {
     const img = document.createElement('img');
     img.className = 'emo';
-    img.src = `icons/${file[strip(emoji)]}.webp`;
+    img.src = `${base}${file[strip(emoji)]}.webp`;
     img.alt = emoji;
     img.draggable = false;
     img.decoding = 'async';
@@ -80,6 +85,6 @@
   }).observe(document.body, { childList: true, subtree: true, characterData: true });
 
   // fetch the rest in the background so effects never pop in empty
-  const preload = () => Object.values(file).forEach(name => { new Image().src = `icons/${name}.webp`; });
+  const preload = () => Object.values(file).forEach(name => { new Image().src = `${base}${name}.webp`; });
   window.addEventListener('load', () => ('requestIdleCallback' in window ? requestIdleCallback(preload) : setTimeout(preload, 1500)));
 })();

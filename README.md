@@ -1,6 +1,6 @@
 # KHADI.UZ 💀 Ultimate Brainrot HQ
 
-A one-page brainrot website. It's plain HTML, CSS and JavaScript, so there's no build step and nothing to install. The soundboard plays the real meme sounds, the Italian brainrot names are recorded with a neural Italian voice, and every emoji is shown as a high-resolution 3D icon.
+A brainrot website. It's plain HTML, CSS and JavaScript, so nothing needs installing to run it. Every dictionary word and Italian brainrot creature also has its own page, so each one can show up in search. The soundboard plays the real meme sounds, the Italian brainrot names are recorded with a neural Italian voice, and every emoji is shown as a high-resolution 3D icon.
 
 ## What's on the page
 
@@ -20,19 +20,31 @@ Secret codes (type them anywhere on the page): `67`, `skibidi`, `sigma`, `ohio`,
 ## Files
 
 ```
-index.html     page structure
-style.css      all styling
-app.js         everything interactive
-audio.js       plays the sound files, plus text-to-speech for the translator
-icons.js       swaps every emoji on the page for its 3D icon
-subway.js      the split-screen runner game
-icons/         3D emoji icons (.webp), favicon and home-screen icon
-sounds/        meme sound effects and the phonk loop
-sounds/names/  the 12 Italian brainrot names, one recording each
-sounds/words/  the Fusion Lab words, stitched together when a creature is born
+index.html            the home page
+style.css             all styling, for every page
+app.js                everything interactive on the home page
+data.js               the dictionary words and Italian brainrot creatures
+audio.js              plays the sound files, plus text-to-speech for the translator
+icons.js              swaps every emoji for its 3D icon
+subway.js             the split-screen runner game
+icons/                3D emoji icons (.webp), favicon, home-screen icon and link-preview image
+sounds/               meme sound effects and the phonk loop
+sounds/names/         the 12 Italian brainrot names, one recording each
+sounds/words/         the Fusion Lab words, stitched together when a creature is born
+meaning/              one page per dictionary word (built, don't edit by hand)
+italian-brainrot/     one page per creature (built, don't edit by hand)
+tools/content.js      the longer text for those pages
+tools/build-pages.js  builds meaning/, italian-brainrot/ and sitemap.xml
+robots.txt, sitemap.xml, google42f0761f873f0cfb.html   for search engines
 ```
 
 To add an icon for a new emoji, drop its `.webp` into `icons/` and add the emoji to the `ICONS` list at the top of `icons.js`. Emoji without an icon stay as normal emoji.
+
+## Change a word or a creature
+
+1. Edit the short definition or lore in `data.js`, and the longer text in `tools/content.js`. A new word needs an entry in both, keyed by its `slug`. A new creature also needs its name recorded in `sounds/names/`.
+2. Run `node tools/build-pages.js` from this folder. It rebuilds every page and the sitemap, and stops with a message if something is missing.
+3. Commit and push.
 
 ## Run it locally
 
@@ -40,12 +52,11 @@ Double-click `index.html` to open it in your browser. Everything works this way,
 
 ## Put it online at khadi.uz
 
-1. Log in to your hosting control panel at ahost.
-2. Open **File Manager** and go into the site's web folder (usually `public_html`).
-3. Upload the 6 files `index.html`, `style.css`, `app.js`, `audio.js`, `icons.js` and `subway.js`, plus the `icons` and `sounds` folders with everything inside them.
-4. Open https://khadi.uz.
+The site is hosted on GitHub Pages from the `main` branch of this repo, and the `CNAME` file points it at khadi.uz. Push to `main` and the live site updates within a minute or two.
 
-If you only bought the domain at ahost and have no hosting plan there, you can host the files for free on GitHub Pages, Cloudflare Pages or Netlify and point the domain's DNS records to it.
+## Search engines
+
+The site is verified in Google Search Console, and `sitemap.xml` lists every page. Keep `google42f0761f873f0cfb.html` and the `google-site-verification` tag in `index.html`, or Search Console stops trusting the site.
 
 ## Credits
 
