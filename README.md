@@ -52,4 +52,4 @@ If you only bought the domain at ahost and have no hosting plan there, you can h
 - 3D emoji: [Fluent Emoji](https://github.com/microsoft/fluentui-emoji) by Microsoft, MIT license.
 - Phonk loop: ["Phonk Type Beat"](https://freesound.org/people/Koolgs/sounds/785479/) by Koolgs on Freesound, CC0 (public domain).
 - Meme sound effects (vine boom, metal pipe, MLG airhorn, bruh, Taco Bell bong, sad trombone, hitmarker, wrong buzzer, skibidi, six seven): the well-known clips as shared on [myinstants.com](https://www.myinstants.com). They belong to their original creators.
-- Italian brainrot voices: Microsoft Edge neural text-to-speech (Diego, Italian; Ardi, Indonesian, for Tung Tung Tung Sahur).
+- Italian brainrot voices: Microsoft Edge neural text-to-speech (Diego, Italian; Ardi, Indonesian, for Tung Tung Tung Sahur). "Brr" is fed to the voice as "Brùr", otherwise it spells the letters out.
