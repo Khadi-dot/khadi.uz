@@ -2,7 +2,11 @@
 
 A brainrot website. It's plain HTML, CSS and JavaScript, so nothing needs installing to run it. Every dictionary word and Italian brainrot creature also has its own page, so each one can show up in search. The soundboard plays the real meme sounds, the Italian brainrot names are recorded with a neural Italian voice, and every emoji is shown as a high-resolution 3D icon.
 
-## What's on the page
+## What's on the site
+
+The front page (`index.html`) introduces the site: a hero, a grid of the six features, a strip of reviews and a contact form. The contact form opens the visitor's email app addressed to `me@khadi.uz`. To have messages delivered from the page instead, paste a Formspree form URL into `FORM_ENDPOINT` near the bottom of `index.html`.
+
+Everything interactive lives on the play page (`play.html`, at khadi.uz/play.html):
 
 | Section | What it does |
 |---|---|
@@ -15,14 +19,15 @@ A brainrot website. It's plain HTML, CSS and JavaScript, so nothing needs instal
 | **06 Dictionary** | Brainrot words explained for parents and teachers |
 | **Subway Mode** | Split screen with an auto-running subway game for your attention span |
 
-Secret codes (type them anywhere on the page): `67`, `skibidi`, `sigma`, `ohio`, and the Konami code `↑↑↓↓←→←→BA`.
+Secret codes (type them anywhere on the play page): `67`, `skibidi`, `sigma`, `ohio`, and the Konami code `↑↑↓↓←→←→BA`.
 
 ## Files
 
 ```
-index.html            the home page
-style.css             all styling, for every page
-app.js                everything interactive on the home page
+index.html            the front page, with its styling and script inside the file
+play.html             the soundboard, games and tools
+style.css             styling for the play page and the dictionary and creature pages
+app.js                everything interactive on the play page
 data.js               the dictionary words and Italian brainrot creatures
 audio.js              plays the sound files, plus text-to-speech for the translator
 icons.js              swaps every emoji for its 3D icon

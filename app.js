@@ -453,7 +453,7 @@
       <button class="btn btn-small" type="button" id="scan-share">📤 SHARE RESULT</button>`;
     requestAnimationFrame(() => requestAnimationFrame(() => scanResult.classList.add('go')));
     $('#scan-share').addEventListener('click', () =>
-      share(`${name}'s aura on khadi.uz: ${sign}${fmt(s.aura)} (${RANKS[idx][1]}) 🗿 scan yours → https://khadi.uz/#scan`));
+      share(`${name}'s aura on khadi.uz: ${sign}${fmt(s.aura)} (${RANKS[idx][1]}) 🗿 scan yours → https://khadi.uz/play.html#scan`));
     return idx;
   }
 

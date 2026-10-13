@@ -75,7 +75,7 @@ function page({ root, url, title, description, type = 'article', ld, body, scrip
     <nav class="top-actions" aria-label="Site">
       <a class="chip-btn" href="${root}meaning/"><span aria-hidden="true">📖</span><span class="lbl">DICTIONARY</span></a>
       <a class="chip-btn" href="${root}italian-brainrot/"><span aria-hidden="true">🤌</span><span class="lbl">ITALIAN BRAINROT</span></a>
-      <a class="chip-btn hot" href="${root}"><span aria-hidden="true">🗿</span><span class="lbl">FARM AURA</span></a>
+      <a class="chip-btn hot" href="${root}play.html"><span aria-hidden="true">🗿</span><span class="lbl">FARM AURA</span></a>
     </nav>
   </header>
 
@@ -84,7 +84,7 @@ ${body}
     <aside class="cta">
       <p class="cta-title">this was the boring part. now lose some brain cells 🧠</p>
       <p>hear the real meme sounds, summon Italian brainrot, scan anyone’s aura and smash skibidi toilets on KHADI.UZ.</p>
-      <a class="btn btn-lime" href="${root}">ENTER THE BRAINROT</a>
+      <a class="btn btn-lime" href="${root}play.html">ENTER THE BRAINROT</a>
     </aside>
   </main>
 
@@ -258,7 +258,7 @@ write('italian-brainrot/index.html', italianIndex());
 creatures.forEach(c => write(`italian-brainrot/${c.slug}/index.html`, creaturePage(c)));
 
 const today = new Date().toISOString().slice(0, 10);
-const urls = [SITE, `${SITE}meaning/`, ...words.map(w => w.url), `${SITE}italian-brainrot/`, ...creatures.map(c => c.url)];
+const urls = [SITE, `${SITE}play.html`, `${SITE}meaning/`, ...words.map(w => w.url), `${SITE}italian-brainrot/`, ...creatures.map(c => c.url)];
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(u => `  <url>\n    <loc>${u}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`).join('\n')}
