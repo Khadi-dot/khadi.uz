@@ -4,7 +4,7 @@ A brainrot website. It's plain HTML, CSS and JavaScript, so nothing needs instal
 
 ## What's on the site
 
-The front page (`index.html`) introduces the site: a hero, a grid of the six features, a strip of reviews and a contact form. The contact form opens the visitor's email app addressed to `me@khadi.uz`. To have messages delivered from the page instead, paste a Formspree form URL into `FORM_ENDPOINT` near the bottom of `index.html`.
+The front page (`index.html`) introduces the site: a hero with a phone you can tap to hear the Italian brainrot creatures, the six features, reviews and a contact form. The contact form opens the visitor's email app addressed to `me@khadi.uz`. To have messages delivered from the page instead, paste a Formspree form URL into `FORM_ENDPOINT` near the bottom of `index.html`.
 
 Everything interactive lives on the play page (`play.html`, at khadi.uz/play.html):
 
@@ -24,15 +24,17 @@ Secret codes (type them anywhere on the play page): `67`, `skibidi`, `sigma`, `o
 ## Files
 
 ```
-index.html            the front page, with its styling and script inside the file
+BRAND.md              the brand: colors, typefaces, voice, the tile and the motion rules
+brand.css             the brand as CSS variables, plus buttons, fields, the tile and the footer every page shares
+index.html            the front page, with its layout and script inside the file
 play.html             the soundboard, games and tools
-style.css             styling for the play page and the dictionary and creature pages
+style.css             layout for the play page and the dictionary and creature pages (loads after brand.css)
 app.js                everything interactive on the play page
 data.js               the dictionary words and Italian brainrot creatures
 audio.js              plays the sound files, plus text-to-speech for the translator
 icons.js              swaps every emoji for its 3D icon
 subway.js             a drawn runner game, shown in Subway Mode only when the page is opened from disk (YouTube won't play there)
-icons/                3D emoji icons (.webp), favicon, home-screen icon and link-preview image
+icons/                3D emoji icons (.webp), favicon, home-screen icon and link-preview image (og-image.jpg)
 sounds/               meme sound effects and the phonk loop
 sounds/names/         the 12 Italian brainrot names, one recording each
 sounds/words/         the Fusion Lab words, stitched together when a creature is born

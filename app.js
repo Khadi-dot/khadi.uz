@@ -222,7 +222,7 @@
       addAura(randInt(5000, 15000), x, y);
       Sfx.vineBoom();
       mega('CRITICAL AURA', 'crit');
-      flash('rgba(255, 225, 77, .45)');
+      flash('rgba(255, 198, 41, .45)');
       shake();
     } else if (roll < 0.07) {
       addAura(-randInt(67, 999), x, y);
@@ -278,7 +278,7 @@
       Sfx.vineBoom();
       Sfx.crit();
       mega('MEGA BOOST', 'crit');
-      flash('rgba(255, 225, 77, .45)');
+      flash('rgba(255, 198, 41, .45)');
       rain(['👑', '🔥', '💯', '🗿'], 24);
       shake();
       toast(`MEGA BOOST: +${fmt(o.n)} aura 👑`);
@@ -407,17 +407,17 @@
 
   /* ================= 01 soundboard ================= */
   const PADS = [
-    { emoji: '💥', label: 'VINE BOOM', color: 'var(--yellow)', play: () => { Sfx.vineBoom(); shake(); } },
-    { emoji: '🔩', label: 'METAL PIPE', color: 'var(--cyan)', play: () => Sfx.metalPipe() },
-    { emoji: '📯', label: 'MLG AIRHORN', color: 'var(--orange)', play: () => { Sfx.airhorn(); rain(['📯', '🔥', '💯', '🎯'], 14); } },
-    { emoji: '🗿', label: 'BRUH', color: 'var(--purple)', play: () => Sfx.bruh() },
-    { emoji: '🔔', label: 'TACO BELL', color: 'var(--pink)', play: () => Sfx.tacoBell() },
-    { emoji: '🎺', label: 'SAD TROMBONE', color: 'var(--blue)', play: () => Sfx.sadTrombone() },
-    { emoji: '🐄', label: 'PHONK LOOP', color: 'var(--lime)', toggle: true, play: () => Sfx.togglePhonk() },
-    { emoji: '🚽', label: 'SKIBIDI', color: 'var(--cyan)', play: () => Sfx.skibidi() },
-    { emoji: '🤲', label: 'SIX SEVEN', color: 'var(--yellow)', play: () => sixSeven() },
-    { emoji: '❌', label: 'HITMARKER', color: 'var(--red)', play: () => { Sfx.hitmarker(); flash('rgba(255, 255, 255, .2)'); } },
-    { emoji: '🐱', label: 'SIGMA MEOW', color: 'var(--pink)', play: () => { Sfx.meow(); shake(); rain(['🐱', '🗿'], 12); } },
+    { emoji: '💥', label: 'VINE BOOM', color: 'var(--saffron-wash)', play: () => { Sfx.vineBoom(); shake(); } },
+    { emoji: '🔩', label: 'METAL PIPE', color: 'var(--cobalt-wash)', play: () => Sfx.metalPipe() },
+    { emoji: '📯', label: 'MLG AIRHORN', color: 'var(--pomegranate-wash)', play: () => { Sfx.airhorn(); rain(['📯', '🔥', '💯', '🎯'], 14); } },
+    { emoji: '🗿', label: 'BRUH', color: 'var(--dome-wash)', play: () => Sfx.bruh() },
+    { emoji: '🔔', label: 'TACO BELL', color: 'var(--saffron-wash)', play: () => Sfx.tacoBell() },
+    { emoji: '🎺', label: 'SAD TROMBONE', color: 'var(--cobalt-wash)', play: () => Sfx.sadTrombone() },
+    { emoji: '🐄', label: 'PHONK LOOP', color: 'var(--pomegranate-wash)', toggle: true, play: () => Sfx.togglePhonk() },
+    { emoji: '🚽', label: 'SKIBIDI', color: 'var(--dome-wash)', play: () => Sfx.skibidi() },
+    { emoji: '🤲', label: 'SIX SEVEN', color: 'var(--saffron-wash)', play: () => sixSeven() },
+    { emoji: '❌', label: 'HITMARKER', color: 'var(--cobalt-wash)', play: () => { Sfx.hitmarker(); flash('rgba(255, 255, 255, .2)'); } },
+    { emoji: '🐱', label: 'SIGMA MEOW', color: 'var(--pomegranate-wash)', play: () => { Sfx.meow(); shake(); rain(['🐱', '🗿'], 12); } },
   ];
   const padsEl = $('#pads');
   PADS.forEach(p => {
@@ -444,7 +444,7 @@
 
   /* ================= 02 italian brainrot ================= */
   const ITALIAN = KHADI_DATA.italian;
-  const CARD_COLORS = ['var(--yellow)', 'var(--cyan)', 'var(--pink)', 'var(--lime)', 'var(--orange)', 'var(--purple)'];
+  const CARD_COLORS = ['var(--dome)', 'var(--saffron)', 'var(--pomegranate)', 'var(--cobalt)'];
   const cardsEl = $('#cards');
   ITALIAN.forEach((c, i) => {
     const el = document.createElement('button');
@@ -546,16 +546,16 @@
       <p class="scan-name">${esc(name)}</p>
       <p class="scan-aura">${sign}${fmt(s.aura)} <small>aura</small></p>
       <p class="scan-rank">${RANKS[idx][1]}</p>
-      ${bar('RIZZ', s.rizz, 'var(--pink)')}
-      ${bar('SIGMA', s.sigma, 'var(--lime)')}
-      ${bar('COOKED', s.cooked, 'var(--orange)')}
-      ${bar('NPC CHANCE', s.npc, 'var(--cyan)')}
+      ${bar('RIZZ', s.rizz, 'var(--pomegranate)')}
+      ${bar('SIGMA', s.sigma, 'var(--dome)')}
+      ${bar('COOKED', s.cooked, 'var(--saffron)')}
+      ${bar('NPC CHANCE', s.npc, 'var(--cobalt-light)')}
       <div class="scan-facts">
         <span>🌽 ohio level <b>${s.ohio}/10</b></span>
         <span>🤫 mewing streak <b>${fmt(s.mewing)} days</b></span>
       </div>
       <p class="scan-verdict">“${esc(verdict)}”</p>
-      <button class="btn btn-small" type="button" id="scan-share">📤 SHARE RESULT</button>`;
+      <button class="btn btn-small btn-white" type="button" id="scan-share">📤 Share result</button>`;
     requestAnimationFrame(() => requestAnimationFrame(() => scanResult.classList.add('go')));
     $('#scan-share').addEventListener('click', () =>
       share(`${name}'s aura on khadi.uz: ${sign}${fmt(s.aura)} (${RANKS[idx][1]}) 🗿 scan yours → https://khadi.uz/play.html#scan`));
@@ -967,6 +967,6 @@
       : baseTitle;
   });
 
-  console.log('%cKHADI.UZ', 'font: 900 42px Bungee, Impact, sans-serif; color: #c6ff00; text-shadow: 3px 3px 0 #ff3db8;');
+  console.log('%cKHADI.UZ', 'font: 900 42px "TikTok Sans", Impact, sans-serif; color: #1F3FBF; text-shadow: 3px 3px 0 #FFC629;');
   console.log('%cyou opened devtools. +1000 nerd aura 🤓\nsecret codes: 67 · skibidi · sigma · ohio · ↑↑↓↓←→←→BA', 'font-size: 14px;');
 })();

@@ -6,7 +6,7 @@
   <title>Play: Brainrot Soundboard, Aura Scanner & Skibidi Smash | KHADI.UZ</title>
   <meta name="description" content="The ultimate brainrot website. Farm aura, summon Italian brainrot, smash skibidi toilets, translate to Gen Alpha and scan anyone's rizz. No cap.">
   <link rel="canonical" href="https://khadi.uz/play.html">
-  <meta name="theme-color" content="#0d0718">
+  <meta name="theme-color" content="#F4F6FB">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="KHADI.UZ">
   <meta property="og:url" content="https://khadi.uz/play.html">
@@ -22,7 +22,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Comic+Neue:wght@700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,400..800&family=Comic+Neue:wght@700&family=TikTok+Sans:opsz,wdth,wght@12..36,75..150,300..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="brand.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -35,7 +36,7 @@
     </div>
 
     <header class="topbar">
-      <a class="logo" href="./">KHADI<span>.UZ</span></a>
+      <a class="logo" href="./">KHADI<span>.uz</span></a>
       <div class="aura-pill" id="aura-pill" title="Your total aura">
         <span aria-hidden="true">🔥</span>
         <span class="num" id="aura-val">0</span>
@@ -60,45 +61,43 @@
     <main id="main">
       <!-- ============ HERO ============ -->
       <section class="hero" id="top">
-        <div class="stickers" aria-hidden="true">
-          <span style="--x:5%;--y:12%;--r:-12deg;--d:0s">🚽</span>
-          <span style="--x:88%;--y:10%;--r:10deg;--d:-1s">🦈</span>
-          <span class="far" style="--x:7%;--y:62%;--r:8deg;--d:-2s">🐊</span>
-          <span class="far" style="--x:89%;--y:58%;--r:-8deg;--d:-3s">💀</span>
-          <span class="far" style="--x:5%;--y:84%;--r:-20deg;--d:-1.5s">☕</span>
-          <span class="far" style="--x:90%;--y:82%;--r:16deg;--d:-2.5s">🔥</span>
-        </div>
+        <div class="hero-panel tile">
+          <div class="hero-head">
+            <h1 class="hero-title">KHADI<span>.uz</span></h1>
+            <p class="hero-sub">the internet's most <span class="rotator" id="rotator">sigma</span> website</p>
+          </div>
 
-        <p class="kicker">EST. 2026 · TASHKENT, OHIO</p>
-        <h1 class="glitch" data-text="KHADI.UZ">KHADI.UZ</h1>
-        <p class="hero-sub">the internet's most <span class="rotator" id="rotator">sigma</span> website</p>
+          <div class="hero-play">
+            <div class="farm-wrap">
+              <button class="farm" id="farm" type="button" aria-label="Farm aura"><span aria-hidden="true">🗿</span></button>
+              <p class="farm-label">tap the moai to farm aura</p>
+              <p class="farm-stats">your aura <b id="hero-aura">0</b> · rank <b id="hero-rank">NPC 🤖</b></p>
+            </div>
 
-        <button class="farm" id="farm" type="button" aria-label="Farm aura"><span aria-hidden="true">🗿</span></button>
-        <p class="farm-label">TAP THE MOAI TO FARM AURA</p>
-        <p class="farm-stats">your aura: <b id="hero-aura">0</b> · rank: <b id="hero-rank">NPC 🤖</b></p>
-
-        <div class="mystery">
-          <p class="mystery-title">OR PICK A MYSTERY CARD</p>
-          <p class="mystery-sub">one gives aura, one takes it, one goes crazy. they reshuffle every round.</p>
-          <div class="mystery-row" id="mystery" role="group" aria-label="Mystery aura cards">
-          <button class="mcard" type="button" aria-label="Mystery pick 1">
-            <span class="mcard-inner">
-              <span class="mcard-face mcard-front" aria-hidden="true">❓</span>
-              <span class="mcard-face mcard-back" aria-hidden="true"></span>
-            </span>
-          </button>
-          <button class="mcard" type="button" aria-label="Mystery pick 2">
-            <span class="mcard-inner">
-              <span class="mcard-face mcard-front" aria-hidden="true">❓</span>
-              <span class="mcard-face mcard-back" aria-hidden="true"></span>
-            </span>
-          </button>
-          <button class="mcard" type="button" aria-label="Mystery pick 3">
-            <span class="mcard-inner">
-              <span class="mcard-face mcard-front" aria-hidden="true">❓</span>
-              <span class="mcard-face mcard-back" aria-hidden="true"></span>
-            </span>
-          </button>
+            <div class="mystery">
+              <p class="mystery-title">or pick a mystery card</p>
+              <p class="mystery-sub">one gives aura, one takes it, one goes crazy. they reshuffle every round.</p>
+              <div class="mystery-row" id="mystery" role="group" aria-label="Mystery aura cards">
+                <button class="mcard" type="button" aria-label="Mystery pick 1">
+                  <span class="mcard-inner">
+                    <span class="mcard-face mcard-front" aria-hidden="true">❓</span>
+                    <span class="mcard-face mcard-back" aria-hidden="true"></span>
+                  </span>
+                </button>
+                <button class="mcard" type="button" aria-label="Mystery pick 2">
+                  <span class="mcard-inner">
+                    <span class="mcard-face mcard-front" aria-hidden="true">❓</span>
+                    <span class="mcard-face mcard-back" aria-hidden="true"></span>
+                  </span>
+                </button>
+                <button class="mcard" type="button" aria-label="Mystery pick 3">
+                  <span class="mcard-inner">
+                    <span class="mcard-face mcard-front" aria-hidden="true">❓</span>
+                    <span class="mcard-face mcard-back" aria-hidden="true"></span>
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -112,21 +111,19 @@
         </nav>
       </section>
 
-      <!-- ============ 01 SOUNDBOARD ============ -->
+      <!-- ============ SOUNDBOARD ============ -->
       <section class="section" id="sounds">
         <div class="section-head">
-          <span class="section-num" aria-hidden="true">01</span>
-          <h2>SOUNDBOARD</h2>
+          <h2>Soundboard</h2>
           <p>the real sounds, straight from the group chat. headphones recommended, dignity optional.</p>
         </div>
         <div class="pads" id="pads"></div>
       </section>
 
-      <!-- ============ 02 ITALIAN BRAINROT ============ -->
+      <!-- ============ ITALIAN BRAINROT ============ -->
       <section class="section" id="italian">
         <div class="section-head">
-          <span class="section-num" aria-hidden="true">02</span>
-          <h2>ITALIAN BRAINROT HALL OF FAME</h2>
+          <h2>Italian brainrot hall of fame</h2>
           <p>tap a creature to hear its true name, spoken by a real fake italian.</p>
         </div>
         <div class="cards" id="cards"></div>
@@ -134,9 +131,9 @@
 
         <div class="fusion">
           <div class="fusion-copy">
-            <h3>⚗️ FUSION LAB</h3>
+            <h3>⚗️ Fusion lab</h3>
             <p>mix a random animal with a random object and create a brand-new brainrot creature. never seen before. probably for a good reason.</p>
-            <button class="btn btn-lime" id="fuse-btn" type="button">FUSE A CREATURE</button>
+            <button class="btn btn-cobalt" id="fuse-btn" type="button">Fuse a creature</button>
           </div>
           <div class="fusion-result" id="fuse-result" aria-live="polite">
             <div class="fusion-art" id="fuse-art" aria-hidden="true">❓</div>
@@ -149,18 +146,17 @@
         </div>
       </section>
 
-      <!-- ============ 03 AURA SCANNER ============ -->
+      <!-- ============ AURA SCANNER ============ -->
       <section class="section" id="scan">
         <div class="section-head">
-          <span class="section-num" aria-hidden="true">03</span>
-          <h2>AURA SCANNER</h2>
+          <h2>Aura scanner</h2>
           <p>enter any name. our 100% scientific algorithm reveals the truth. same name = same result, so no rerolling gang.</p>
         </div>
         <div class="scanner">
           <form class="scan-form" id="scan-form" autocomplete="off">
             <label for="scan-name">name of the victim</label>
             <input class="field" id="scan-name" type="text" maxlength="40" placeholder="e.g. your best friend">
-            <button class="btn btn-pink" id="scan-btn" type="submit">SCAN AURA</button>
+            <button class="btn btn-cobalt" id="scan-btn" type="submit">Scan aura</button>
             <p class="small">try your own name first. then try your teacher's. 💀</p>
           </form>
           <div class="scan-out" aria-live="polite">
@@ -174,11 +170,10 @@
         </div>
       </section>
 
-      <!-- ============ 04 SKIBIDI SMASH ============ -->
+      <!-- ============ SKIBIDI SMASH ============ -->
       <section class="section" id="smash">
         <div class="section-head">
-          <span class="section-num" aria-hidden="true">04</span>
-          <h2>SKIBIDI SMASH</h2>
+          <h2>Skibidi smash</h2>
           <p>30 seconds. smash the skibidi toilets before they start singing. become the cameraman.</p>
         </div>
         <div class="game">
@@ -191,7 +186,7 @@
               <div><span>TIME</span><b id="g-time">30.0</b></div>
               <div><span>BEST</span><b id="g-best">0</b></div>
             </div>
-            <button class="btn btn-yellow" id="g-start" type="button">START SMASHING</button>
+            <button class="btn" id="g-start" type="button">Start smashing</button>
             <ul class="legend">
               <li><span aria-hidden="true">🤪</span> skibidi toilet <b>+1</b></li>
               <li><span aria-hidden="true">🗿</span> rare sigma <b>+5</b></li>
@@ -202,11 +197,10 @@
         </div>
       </section>
 
-      <!-- ============ 05 TRANSLATOR ============ -->
+      <!-- ============ TRANSLATOR ============ -->
       <section class="section" id="translate">
         <div class="section-head">
-          <span class="section-num" aria-hidden="true">05</span>
-          <h2>BRAINROT TRANSLATOR</h2>
+          <h2>Brainrot translator</h2>
           <p>turn boring adult english into fluent gen alpha. send it to your parents. watch them suffer.</p>
         </div>
         <div class="translator">
@@ -226,18 +220,17 @@
             <span class="tr-label">brainrot 💀</span>
             <output id="tr-out" for="tr-in"></output>
             <div class="tr-row">
-              <button class="btn btn-small" id="tr-copy" type="button">📋 COPY</button>
-              <button class="btn btn-small" id="tr-speak" type="button">🔊 READ ALOUD</button>
+              <button class="btn btn-small btn-white" id="tr-copy" type="button">📋 Copy</button>
+              <button class="btn btn-small btn-white" id="tr-speak" type="button">🔊 Read aloud</button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ============ 06 DICTIONARY ============ -->
+      <!-- ============ DICTIONARY ============ -->
       <section class="section" id="dictionary">
         <div class="section-head">
-          <span class="section-num" aria-hidden="true">06</span>
-          <h2>BRAINROT DICTIONARY</h2>
+          <h2>Brainrot dictionary</h2>
           <p>for parents, teachers and anyone over 25 who feels lost. you're welcome.</p>
         </div>
         <input class="field dict-search" id="dict-search" type="search" placeholder="search a word… (try “rizz”)" aria-label="Search the dictionary">
@@ -247,8 +240,8 @@
       </section>
     </main>
 
-    <footer class="footer">
-      <p class="big">KHADI.UZ</p>
+    <footer class="footer tile">
+      <p class="big">KHADI<span>.uz</span></p>
       <p>made with 0 brain cells in Tashkent · © 2026 · no cap</p>
       <p class="footer-links"><a href="./">home</a> · <a href="meaning/">brainrot dictionary</a> · <a href="italian-brainrot/">italian brainrot characters</a></p>
       <p class="secret">psst… there are 5 secret codes. type them anywhere on the page. one of them is <kbd>67</kbd>.</p>

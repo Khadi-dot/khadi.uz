@@ -12,7 +12,7 @@ const ROOT = path.join(__dirname, '..');
 const SITE = 'https://khadi.uz/';
 const DATA = require('../data.js');
 const CONTENT = require('./content.js');
-const CARD_COLORS = ['var(--yellow)', 'var(--cyan)', 'var(--pink)', 'var(--lime)', 'var(--orange)', 'var(--purple)'];
+const CARD_COLORS = ['var(--dome)', 'var(--saffron)', 'var(--pomegranate)', 'var(--cobalt)'];
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -52,7 +52,7 @@ function page({ root, url, title, description, type = 'article', ld, body, scrip
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(description)}">
   <link rel="canonical" href="${url}">
-  <meta name="theme-color" content="#0d0718">
+  <meta name="theme-color" content="#F4F6FB">
   <meta property="og:type" content="${type}">
   <meta property="og:site_name" content="KHADI.UZ">
   <meta property="og:url" content="${url}">
@@ -65,13 +65,14 @@ function page({ root, url, title, description, type = 'article', ld, body, scrip
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Comic+Neue:wght@700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,400..800&family=TikTok+Sans:opsz,wdth,wght@12..36,75..150,300..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="${root}brand.css">
   <link rel="stylesheet" href="${root}style.css">
   ${jsonLd(ld)}
 </head>
 <body class="subpage">
   <header class="topbar">
-    <a class="logo" href="${root}">KHADI<span>.UZ</span></a>
+    <a class="logo" href="${root}">KHADI<span>.uz</span></a>
     <nav class="top-actions" aria-label="Site">
       <a class="chip-btn" href="${root}meaning/"><span aria-hidden="true">📖</span><span class="lbl">DICTIONARY</span></a>
       <a class="chip-btn" href="${root}italian-brainrot/"><span aria-hidden="true">🤌</span><span class="lbl">ITALIAN BRAINROT</span></a>
@@ -81,15 +82,15 @@ function page({ root, url, title, description, type = 'article', ld, body, scrip
 
   <main class="article" id="main">
 ${body}
-    <aside class="cta">
+    <aside class="cta tile">
       <p class="cta-title">this was the boring part. now lose some brain cells 🧠</p>
       <p>hear the real meme sounds, summon Italian brainrot, scan anyone’s aura and smash skibidi toilets on KHADI.UZ.</p>
-      <a class="btn btn-lime" href="${root}play.html">ENTER THE BRAINROT</a>
+      <a class="btn" href="${root}play.html">Enter the brainrot</a>
     </aside>
   </main>
 
-  <footer class="footer">
-    <p class="big">KHADI.UZ</p>
+  <footer class="footer tile">
+    <p class="big">KHADI<span>.uz</span></p>
     <p class="footer-links"><a href="${root}">home</a> · <a href="${root}meaning/">brainrot dictionary</a> · <a href="${root}italian-brainrot/">italian brainrot characters</a></p>
     <p>made with 0 brain cells in Tashkent · © 2026 · no cap</p>
   </footer>
@@ -189,7 +190,7 @@ function creaturePage(c) {
     <h1 class="creature-name">${esc(c.name)}</h1>
     <p class="answer">${esc(c.lore)}</p>
     <div class="creature-actions">
-      <button class="btn btn-lime" type="button" data-sound="${root}sounds/names/${c.slug}.mp3">🔊 HEAR THE NAME</button>
+      <button class="btn btn-cobalt" type="button" data-sound="${root}sounds/names/${c.slug}.mp3">🔊 Hear the name</button>
       <span class="creature-aura">AURA ${fmt(c.aura)}</span>
     </div>
 
