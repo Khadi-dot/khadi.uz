@@ -1,37 +1,45 @@
 # khadi.uz brand
 
-The personal site of Xadyatullox Muhammadjonov: accounting and finance, from Tashkent. One cobalt tile panel opens and closes each page, everything between is calm cool white, and the content does the work.
+The personal site of Xadyatullox Muhammadjonov: accounting and finance by training, games on the side, from Tashkent. A light, art-directed sheet with black type, near-black blocks that come and go, and one cyan accent. It is laid out like an instrument panel: bracket corners, chamfered buttons, dashed grids, figures in a condensed face.
 
-Every value below lives as a CSS variable in `brand.css`. Components use the variables, never the raw hex.
+Every value below lives as a CSS variable in `brand.css`, in two tiers. Tier 1 (`--raw-…`) is the only place a hex code appears. Components read the tier 2 roles (`--background`, `--accent`…), never the raw values.
 
 ## Colors
 
-| Name | Hex | Variable | Use |
+| Role | Hex | Variable | Use |
 |---|---|---|---|
-| Registan cobalt | `#1F3FBF` | `--cobalt` | the hero panel, primary buttons, links |
-| Dome turquoise | `#0E9E96` | `--dome` | passed, done, positive |
-| Plov saffron | `#FFC629` | `--saffron` | the main call to action, highlights |
-| Pomegranate | `#C9293E` | `--pomegranate` | errors (rarely needed) |
-| Paper | `#F4F6FB` | `--paper` | page background (cool, never cream) |
-| Ink | `#12141D` | `--ink` | text and outlines |
+| Page | `#f7fafb` | `--background` | the light ground |
+| Ink | `#090a0b` | `--foreground`, `--surface-black` | all copy, and the dark blocks |
+| Panel | `#0e0f14` | `--surface-dark` | dark buttons and panels |
+| Cyan | `#02d2e3` | `--accent` | the one accent: rules, mastheads on dark, fills, glows |
+| Cyan ink | `#007a85` | `--accent-ink` | the accent as text on the light ground |
+| Hairline | `#dfe5e9` | `--surface-soft`, `--border-muted` | dividers and the contour lines |
+| Steel | `#b6c1c8` | `--foreground-on-dark-muted` | muted copy on dark |
+| Orange | `#ff6b00` | `--danger` | errors only, never decoration |
 
-Saffron is too light for text on white. Put ink text on a saffron fill, or saffron text on cobalt or ink. Turquoise is the same: ink text on it, or `--dome-deep` when it has to be text on white.
+Cyan on the light ground is too pale for text. Use `--accent-ink` for words there and keep `--accent` for shapes, or put cyan type on a dark slab (that is what the buttons do).
 
 ## Type
 
-- **Bodoni Moda**: the name, headings and the wordmark. A classic serif from Parma, with the authority of the financial press.
-- **TikTok Sans**: everything you read, at normal width. A clean grotesque that also covers Cyrillic, so Uzbek and Russian pages can follow.
+- **Oswald** (700, 500): the name, the block mastheads, the years and every figure. Always uppercase, tight leading (0.95, 0.72 for figures).
+- **Space Grotesk** (400, 500, 700): everything you read, nav and labels included. Usually uppercase at small sizes.
 
 ## Voice
 
-Plain and specific: say what was done and what it changed, in short sentences. No buzzwords, no jokes.
+Plain and specific. Say what was done and what it changed, in short sentences. No buzzwords.
 
-## Signature
+## Signatures
 
-The Samarkand tile: eight-point stars stored in the `--tile` variable as an inline SVG and used as a mask, so its color comes from the variables. (Inline rather than a file because browsers refuse mask images from disk.) It fills the hero and the contact panel at the end of the page, and backs the favicon and the link-preview image. Add `class="tile"` to any block to use it.
+- **Bracket corners**: one path (`M0 0.5H10V10.5`) drawn at four corners of a panel instead of a border.
+- **The chamfered button**: a dark slab with a cut bottom-right corner and cyan type that floods cyan on hover.
+- **The stepped plate**: the journey's photo frames, a rounded rectangle with a step cut out of its foot.
+- **Contours**: slow rolling contour lines behind the light blocks, white at 10% behind the contact panel.
+- **The chequered dissolve**: where a light block meets a dark one, the edge breaks into a chequerboard and burns off as you scroll.
 
 ## Motion
 
-- One orchestrated moment: on the home page the name rises and the "at a glance" ledger fills in, under 900ms.
-- Everything else moves only when you touch it: buttons press down onto their lip. UI transitions are 150 to 250ms, ease-out.
-- No scroll-triggered fades. `prefers-reduced-motion` turns the hero sequence off.
+- Everything that moves is a spring (tension and friction, mass 1). There are no CSS keyframes. The only CSS transitions are hover colours, the button floods and the plates' inset.
+- Text arrives word by word or letter by letter, rising 0.35em.
+- The first three blocks are a stack: each pins to the top and the next slides over it while the covered one shrinks to 90% and darkens.
+- The hero opens behind a veil (your silhouette filling from the top). Then a halftone blueprint of the portrait burns away crown to chin, and comes back wherever the cursor has just been.
+- `prefers-reduced-motion` shows everything at once: no smooth scrolling, no reveals, and the hero settles on its final frame.

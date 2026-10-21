@@ -5,33 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Page not found · khadi.uz</title>
   <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#F4F6FB">
+  <meta name="theme-color" content="#f7fafb">
   <link rel="icon" type="image/png" href="/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..800&family=TikTok+Sans:opsz,wdth,wght@12..36,75..150,300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/brand.css">
   <style>
     /* GitHub Pages serves this for any address that doesn't exist, from any folder, so links start at / */
-    .lost { display: grid; place-items: center; min-height: 100vh; padding: var(--space-3); }
-    .lost-panel {
-      width: 100%; max-width: 1440px;
-      min-height: calc(100vh - 2 * var(--space-3));
-      display: grid; align-content: center; justify-items: start; gap: var(--space-4);
-      padding: var(--space-8) clamp(20px, 6vw, 96px);
-      border-radius: var(--radius-l);
+    .lost {
+      position: relative; isolation: isolate;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 3rem;
+      min-height: 100lvh;
+      padding: 1.5rem clamp(1.5rem, 4vw, 2rem) 2rem;
+      overflow: hidden;
     }
-    .lost h1 { margin: 0; font: 600 var(--step-5)/var(--leading-tight) var(--font-serif); letter-spacing: -.02em; }
-    .lost p { margin: 0 0 var(--space-4); max-width: 44ch; font-size: var(--step-1); color: var(--on-cobalt-soft); }
+    .lost::before {
+      content: ''; position: absolute; inset: 0; z-index: -1;
+      background: repeating-radial-gradient(ellipse at 70% 65%, transparent 0 52px, var(--surface-soft) 52px 53.5px, transparent 53.5px 104px);
+    }
+    .lost .logo { color: var(--foreground); }
+    .lost-id { margin: 0 0 1rem; font-size: var(--type-label); line-height: var(--leading-flat); text-transform: uppercase; color: var(--foreground-muted); }
+    .lost h1 {
+      margin: 0;
+      font: 700 clamp(3.5rem, 11vw, 9rem)/var(--leading-headline) var(--font-display);
+      text-transform: uppercase;
+    }
+    .lost h1 span { color: var(--accent); }
+    .lost p { max-width: 32ch; margin: 1.5rem 0 2rem; font-size: var(--type-lead); line-height: var(--leading-display); text-transform: uppercase; }
   </style>
 </head>
 <body>
   <main class="lost">
-    <div class="lost-panel tile">
-      <a class="logo" href="/">khadi.uz</a>
-      <h1>This page isn't here.</h1>
-      <p>khadi.uz is now the personal site of Xadyatullox Muhammadjonov. The page you were looking for has moved on.</p>
-      <a class="btn" href="/">Go to khadi.uz</a>
+    <a class="logo" href="/" aria-label="khadi.uz, home">khadi<span>.</span>uz</a>
+    <div>
+      <p class="lost-id">error_404</p>
+      <h1>Off the map<span>.</span></h1>
+      <p>This page isn't here. khadi.uz is the personal site of Xadyatullox Muhammadjonov.</p>
+      <a class="cta" href="/">
+        <svg class="cta-frame" viewBox="0 0 217 50" preserveAspectRatio="none" aria-hidden="true">
+          <path class="cta-body" d="M0.5 0.5H216.5V42L209 49.5H0.5Z"/>
+          <path class="cta-flood" d="M0.5 0.5H216.5V42L209 49.5H0.5Z"/>
+          <path class="cta-ring" d="M0.5 0.5H216.5V42L209 49.5H0.5Z"/>
+        </svg>
+        Go home
+        <svg class="cta-arrow" viewBox="0 0 13.7071 10.7071" aria-hidden="true"><path d="M0 5.35355H13M8 10.3536L13 5.35355L8 0.353553"/></svg>
+      </a>
     </div>
   </main>
 </body>

@@ -1,89 +1,110 @@
 /* ==========================================================
    khadi.uz — brand tokens and shared pieces
-   Every page loads this first. Colors, type, spacing and
-   motion live here as variables; see BRAND.md for the why.
+   Every page loads this first. Tier 1 is the only place a raw
+   value appears; components read the tier 2 roles. BRAND.md
+   has the why.
    ========================================================== */
 
 :root {
-  /* ---- brand colors ---- */
-  --cobalt: #1F3FBF;
-  --dome: #0E9E96;
-  --saffron: #FFC629;
-  --pomegranate: #C9293E;
-  --paper: #F4F6FB;
-  --ink: #12141D;
+  /* ---- tier 1: raw values ---- */
+  --raw-color-ice-50: #f7fafb;        /* the page */
+  --raw-color-ice-100: #ebeef1;       /* contour lines */
+  --raw-color-ice-200: #dfe5e9;       /* hairlines and dividers */
+  --raw-color-steel-400: #b6c1c8;     /* muted copy on dark */
+  --raw-color-ink-950: #090a0b;       /* all body copy, the black blocks */
+  --raw-color-ink-900: #0e0f14;       /* dark buttons and panels */
+  --raw-color-ink-800: #1b1d24;
+  --raw-color-ink-700: #2a2d36;
+  --raw-color-ink-alpha-35: rgb(9 10 11 / 0.35);
+  --raw-color-ink-alpha-60: rgb(9 10 11 / 0.6);
+  --raw-color-slate-500: #7a7a7a;     /* the games map: halftone */
+  --raw-color-slate-600: #4d4d4d;     /* the games map: grid, inner ring */
+  --raw-color-slate-900: #1e1e1e;     /* the games map: outer rings */
+  --raw-color-cyan-400: #02d2e3;      /* the accent */
+  --raw-color-cyan-700: #007a85;      /* the accent as text on light ground (AA) */
+  --raw-color-cyan-alpha-25: rgb(2 210 227 / 0.25);
+  --raw-color-stone-600: #535450;     /* journey: plate outline */
+  --raw-color-white-alpha-10: rgb(255 255 255 / 0.1);
+  --raw-color-white-alpha-15: rgb(255 255 255 / 0.15);
+  --raw-color-white-alpha-20: rgb(255 255 255 / 0.2);
+  --raw-color-ink-alpha-08: rgb(9 10 11 / 0.08);
+  --raw-color-white-alpha-40: rgb(255 255 255 / 0.4);
+  --raw-color-white-alpha-60: rgb(255 255 255 / 0.6);
+  --raw-color-white: #ffffff;
+  --raw-color-orange-500: #ff6b00;    /* errors only */
 
-  /* ---- shades and washes of the brand colors ---- */
-  --cobalt-deep: #152C8C;
-  --cobalt-light: #2B4DD3;
-  --cobalt-tile: #2646C9;
-  --cobalt-wash: #E3E8FA;
-  --dome-deep: #0A7A74;
-  --dome-wash: #DCF2F0;
-  --saffron-deep: #B58500;
-  --saffron-wash: #FFF2C9;
-  --white: #FFFFFF;
-  --ink-soft: #535A6E;
-  --line: #DCE0EA;
-  --line-strong: #C3C9D8;
-  --paper-glass: rgba(244, 246, 251, .88);
-  --on-cobalt: #FFFFFF;
-  --on-cobalt-soft: rgba(255, 255, 255, .82);
-  --on-cobalt-line: rgba(255, 255, 255, .3);
+  --raw-font-size-96: 6rem;
+  --raw-font-size-72: 4.5rem;
+  --raw-font-size-70: 4.375rem;
+  --raw-font-size-55: 3.4375rem;
+  --raw-font-size-52: 3.25rem;
+  --raw-font-size-38: 2.375rem;
+  --raw-font-size-36: 2.25rem;
+  --raw-font-size-20: 1.25rem;
+  --raw-font-size-18: 1.125rem;
+  --raw-font-size-16: 1rem;
+  --raw-font-size-14: 0.875rem;
+  --raw-font-size-12: 0.75rem;
 
-  /* ---- type ---- */
-  --font-body: 'TikTok Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-serif: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
-  --stretch-ui: 106%;
-  --weight-body: 420;
-  --weight-medium: 560;
-  --weight-bold: 700;
-  --weight-black: 860;
+  /* ---- tier 2: roles ---- */
+  --background: var(--raw-color-ice-50);
+  --foreground: var(--raw-color-ink-950);
+  --foreground-muted: var(--raw-color-ink-alpha-35);
+  --foreground-soft: var(--raw-color-ink-alpha-60);
+  --surface-dark: var(--raw-color-ink-900);
+  --surface-dark-raised: var(--raw-color-ink-800);
+  --surface-black: var(--raw-color-ink-950);
+  --surface-muted: var(--raw-color-ice-100);
+  --surface-soft: var(--raw-color-ice-200);
+  --foreground-on-dark: var(--raw-color-white);
+  --foreground-on-dark-muted: var(--raw-color-steel-400);
+  --foreground-on-dark-faint: var(--raw-color-white-alpha-40);
+  --border-muted: var(--raw-color-ice-200);
+  --border-on-dark: var(--raw-color-ink-700);
+  --rule-on-dark: var(--raw-color-white-alpha-15);
+  --map-dot: var(--raw-color-slate-500);
+  --map-grid: var(--raw-color-slate-600);
+  --map-grid-ghost: var(--raw-color-slate-900);
+  --map-mark: var(--raw-color-ice-50);
+  --timeline-outline: var(--raw-color-stone-600);
+  --timeline-fill: var(--raw-color-white-alpha-10);
+  --timeline-rail: var(--raw-color-white-alpha-20);
+  --paddock-contour: var(--raw-color-ink-alpha-08);
+  --footer-contour: var(--raw-color-white-alpha-10);
+  --accent: var(--raw-color-cyan-400);
+  --accent-ink: var(--raw-color-cyan-700);
+  --accent-muted: var(--raw-color-cyan-alpha-25);
+  --danger: var(--raw-color-orange-500);
 
-  --step--2: 0.75rem;
-  --step--1: 0.875rem;
-  --step-0: 1.0625rem;
-  --step-1: clamp(1.125rem, 1.06rem + 0.3vw, 1.3rem);
-  --step-2: clamp(1.3rem, 1.16rem + 0.65vw, 1.7rem);
-  --step-3: clamp(1.6rem, 1.3rem + 1.3vw, 2.4rem);
-  --step-4: clamp(2rem, 1.5rem + 2.4vw, 3.5rem);
-  --step-5: clamp(2.6rem, 1.6rem + 4.4vw, 5.6rem);
-  --leading-tight: 1;
-  --leading-snug: 1.2;
-  --leading-body: 1.6;
+  --type-impact: var(--raw-font-size-96);
+  --type-name: var(--raw-font-size-72);
+  --type-display-lg: var(--raw-font-size-70);
+  --type-display: var(--raw-font-size-52);
+  --type-display-sm: var(--raw-font-size-55);
+  --type-heading: var(--raw-font-size-38);
+  --type-year: var(--raw-font-size-36);
+  --type-title: var(--raw-font-size-20);
+  --type-lead: var(--raw-font-size-18);
+  --type-label: var(--raw-font-size-16);
+  --type-body: var(--raw-font-size-14);
+  --type-eyebrow: var(--raw-font-size-12);
 
-  /* ---- space and shape ---- */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
-  --space-9: 96px;
-  --gutter: clamp(16px, 4vw, 40px);
-  --section-pad: clamp(64px, 9vw, 120px);
-  --max: 1160px;
-  --max-text: 64ch;
-  --topbar-h: 68px;
+  --leading-headline: 0.95;
+  --leading-flat: 0.9;
+  --leading-cap: 0.72;
+  --leading-display: 1.1;
+  --tracking-stat: -0.08em;
+  --tracking-label: -0.04em;
+  --tracking-eyebrow: -0.02em;
 
-  --radius-s: 10px;
-  --radius-m: 16px;
-  --radius-l: 28px;
-  --radius-pill: 999px;
-  --border: 2px;
-  --lip: 4px;
-  --tile-size: 112px;
-  /* Samarkand tile: eight-point stars, drawn white so it works as a mask */
-  --tile: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cpath fill='%23fff' fill-rule='evenodd' d='M48.00 17.00L57.08 26.08L69.92 26.08L69.92 38.92L79.00 48.00L69.92 57.08L69.92 69.92L57.08 69.92L48.00 79.00L38.92 69.92L26.08 69.92L26.08 57.08L17.00 48.00L26.08 38.92L26.08 26.08L38.92 26.08ZM48.00 23.50L55.18 30.68L65.32 30.68L65.32 40.82L72.50 48.00L65.32 55.18L65.32 65.32L55.18 65.32L48.00 72.50L40.82 65.32L30.68 65.32L30.68 55.18L23.50 48.00L30.68 40.82L30.68 30.68L40.82 30.68ZM48.00 39.00L50.64 41.64L54.36 41.64L54.36 45.36L57.00 48.00L54.36 50.64L54.36 54.36L50.64 54.36L48.00 57.00L45.36 54.36L41.64 54.36L41.64 50.64L39.00 48.00L41.64 45.36L41.64 41.64L45.36 41.64ZM0.00 -31.00L9.08 -21.92L21.92 -21.92L21.92 -9.08L31.00 0.00L21.92 9.08L21.92 21.92L9.08 21.92L0.00 31.00L-9.08 21.92L-21.92 21.92L-21.92 9.08L-31.00 0.00L-21.92 -9.08L-21.92 -21.92L-9.08 -21.92ZM0.00 -24.50L7.18 -17.32L17.32 -17.32L17.32 -7.18L24.50 0.00L17.32 7.18L17.32 17.32L7.18 17.32L0.00 24.50L-7.18 17.32L-17.32 17.32L-17.32 7.18L-24.50 0.00L-17.32 -7.18L-17.32 -17.32L-7.18 -17.32ZM0.00 -9.00L2.64 -6.36L6.36 -6.36L6.36 -2.64L9.00 0.00L6.36 2.64L6.36 6.36L2.64 6.36L0.00 9.00L-2.64 6.36L-6.36 6.36L-6.36 2.64L-9.00 0.00L-6.36 -2.64L-6.36 -6.36L-2.64 -6.36ZM96.00 -31.00L105.08 -21.92L117.92 -21.92L117.92 -9.08L127.00 0.00L117.92 9.08L117.92 21.92L105.08 21.92L96.00 31.00L86.92 21.92L74.08 21.92L74.08 9.08L65.00 0.00L74.08 -9.08L74.08 -21.92L86.92 -21.92ZM96.00 -24.50L103.18 -17.32L113.32 -17.32L113.32 -7.18L120.50 0.00L113.32 7.18L113.32 17.32L103.18 17.32L96.00 24.50L88.82 17.32L78.68 17.32L78.68 7.18L71.50 0.00L78.68 -7.18L78.68 -17.32L88.82 -17.32ZM96.00 -9.00L98.64 -6.36L102.36 -6.36L102.36 -2.64L105.00 0.00L102.36 2.64L102.36 6.36L98.64 6.36L96.00 9.00L93.36 6.36L89.64 6.36L89.64 2.64L87.00 0.00L89.64 -2.64L89.64 -6.36L93.36 -6.36ZM0.00 65.00L9.08 74.08L21.92 74.08L21.92 86.92L31.00 96.00L21.92 105.08L21.92 117.92L9.08 117.92L0.00 127.00L-9.08 117.92L-21.92 117.92L-21.92 105.08L-31.00 96.00L-21.92 86.92L-21.92 74.08L-9.08 74.08ZM0.00 71.50L7.18 78.68L17.32 78.68L17.32 88.82L24.50 96.00L17.32 103.18L17.32 113.32L7.18 113.32L0.00 120.50L-7.18 113.32L-17.32 113.32L-17.32 103.18L-24.50 96.00L-17.32 88.82L-17.32 78.68L-7.18 78.68ZM0.00 87.00L2.64 89.64L6.36 89.64L6.36 93.36L9.00 96.00L6.36 98.64L6.36 102.36L2.64 102.36L0.00 105.00L-2.64 102.36L-6.36 102.36L-6.36 98.64L-9.00 96.00L-6.36 93.36L-6.36 89.64L-2.64 89.64ZM96.00 65.00L105.08 74.08L117.92 74.08L117.92 86.92L127.00 96.00L117.92 105.08L117.92 117.92L105.08 117.92L96.00 127.00L86.92 117.92L74.08 117.92L74.08 105.08L65.00 96.00L74.08 86.92L74.08 74.08L86.92 74.08ZM96.00 71.50L103.18 78.68L113.32 78.68L113.32 88.82L120.50 96.00L113.32 103.18L113.32 113.32L103.18 113.32L96.00 120.50L88.82 113.32L78.68 113.32L78.68 103.18L71.50 96.00L78.68 88.82L78.68 78.68L88.82 78.68ZM96.00 87.00L98.64 89.64L102.36 89.64L102.36 93.36L105.00 96.00L102.36 98.64L102.36 102.36L98.64 102.36L96.00 105.00L93.36 102.36L89.64 102.36L89.64 98.64L87.00 96.00L89.64 93.36L89.64 89.64L93.36 89.64ZM48 -9L57 0L48 9L39 0ZM0 39L9 48L0 57L-9 48ZM96 39L105 48L96 57L87 48ZM48 87L57 96L48 105L39 96Z'/%3E%3C/svg%3E");
-  --shadow-float: 0 24px 48px -22px rgba(18, 20, 29, .4);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-plate: 700ms;
+  --ease-entrance: cubic-bezier(0.2, 0, 0, 1);
+  --ease-plate: cubic-bezier(0.33, 0, 0, 1);
 
-  /* ---- motion ---- */
-  --dur-ui: 180ms;
-  --dur-press: 150ms;
-  --dur-hero: 800ms;
-  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Oswald", Impact, sans-serif;
 
   color-scheme: light;
 }
@@ -91,31 +112,26 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--topbar-h) + var(--space-4));
-  -webkit-text-size-adjust: 100%;
-}
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  min-height: 100vh;
-  background: var(--paper);
-  color: var(--ink);
-  font: var(--weight-body) var(--step-0)/var(--leading-body) var(--font-body);
-  overflow-x: hidden;
+  min-height: 100lvh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 
 button { font: inherit; color: inherit; }
-img { max-width: 100%; display: block; }
-a { color: var(--cobalt); text-underline-offset: 3px; }
-::selection { background: var(--saffron); color: var(--ink); }
+img { display: block; max-width: 100%; }
+::selection { background: var(--accent); color: var(--surface-black); }
 
-:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; }
-.tile :focus-visible { outline-color: var(--saffron); }
+:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 3px; }
+.on-dark :focus-visible { outline-color: var(--accent); }
 
-.sr {
+.sr-only {
   position: absolute;
   width: 1px; height: 1px;
   overflow: hidden;
@@ -124,100 +140,98 @@ a { color: var(--cobalt); text-underline-offset: 3px; }
 }
 
 .skip {
-  position: absolute; left: -999px; top: var(--space-2); z-index: 100;
-  padding: var(--space-2) var(--space-4);
-  background: var(--saffron); color: var(--ink);
-  font-weight: var(--weight-bold);
-  border-radius: var(--radius-s);
+  position: fixed; left: -999px; top: 0.5rem; z-index: 100;
+  padding: 0.75rem 1rem;
+  font-size: var(--type-body);
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--surface-dark);
 }
-.skip:focus { left: var(--space-2); }
+.skip:focus { left: 0.5rem; }
 
-.wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gutter); }
-
-/* ---------- the signature: Samarkand tile ----------
-   The pattern is a mask, so its color comes from --tile-ink. */
-.tile {
-  position: relative;
-  isolation: isolate;
-  background: var(--tile-bg, var(--cobalt));
-  color: var(--on-cobalt);
-}
-.tile::before {
-  content: '';
-  position: absolute; inset: 0; z-index: -1;
-  border-radius: inherit;
-  background: var(--tile-ink, var(--cobalt-tile));
-  -webkit-mask: var(--tile) 0 0 / var(--tile-size) repeat;
-  mask: var(--tile) 0 0 / var(--tile-size) repeat;
-  pointer-events: none;
-}
-
-/* ---------- wordmark ---------- */
+/* ---------- the wordmark ---------- */
 .logo {
+  display: inline-block;
+  font: 700 1.5rem/1 var(--font-display);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   color: inherit;
   text-decoration: none;
-  font: italic 600 1.5rem/1 var(--font-serif);
-  letter-spacing: -.01em;
   white-space: nowrap;
 }
+.logo span { color: var(--accent); }
 
-/* ---------- top bar ---------- */
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: var(--space-5);
-  min-height: var(--topbar-h);
-  padding: var(--space-2) var(--gutter);
-  background: var(--paper-glass);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--dur-ui) var(--ease-out);
+/* ---------- bracket corners: one path drawn four ways ---------- */
+.brackets { position: relative; }
+.brackets > .corner {
+  position: absolute;
+  width: 0.625rem; height: 0.625rem;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  pointer-events: none;
 }
-.topbar.scrolled { border-bottom-color: var(--line); }
-.topbar .logo { margin-right: auto; }
+.brackets > .corner.tr { top: 0; right: 0; }
+.brackets > .corner.tl { top: 0; left: 0; transform: scaleX(-1); }
+.brackets > .corner.bl { bottom: 0; left: 0; transform: scale(-1); }
+.brackets > .corner.br { bottom: 0; right: 0; transform: scaleY(-1); }
 
-/* ---------- buttons: they press down onto their lip ---------- */
-.btn {
-  --btn-bg: var(--saffron);
-  --btn-fg: var(--ink);
-  --btn-lip: var(--saffron-deep);
-  --btn-hover: #FFD04F;
-  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
-  min-height: 52px;
-  padding: 0 var(--space-5);
-  font: var(--weight-bold) var(--step-0)/1 var(--font-body);
-  font-stretch: var(--stretch-ui);
-  color: var(--btn-fg);
+/* ---------- the chamfered button ----------
+   A dark slab with cyan type, flooding cyan on hover. Every length is a
+   ratio of its height, so it keeps its shape at any size. */
+.cta {
+  --cta-h: 3.125rem;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--cta-h) * 32 / 50);
+  height: var(--cta-h);
+  padding: 0 calc(var(--cta-h) * 24 / 50);
+  font-size: calc(var(--cta-h) * 20 / 50);
+  line-height: var(--leading-flat);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--accent);
   text-decoration: none;
-  white-space: nowrap;
-  background: var(--btn-bg);
-  border: 0;
-  border-radius: var(--radius-m);
-  box-shadow: 0 var(--lip) 0 var(--btn-lip);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform var(--dur-press) var(--ease-out), box-shadow var(--dur-press) var(--ease-out), background-color var(--dur-ui) var(--ease-out);
+  transition: color var(--duration-normal) var(--ease-plate);
 }
-.btn:hover { background: var(--btn-hover); }
-.btn:active { transform: translateY(var(--lip)); box-shadow: 0 0 0 var(--btn-lip); }
-.btn svg { width: 1.1em; height: 1.1em; flex: none; }
+.cta-frame { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; overflow: visible; }
+.cta-body { fill: var(--surface-dark); }
+.cta-ring { fill: none; stroke: var(--accent); vector-effect: non-scaling-stroke; }
+.cta-flood {
+  fill: var(--accent);
+  transform-box: fill-box;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform var(--duration-normal) var(--ease-plate);
+}
+.cta--hollow .cta-body { fill: none; }
+.cta-arrow {
+  width: calc(var(--cta-h) * 13.71 / 50);
+  height: calc(var(--cta-h) * 10.71 / 50);
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  overflow: visible;
+  transition: transform var(--duration-fast) var(--ease-entrance);
+}
+.cta:hover, .cta:focus-visible { color: var(--surface-black); }
+.cta:hover .cta-flood, .cta:focus-visible .cta-flood { transform: scaleX(1); }
+.cta:hover .cta-arrow, .cta:focus-visible .cta-arrow { transform: translateX(0.25rem); }
 
-.btn-cobalt { --btn-bg: var(--cobalt); --btn-fg: var(--on-cobalt); --btn-lip: var(--cobalt-deep); --btn-hover: var(--cobalt-light); }
-.btn-white { --btn-bg: var(--white); --btn-fg: var(--ink); --btn-lip: var(--line-strong); --btn-hover: var(--paper); }
-.btn-ghost {
-  --btn-bg: transparent; --btn-fg: currentColor; --btn-hover: rgba(255, 255, 255, .1);
-  box-shadow: inset 0 0 0 var(--border) var(--on-cobalt-line);
+/* ---------- the error banner: a failed load must be visible ---------- */
+.load-error {
+  position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 90;
+  padding: 0.75rem 1rem;
+  font-size: var(--type-body);
+  line-height: 1.3;
+  color: var(--foreground-on-dark);
+  background: var(--surface-dark);
+  border-left: 3px solid var(--danger);
 }
-.btn-ghost:hover { box-shadow: inset 0 0 0 var(--border) currentColor; }
-.btn-ghost:active { transform: none; box-shadow: inset 0 0 0 var(--border) currentColor; }
-.btn-small { --lip: 3px; min-height: 42px; padding: 0 var(--space-4); font-size: var(--step--1); border-radius: var(--radius-s); }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
-    transition-delay: 0s !important;
-  }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
 }

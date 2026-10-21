@@ -6,7 +6,7 @@
   <title>CV · Xadyatullox Muhammadjonov</title>
   <meta name="description" content="CV of Xadyatullox Muhammadjonov: BSc Accounting and Finance, ACCA, business analysis and accounting experience. Tashkent, Uzbekistan.">
   <link rel="canonical" href="https://khadi.uz/cv/">
-  <meta name="theme-color" content="#F4F6FB">
+  <meta name="theme-color" content="#f7fafb">
   <meta property="og:type" content="profile">
   <meta property="og:site_name" content="khadi.uz">
   <meta property="og:url" content="https://khadi.uz/cv/">
@@ -17,109 +17,151 @@
   <link rel="icon" type="image/png" href="../img/favicon.png">
   <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..800&family=TikTok+Sans:opsz,wdth,wght@12..36,75..150,300..900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="../brand.css">
 
   <style>
+    /* Static font files, not Google's variable ones: Chrome's PDF export splits words set in the
+       variable fonts ("ACCOUNTIN G"), and recruiters' screening software reads the PDF's text. */
+    @font-face { font-family: "Oswald"; font-weight: 700; font-display: swap; src: url(https://cdn.jsdelivr.net/npm/@fontsource/oswald@5.2.8/files/oswald-latin-700-normal.woff2) format("woff2"); }
+    @font-face { font-family: "Space Grotesk"; font-weight: 400; font-display: swap; src: url(https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.2.8/files/space-grotesk-latin-400-normal.woff2) format("woff2"); }
+    @font-face { font-family: "Space Grotesk"; font-weight: 500; font-display: swap; src: url(https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.2.8/files/space-grotesk-latin-500-normal.woff2) format("woff2"); }
+    @font-face { font-family: "Space Grotesk"; font-weight: 700; font-display: swap; src: url(https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.2.8/files/space-grotesk-latin-700-normal.woff2) format("woff2"); }
+
     /* ==========================================================
        khadi.uz — CV
        A sheet of paper on screen, a clean A4 document in print.
-       Tokens come from brand.css.
+       Tokens and the chamfered button come from brand.css.
        ========================================================== */
 
     :root {
       --sheet-w: 210mm;
-      --sheet-pad: 16mm 18mm;
-      --cv-text: 0.9375rem;
+      --sheet-pad: 16mm 17mm;
+      --cv-text: 0.875rem;
     }
 
-    .topbar .tools { display: flex; gap: var(--space-2); }
+    .bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      max-width: calc(var(--sheet-w) + 2rem);
+      margin: 0 auto;
+      padding: 1.5rem 1rem 0;
+    }
+    .bar .logo { color: var(--foreground); }
+    .bar-tools { display: flex; align-items: center; gap: 1.5rem; }
+    .bar-tools button, .bar-tools .back {
+      padding: 0;
+      font-size: var(--type-body);
+      line-height: var(--leading-flat);
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--foreground);
+      background: none; border: 0; cursor: pointer;
+      transition: color var(--duration-fast) var(--ease-entrance);
+    }
+    .bar-tools button:hover, .bar-tools .back:hover { color: var(--accent-ink); }
+    .bar .cta { --cta-h: 2.75rem; width: auto; padding-right: calc(var(--cta-h) * 24 / 50); }
 
     .sheet {
+      position: relative;
       max-width: var(--sheet-w);
-      margin: var(--space-5) auto var(--space-8);
+      margin: 1.25rem auto 4rem;
       padding: var(--sheet-pad);
       font-size: var(--cv-text);
       line-height: 1.5;
-      /* plain glyphs only: the PDF export can't map alternate digits or ligatures back to text,
-         and recruiters' screening software reads that text. The same goes for a capital Q
-         above regular weight (the font swaps in another Q), so keep Q out of bold text here. */
+      /* plain glyphs only: the PDF export can't map ligatures or alternates back to text,
+         and recruiters' screening software reads that text */
       font-variant-ligatures: none;
-      font-feature-settings: "liga" 0, "calt" 0, "tnum" 0;
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-m);
-      box-shadow: var(--shadow-float);
+      font-feature-settings: "liga" 0, "calt" 0;
+      background: var(--raw-color-white);
+      border: 1px solid var(--border-muted);
+    }
+    /* the sheet carries the site's stepped corner as a cyan tick */
+    .sheet::after {
+      content: '';
+      position: absolute; right: -1px; bottom: -1px;
+      width: 18px; height: 18px;
+      background: linear-gradient(135deg, transparent 50%, var(--accent) 50%);
     }
 
     .cv-head {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
-      gap: var(--space-5);
+      gap: 1.25rem;
       align-items: center;
-      padding-bottom: var(--space-5);
-      border-bottom: var(--border) solid var(--ink);
+      padding-bottom: 1.25rem;
+      border-bottom: 2px solid var(--foreground);
     }
-    .cv-photo { width: 88px; height: 96px; object-fit: cover; border-radius: var(--radius-s); }
-    .cv-head h1 { margin: 0; font: 600 2.4rem/1 var(--font-serif); letter-spacing: -.02em; }
-    .cv-role { margin: var(--space-2) 0 var(--space-1); font-weight: var(--weight-bold); color: var(--cobalt); }
-    .cv-contact { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); margin: 0; padding: 0; list-style: none; color: var(--ink-soft); }
-    .cv-contact li + li::before { content: '·'; margin-right: var(--space-3); }
-    .cv-contact a { color: inherit; }
+    .cv-photo { width: 84px; height: 92px; object-fit: cover; }
+    .cv-head h1 {
+      margin: 0;
+      font: 700 2.25rem/0.95 var(--font-display);
+      text-transform: uppercase;
+      letter-spacing: 0.005em;
+    }
+    .cv-role {
+      margin: 0.6rem 0 0.4rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--accent-ink);
+    }
+    .cv-contact { display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem; margin: 0; padding: 0; list-style: none; color: var(--foreground-soft); }
+    .cv-contact a { color: inherit; text-underline-offset: 2px; }
 
-    .cv-section { margin-top: var(--space-5); }
+    .cv-section { margin-top: 1.4rem; }
     .cv-section > h2 {
-      margin: 0 0 var(--space-3);
-      padding-bottom: var(--space-1);
-      font: italic 600 1.35rem/1.2 var(--font-serif);
-      color: var(--cobalt);
-      border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; gap: 0.6rem;
+      margin: 0 0 0.75rem;
+      font: 700 0.9375rem/1 var(--font-display);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
+    .cv-section > h2::before { content: ''; width: 14px; height: 2px; background: var(--accent); }
+    .cv-section > h2::after { content: ''; flex: 1; height: 1px; background: var(--border-muted); }
 
     .item { break-inside: avoid; }
-    .item + .item { margin-top: var(--space-4); }
-    .item-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--space-4); }
-    .item-head h3 { margin: 0; font-size: 1rem; font-weight: var(--weight-bold); }
-    .item-when { color: var(--ink-soft); white-space: nowrap; }
-    .item-sub { margin: 0 0 var(--space-1); color: var(--ink-soft); }
-    .item ul { margin: var(--space-1) 0 0; padding-left: 1.1em; }
-    .item li::marker { color: var(--cobalt); }
-    .item p { margin: var(--space-1) 0 0; }
+    .item + .item { margin-top: 0.9rem; }
+    .item-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; }
+    .item-head h3 { margin: 0; font-size: 0.9375rem; font-weight: 700; }
+    .item-when { color: var(--foreground-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .item-sub { margin: 0 0 0.2rem; color: var(--foreground-soft); }
+    .item ul { margin: 0.25rem 0 0; padding-left: 1.1em; }
+    .item li::marker { color: var(--accent-ink); }
+    .item p { margin: 0.25rem 0 0; }
 
-    .acca { width: 100%; margin-top: var(--space-2); border-collapse: collapse; }
-    .acca th, .acca td { padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; border-bottom: 1px solid var(--line); }
-    .acca th { font-size: var(--step--2); font-weight: var(--weight-bold); color: var(--ink-soft); }
-    .acca td:first-child { font-weight: var(--weight-bold); }
-    .acca .pass td { background: var(--dome-wash); }
-    .acca .pass td:first-child { box-shadow: inset 3px 0 0 var(--dome); padding-left: var(--space-2); }
+    .acca { width: 100%; margin-top: 0.5rem; border-collapse: collapse; }
+    .acca th, .acca td { padding: 0.25rem 0.5rem 0.25rem 0; text-align: left; border-bottom: 1px solid var(--border-muted); }
+    .acca th { font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--foreground-soft); }
+    .acca td:first-child { font-weight: 700; }
+    .acca .pass td { background: rgb(2 210 227 / 0.1); }
+    .acca .pass td:first-child { box-shadow: inset 3px 0 0 var(--accent); padding-left: 0.5rem; }
 
-    .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
-    .cols h3 { margin: 0 0 var(--space-1); font-size: 1rem; font-weight: var(--weight-bold); }
+    .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+    .cols h3 { margin: 0 0 0.25rem; font-size: 0.9375rem; font-weight: 700; }
     .cols ul { margin: 0; padding-left: 1.1em; }
-    .cols li::marker { color: var(--cobalt); }
+    .cols li::marker { color: var(--accent-ink); }
 
     @media (max-width: 760px) {
-      .topbar .tools .btn-white { display: none; }
-      .sheet { margin: var(--space-3) var(--space-3) var(--space-7); padding: var(--space-5) var(--space-4); }
-      .cv-head { grid-template-columns: 1fr; gap: var(--space-4); }
+      .bar-tools button { display: none; }
+      .sheet { margin: 1rem 0.75rem 3rem; padding: 1.5rem 1.25rem; }
+      .cv-head { grid-template-columns: 1fr; gap: 1rem; }
       .cv-head h1 { font-size: 2rem; }
       .cv-contact { flex-direction: column; }
-      .cv-contact li + li::before { content: none; }
-      .cols { grid-template-columns: 1fr; gap: var(--space-4); }
+      .cols { grid-template-columns: 1fr; gap: 1rem; }
     }
 
     /* ---------- print: just the paper ---------- */
     @page { size: A4; margin: 13mm 15mm; }
     @media print {
-      :root { --cv-text: 9.6pt; }
-      body { background: var(--white); }
-      .topbar, .skip { display: none; }
-      .sheet { max-width: none; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
-      .cv-head h1 { font-size: 24pt; }
-      .cv-section { margin-top: 12pt; }
-      .item + .item { margin-top: 9pt; }
+      :root { --cv-text: 9.4pt; }
+      body { background: #fff; }
+      .bar, .skip { display: none; }
+      .sheet { max-width: none; margin: 0; padding: 0; border: 0; }
+      .sheet::after { display: none; }
+      .cv-head h1 { font-size: 25pt; }
+      .cv-section { margin-top: 11pt; }
+      .item + .item { margin-top: 8pt; }
       .cv-section > h2 { break-after: avoid; }
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       a { text-decoration: none; }
@@ -129,11 +171,19 @@
 <body>
   <a class="skip" href="#cv">Skip to the CV</a>
 
-  <header class="topbar" id="topbar">
-    <a class="logo" href="../">khadi.uz</a>
-    <div class="tools">
-      <button class="btn btn-small btn-white" id="print" type="button">Print</button>
-      <a class="btn btn-small" href="../cv.pdf" download="Xadyatullox-Muhammadjonov-CV.pdf">Download PDF</a>
+  <header class="bar">
+    <a class="logo" href="../" aria-label="khadi.uz, home">khadi<span>.</span>uz</a>
+    <div class="bar-tools">
+      <a class="back" href="../">← Home</a>
+      <button id="print" type="button">Print</button>
+      <a class="cta" href="../cv.pdf" download="Xadyatullox-Muhammadjonov-CV.pdf">
+        <svg class="cta-frame" viewBox="0 0 217 50" preserveAspectRatio="none" aria-hidden="true">
+          <path class="cta-body" d="M0.5 0.5H216.5V42L209 49.5H0.5Z"/>
+          <path class="cta-flood" d="M0.5 0.5H216.5V42L209 49.5H0.5Z"/>
+          <path class="cta-ring" d="M0.5 0.5H216.5V42L209 49.5H0.5Z"/>
+        </svg>
+        Download PDF
+      </a>
     </div>
   </header>
 
@@ -147,6 +197,7 @@
           <li>Tashkent, Uzbekistan</li>
           <li><a href="mailto:khadyatullokh@gmail.com">khadyatullokh@gmail.com</a></li>
           <li><a href="https://khadi.uz/">khadi.uz</a></li>
+          <li><a href="https://www.linkedin.com/in/xadyatullo-muxammadjonov-5ba8532a1/">linkedin.com/in/xadyatullo-muxammadjonov</a></li>
         </ul>
       </div>
     </header>
@@ -281,10 +332,6 @@
 
   <script>
     document.getElementById('print').addEventListener('click', () => window.print());
-    const topbar = document.getElementById('topbar');
-    const onScroll = () => topbar.classList.toggle('scrolled', window.scrollY > 8);
-    addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
   </script>
 </body>
 </html>
