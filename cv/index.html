@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV · Xadyatullox Muhammadjonov</title>
+  <meta name="description" content="CV of Xadyatullox Muhammadjonov: BSc Accounting and Finance, ACCA, business analysis and accounting experience. Tashkent, Uzbekistan.">
+  <link rel="canonical" href="https://khadi.uz/cv/">
+  <meta name="theme-color" content="#F4F6FB">
+  <meta property="og:type" content="profile">
+  <meta property="og:site_name" content="khadi.uz">
+  <meta property="og:url" content="https://khadi.uz/cv/">
+  <meta property="og:title" content="CV · Xadyatullox Muhammadjonov">
+  <meta property="og:description" content="Accounting & finance, ACCA, business analysis. Tashkent, Uzbekistan.">
+  <meta property="og:image" content="https://khadi.uz/img/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="../img/favicon.png">
+  <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..800&family=TikTok+Sans:opsz,wdth,wght@12..36,75..150,300..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../brand.css">
+
+  <style>
+    /* ==========================================================
+       khadi.uz — CV
+       A sheet of paper on screen, a clean A4 document in print.
+       Tokens come from brand.css.
+       ========================================================== */
+
+    :root {
+      --sheet-w: 210mm;
+      --sheet-pad: 16mm 18mm;
+      --cv-text: 0.9375rem;
+    }
+
+    .topbar .tools { display: flex; gap: var(--space-2); }
+
+    .sheet {
+      max-width: var(--sheet-w);
+      margin: var(--space-5) auto var(--space-8);
+      padding: var(--sheet-pad);
+      font-size: var(--cv-text);
+      line-height: 1.5;
+      /* plain glyphs only: the PDF export can't map alternate digits or ligatures back to text,
+         and recruiters' screening software reads that text. The same goes for a capital Q
+         above regular weight (the font swaps in another Q), so keep Q out of bold text here. */
+      font-variant-ligatures: none;
+      font-feature-settings: "liga" 0, "calt" 0, "tnum" 0;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-m);
+      box-shadow: var(--shadow-float);
+    }
+
+    .cv-head {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: var(--space-5);
+      align-items: center;
+      padding-bottom: var(--space-5);
+      border-bottom: var(--border) solid var(--ink);
+    }
+    .cv-photo { width: 88px; height: 96px; object-fit: cover; border-radius: var(--radius-s); }
+    .cv-head h1 { margin: 0; font: 600 2.4rem/1 var(--font-serif); letter-spacing: -.02em; }
+    .cv-role { margin: var(--space-2) 0 var(--space-1); font-weight: var(--weight-bold); color: var(--cobalt); }
+    .cv-contact { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); margin: 0; padding: 0; list-style: none; color: var(--ink-soft); }
+    .cv-contact li + li::before { content: '·'; margin-right: var(--space-3); }
+    .cv-contact a { color: inherit; }
+
+    .cv-section { margin-top: var(--space-5); }
+    .cv-section > h2 {
+      margin: 0 0 var(--space-3);
+      padding-bottom: var(--space-1);
+      font: italic 600 1.35rem/1.2 var(--font-serif);
+      color: var(--cobalt);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .item { break-inside: avoid; }
+    .item + .item { margin-top: var(--space-4); }
+    .item-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--space-4); }
+    .item-head h3 { margin: 0; font-size: 1rem; font-weight: var(--weight-bold); }
+    .item-when { color: var(--ink-soft); white-space: nowrap; }
+    .item-sub { margin: 0 0 var(--space-1); color: var(--ink-soft); }
+    .item ul { margin: var(--space-1) 0 0; padding-left: 1.1em; }
+    .item li::marker { color: var(--cobalt); }
+    .item p { margin: var(--space-1) 0 0; }
+
+    .acca { width: 100%; margin-top: var(--space-2); border-collapse: collapse; }
+    .acca th, .acca td { padding: var(--space-1) var(--space-2) var(--space-1) 0; text-align: left; border-bottom: 1px solid var(--line); }
+    .acca th { font-size: var(--step--2); font-weight: var(--weight-bold); color: var(--ink-soft); }
+    .acca td:first-child { font-weight: var(--weight-bold); }
+    .acca .pass td { background: var(--dome-wash); }
+    .acca .pass td:first-child { box-shadow: inset 3px 0 0 var(--dome); padding-left: var(--space-2); }
+
+    .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
+    .cols h3 { margin: 0 0 var(--space-1); font-size: 1rem; font-weight: var(--weight-bold); }
+    .cols ul { margin: 0; padding-left: 1.1em; }
+    .cols li::marker { color: var(--cobalt); }
+
+    @media (max-width: 760px) {
+      .topbar .tools .btn-white { display: none; }
+      .sheet { margin: var(--space-3) var(--space-3) var(--space-7); padding: var(--space-5) var(--space-4); }
+      .cv-head { grid-template-columns: 1fr; gap: var(--space-4); }
+      .cv-head h1 { font-size: 2rem; }
+      .cv-contact { flex-direction: column; }
+      .cv-contact li + li::before { content: none; }
+      .cols { grid-template-columns: 1fr; gap: var(--space-4); }
+    }
+
+    /* ---------- print: just the paper ---------- */
+    @page { size: A4; margin: 13mm 15mm; }
+    @media print {
+      :root { --cv-text: 9.6pt; }
+      body { background: var(--white); }
+      .topbar, .skip { display: none; }
+      .sheet { max-width: none; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+      .cv-head h1 { font-size: 24pt; }
+      .cv-section { margin-top: 12pt; }
+      .item + .item { margin-top: 9pt; }
+      .cv-section > h2 { break-after: avoid; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      a { text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#cv">Skip to the CV</a>
+
+  <header class="topbar" id="topbar">
+    <a class="logo" href="../">khadi.uz</a>
+    <div class="tools">
+      <button class="btn btn-small btn-white" id="print" type="button">Print</button>
+      <a class="btn btn-small" href="../cv.pdf" download="Xadyatullox-Muhammadjonov-CV.pdf">Download PDF</a>
+    </div>
+  </header>
+
+  <main class="sheet" id="cv">
+    <header class="cv-head">
+      <img class="cv-photo" src="../img/photo.jpg" width="244" height="267" alt="Xadyatullox Muhammadjonov">
+      <div>
+        <h1>Xadyatullox Muhammadjonov</h1>
+        <p class="cv-role">Accounting &amp; finance · ACCA student · Business analyst</p>
+        <ul class="cv-contact">
+          <li>Tashkent, Uzbekistan</li>
+          <li><a href="mailto:khadyatullokh@gmail.com">khadyatullokh@gmail.com</a></li>
+          <li><a href="https://khadi.uz/">khadi.uz</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <section class="cv-section">
+      <h2>Education</h2>
+      <div class="item">
+        <div class="item-head"><h3>British Management University</h3><span class="item-when">Sep 2023 – May 2027</span></div>
+        <p class="item-sub">BSc Accounting and Finance · Tashkent, Uzbekistan · GPA 3.5</p>
+        <p>Relevant modules (ACCA-accredited):</p>
+        <ul>
+          <li>Financial Accounting (F3): preparing financial statements, journal entries, reconciliations, compliance with IFRS</li>
+          <li>Business and Technology (F1): business environment, organizational structures, ethics</li>
+          <li>Management Accounting (F2): cost classification, job and process costing, cost-volume-profit analysis</li>
+          <li>Introduction to Financial Markets and Institutions: stock and bond valuation, capital budgeting, investment analysis</li>
+          <li>Microeconomics and Macroeconomics: fundamental economic principles, policy frameworks</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item-head"><h3>ACCA exams</h3><span class="item-when">In progress</span></div>
+        <table class="acca">
+          <thead><tr><th>Exam</th><th>Status</th><th>Session</th></tr></thead>
+          <tbody>
+            <tr class="pass"><td>Financial Reporting (FR)</td><td>Pass</td><td>Sep 2026</td></tr>
+            <tr><td>Audit and Assurance (AA)</td><td>Conditional exemption</td><td>Mar 2026</td></tr>
+            <tr><td>Taxation (TX)</td><td>Conditional exemption</td><td>Mar 2026</td></tr>
+            <tr><td>Performance Management (PM)</td><td>Conditional exemption</td><td>Mar 2026</td></tr>
+            <tr><td>Corporate and Business Law (LW)</td><td>Conditional exemption</td><td>Mar 2026</td></tr>
+            <tr><td>Financial Accounting (FA)</td><td>Conditional exemption</td><td>Mar 2026</td></tr>
+            <tr><td>Management Accounting (MA)</td><td>Conditional exemption</td><td>Mar 2026</td></tr>
+            <tr><td>Business and Technology (BT)</td><td>Conditional exemption</td><td>Mar 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cv-section">
+      <h2>Experience</h2>
+      <div class="item">
+        <div class="item-head"><h3>Exely</h3></div>
+        <p class="item-sub">Technical Specialist</p>
+        <ul>
+          <li>Technical support for hoteliers setting up and using Exely's products.</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item-head"><h3>T&amp;M Financials, USA (remote)</h3><span class="item-when">Apr 2025 – Aug 2025</span></div>
+        <p class="item-sub">Co-Founder &amp; Accountant · Full-time</p>
+        <ul>
+          <li>Co-founded a financial services company supporting logistics businesses.</li>
+          <li>Tracked logistics trips and prepared invoices using QuickManage and Amazon Relay.</li>
+          <li>Processed invoices for independent trucking clients, ensuring timely and accurate billing.</li>
+          <li>Developed Excel spreadsheets to track expenses, income and profitability.</li>
+          <li>Gained familiarity with multiple payment systems (wire transfer, ACH, Zelle, Cash App, MoneyGram).</li>
+          <li>Created and maintained the company website and Instagram page for client communication and outreach.</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item-head"><h3>Green Group LLC, Tashkent – Virginia, USA</h3><span class="item-when">Feb 2024 – Sep 2025</span></div>
+        <p class="item-sub">Business Analyst · Full-time</p>
+        <ul>
+          <li>Gathered and analyzed business requirements, and documented functional and technical specifications.</li>
+          <li>Evaluated existing processes, identified inefficiencies and proposed optimized solutions.</li>
+          <li>Collected, cleaned and interpreted data, and built analytical reports and visual dashboards.</li>
+          <li>Coordinated between teams to ensure alignment and smooth project execution.</li>
+          <li>Prepared process maps and maintained project documentation.</li>
+          <li>Supported system enhancements through issue tracking and performance monitoring.</li>
+          <li>Assisted with API integrations, data workflows and TMS/CRM platform improvements.</li>
+          <li>Communicated findings and recommendations clearly to stakeholders and management.</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item-head"><h3>Green Group LLC, Tashkent – Virginia, USA</h3><span class="item-when">Feb 2023 – Feb 2024</span></div>
+        <p class="item-sub">Fuel Department Manager · Full-time</p>
+        <ul>
+          <li>Controlled fleet fuel costs and monitored fuel consumption.</li>
+          <li>Managed fuel cards (limits, issuance, fraud prevention).</li>
+          <li>Negotiated fuel prices and discounts, and selected cost-efficient fuel stops.</li>
+          <li>Created fuel optimization plans based on routes and pricing.</li>
+          <li>Analyzed fuel data (MPG, idle time, cost per mile) and reported KPIs.</li>
+          <li>Coordinated with dispatch and safety on fueling strategy.</li>
+          <li>Supported drivers with fuel card and fueling issues.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cv-section">
+      <h2>Leadership &amp; involvement</h2>
+      <div class="item">
+        <div class="item-head"><h3>Regional Round Co-organizer, World Scholar's Cup, Tashkent</h3><span class="item-when">Apr 2025</span></div>
+        <ul>
+          <li>Co-led organization of a regional academic event.</li>
+          <li>Managed event logistics, including check-ins, room allocation, volunteer coordination and award distribution.</li>
+          <li>Supervised and supported volunteer teams to keep the competition running smoothly.</li>
+          <li>Assisted participants and guests with inquiries, contributing to a positive event experience.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cv-section">
+      <h2>Skills &amp; certifications</h2>
+      <div class="cols">
+        <div>
+          <h3>Languages</h3>
+          <ul>
+            <li>Uzbek: native</li>
+            <li>Russian: proficient</li>
+            <li>English: advanced (C1)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Certificates &amp; recognition</h3>
+          <ul>
+            <li>IELTS (B2 &amp; C1)</li>
+            <li>Deloitte Case Competition, High-priority Winner (Nov 2025)</li>
+            <li>EY Career Launch, Finalist (Mar 2025)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Skills</h3>
+          <ul>
+            <li>Analytical skills</li>
+            <li>Microsoft Office (Excel, Word, PowerPoint)</li>
+            <li>Data visualization (Looker Studio)</li>
+            <li>Adaptability and flexibility</li>
+            <li>Time management</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('print').addEventListener('click', () => window.print());
+    const topbar = document.getElementById('topbar');
+    const onScroll = () => topbar.classList.toggle('scrolled', window.scrollY > 8);
+    addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
-# KHADI.UZ brand
+# khadi.uz brand
 
-Brainrot, glazed in Tashkent. The content is unhinged, so the design stays calm: one loud cobalt tile panel per page, cool white everywhere else, and the 3D emoji do the shouting.
+The personal site of Xadyatullox Muhammadjonov: accounting and finance, from Tashkent. One cobalt tile panel opens and closes each page, everything between is calm cool white, and the content does the work.
 
 Every value below lives as a CSS variable in `brand.css`. Components use the variables, never the raw hex.
 
@@ -9,9 +9,9 @@ Every value below lives as a CSS variable in `brand.css`. Components use the var
 | Name | Hex | Variable | Use |
 |---|---|---|---|
 | Registan cobalt | `#1F3FBF` | `--cobalt` | the hero panel, primary buttons, links |
-| Dome turquoise | `#0E9E96` | `--dome` | the tile, W and gains |
-| Plov saffron | `#FFC629` | `--saffron` | the score color: aura numbers, stars, the main call to action |
-| Pomegranate | `#C9293E` | `--pomegranate` | L, losses, errors |
+| Dome turquoise | `#0E9E96` | `--dome` | passed, done, positive |
+| Plov saffron | `#FFC629` | `--saffron` | the main call to action, highlights |
+| Pomegranate | `#C9293E` | `--pomegranate` | errors (rarely needed) |
 | Paper | `#F4F6FB` | `--paper` | page background (cool, never cream) |
 | Ink | `#12141D` | `--ink` | text and outlines |
 
@@ -19,19 +19,19 @@ Saffron is too light for text on white. Put ink text on a saffron fill, or saffr
 
 ## Type
 
-- **TikTok Sans**: everything you read. Headlines in black weight at a wide stretch (`--stretch-wide`), body and buttons at normal width. It's the typeface of the feed brainrot lives in.
-- **Bodoni Moda italic**: creature names, dictionary words and quotes, the things that pretend to be important. Bodoni is from Parma, so the Italian brainrot names get the gravity they don't deserve.
+- **Bodoni Moda**: the name, headings and the wordmark. A classic serif from Parma, with the authority of the financial press.
+- **TikTok Sans**: everything you read, at normal width. A clean grotesque that also covers Cyrillic, so Uzbek and Russian pages can follow.
 
 ## Voice
 
-Deadpan and lowercase: the calmest person in the room saying the most unhinged thing. Fluent in Gen Alpha, never mean.
+Plain and specific: say what was done and what it changed, in short sentences. No buzzwords, no jokes.
 
 ## Signature
 
-The Samarkand tile: eight-point stars stored in the `--tile` variable as an inline SVG and used as a mask, so its color comes from the variables. (Inline rather than a file because browsers refuse mask images from disk.) It fills each page's hero, backs the mystery cards, sits behind creature art and closes the footer. Add `class="tile"` to any block to use it.
+The Samarkand tile: eight-point stars stored in the `--tile` variable as an inline SVG and used as a mask, so its color comes from the variables. (Inline rather than a file because browsers refuse mask images from disk.) It fills the hero and the contact panel at the end of the page, and backs the favicon and the link-preview image. Add `class="tile"` to any block to use it.
 
 ## Motion
 
-- One orchestrated moment: the front page hero comes in once on load (lines rise, the phone settles), under 900ms.
-- Everything else moves only when you touch it: buttons press down onto their lip, cards flip, toasts slide. UI transitions are 150 to 250ms, ease-out.
-- No scroll-triggered fades, no hover lift on cards. `prefers-reduced-motion` turns the hero sequence and the effects off.
+- One orchestrated moment: on the home page the name rises and the "at a glance" ledger fills in, under 900ms.
+- Everything else moves only when you touch it: buttons press down onto their lip. UI transitions are 150 to 250ms, ease-out.
+- No scroll-triggered fades. `prefers-reduced-motion` turns the hero sequence off.

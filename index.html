@@ -3,262 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>KHADI.UZ 💀 Brainrot Soundboard, Italian Brainrot & Aura Scanner</title>
-  <meta name="description" content="The ultimate brainrot website. Farm aura, summon Italian brainrot, smash skibidi toilets, translate to Gen Alpha and scan anyone's rizz. No cap.">
+  <title>Xadyatullox Muhammadjonov · Accounting & Finance, Tashkent</title>
+  <meta name="description" content="Accounting and finance student and ACCA student in Tashkent, with experience in business analysis, logistics operations and accounting. Experience, education, CV and contact.">
   <link rel="canonical" href="https://khadi.uz/">
   <meta name="google-site-verification" content="wJ9leLHSn6Z6JZPh380o6ulZCtsuE7zpQSIYcX3rZ_U">
   <meta name="theme-color" content="#F4F6FB">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="KHADI.UZ">
+  <meta property="og:type" content="profile">
+  <meta property="og:site_name" content="khadi.uz">
   <meta property="og:url" content="https://khadi.uz/">
-  <meta property="og:title" content="KHADI.UZ 💀 Ultimate Brainrot HQ">
-  <meta property="og:description" content="Farm aura. Summon Tung Tung Tung Sahur. Scan your rizz. Lose brain cells. 67.">
-  <meta property="og:image" content="https://khadi.uz/icons/og-image.jpg">
+  <meta property="og:title" content="Xadyatullox Muhammadjonov">
+  <meta property="og:description" content="Accounting & finance, ACCA, business analysis. Tashkent, Uzbekistan.">
+  <meta property="og:image" content="https://khadi.uz/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="KHADI.UZ, the internet's most brainrot website">
+  <meta property="og:image:alt" content="Xadyatullox Muhammadjonov, accounting and finance, Tashkent">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "WebSite", "name": "KHADI.UZ", "alternateName": ["Khadi UZ", "khadi.uz"], "url": "https://khadi.uz/"}
+    {"@context": "https://schema.org", "@type": "Person", "name": "Xadyatullox Muhammadjonov", "alternateName": "Khadi", "url": "https://khadi.uz/", "image": "https://khadi.uz/img/photo.jpg", "address": {"@type": "PostalAddress", "addressLocality": "Tashkent", "addressCountry": "UZ"}, "knowsLanguage": ["uz", "ru", "en"]}
   </script>
-  <link rel="icon" type="image/png" href="icons/favicon.png">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,400..800&family=TikTok+Sans:opsz,wdth,wght@12..36,75..150,300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..800&family=TikTok+Sans:opsz,wdth,wght@12..36,75..150,300..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="brand.css">
-
-  <!-- lets the CSS fold the menu away only when the script is there to open it -->
-  <script>document.documentElement.classList.add('js');</script>
 
   <style>
     /* ==========================================================
-       KHADI.UZ — front page
-       Tokens and shared pieces (buttons, fields, tile, footer)
-       come from brand.css. This is only the layout of this page.
+       khadi.uz — home
+       Tokens, buttons, the tile and the top bar come from
+       brand.css. This is only the layout of this page.
        ========================================================== */
-
-    /* ---------- top bar ---------- */
-    .topbar {
-      position: sticky; top: 0; z-index: 50;
-      display: flex; align-items: center; gap: var(--space-5);
-      min-height: var(--topbar-h);
-      padding: var(--space-2) var(--gutter);
-      background: var(--paper-glass);
-      -webkit-backdrop-filter: blur(12px);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid transparent;
-      transition: border-color var(--dur-ui) var(--ease-out);
-    }
-    .topbar.scrolled { border-bottom-color: var(--line); }
-    .topbar .logo { margin-right: auto; }
 
     .nav { display: flex; gap: var(--space-1); }
     .nav a {
-      position: relative;
       padding: var(--space-2) var(--space-3);
       color: var(--ink);
       font-weight: var(--weight-medium);
       text-decoration: none;
       border-radius: var(--radius-s);
-      transition: background-color var(--dur-ui) var(--ease-out), color var(--dur-ui) var(--ease-out);
+      transition: background-color var(--dur-ui) var(--ease-out);
     }
     .nav a:hover { background: var(--white); }
-    .nav a.active { color: var(--cobalt); }
-    .nav a.active::after {
-      content: '';
-      position: absolute; left: var(--space-3); right: var(--space-3); bottom: 2px;
-      height: 2px;
-      background: currentColor;
-      border-radius: 2px;
-    }
-
-    .menu-btn {
-      display: none;
-      place-items: center;
-      width: 44px; height: 44px;
-      padding: 0;
-      background: var(--white);
-      border: var(--border) solid var(--line);
-      border-radius: var(--radius-s);
-      cursor: pointer;
-    }
-    .bars, .bars::before, .bars::after {
-      display: block;
-      width: 18px; height: 2px;
-      background: var(--ink); border-radius: 2px;
-      transition: transform var(--dur-ui) var(--ease-out), background-color var(--dur-ui);
-    }
-    .bars { position: relative; }
-    .bars::before, .bars::after { content: ''; position: absolute; left: 0; }
-    .bars::before { top: -6px; }
-    .bars::after { top: 6px; }
-    .menu-open .bars { background: transparent; }
-    .menu-open .bars::before { transform: translateY(6px) rotate(45deg); }
-    .menu-open .bars::after { transform: translateY(-6px) rotate(-45deg); }
 
     /* ---------- hero: the one loud place ---------- */
     .hero { padding: 0 var(--space-3); }
     .hero-panel {
-      --tile-size: 112px;
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, .9fr);
       gap: var(--space-7);
       align-items: center;
       max-width: 1440px;
-      min-height: min(780px, calc(100svh - var(--topbar-h) - var(--space-3)));
       margin: 0 auto;
-      padding: clamp(40px, 6vw, 88px) clamp(20px, 5vw, 80px);
+      padding: clamp(36px, 6vw, 88px) clamp(20px, 5vw, 80px);
       border-radius: var(--radius-l);
       overflow: hidden;
     }
-
-    .headline {
-      margin: 0 0 var(--space-5);
-      font: var(--weight-black) clamp(2.5rem, 1.1rem + 4.6vw, 5rem)/var(--leading-tight) var(--font-display);
-      font-stretch: 125%;
-      letter-spacing: -.025em;
-      text-wrap: balance;
+    .portrait {
+      width: 124px; height: 136px;
+      margin-bottom: var(--space-5);
+      object-fit: cover;
+      border: 4px solid var(--white);
+      border-radius: var(--radius-m);
+      box-shadow: var(--shadow-float);
     }
-    .headline .w { display: inline-block; }
-
-    .lede { margin: 0; max-width: 50ch; font-size: var(--step-1); color: var(--on-cobalt-soft); }
-    .lede strong { color: var(--on-cobalt); font-weight: var(--weight-bold); }
+    .hero-name {
+      margin: 0 0 var(--space-4);
+      font: 600 var(--step-5)/.98 var(--font-serif);
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 28;
+      letter-spacing: -.02em;
+    }
+    .hero-name .ln { display: block; }
+    .hero-role { margin: 0 0 var(--space-5); font-size: var(--step-1); font-weight: var(--weight-bold); font-stretch: var(--stretch-ui); }
+    .hero-intro { margin: 0; max-width: 52ch; font-size: var(--step-1); color: var(--on-cobalt-soft); }
     .cta-row { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-6); }
 
-    .proof {
-      display: flex; flex-wrap: wrap;
-      margin: var(--space-7) 0 0; padding: 0;
-      list-style: none;
+    /* "at a glance", set like a ledger */
+    .ledger {
+      margin: 0;
+      padding: var(--space-5) var(--space-6) var(--space-4);
+      color: var(--ink);
+      background: var(--white);
+      border-radius: var(--radius-l);
+      box-shadow: var(--shadow-float);
+    }
+    .ledger-title {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin: 0 0 var(--space-3);
+      padding-bottom: var(--space-3);
+      font: italic 600 var(--step-2)/1.1 var(--font-serif);
+      border-bottom: var(--border) solid var(--ink);
+    }
+    .ledger-title small { font: var(--weight-medium) var(--step--2)/1 var(--font-body); color: var(--ink-soft); }
+    .ledger dl { margin: 0; }
+    .ledger .row {
+      display: grid;
+      grid-template-columns: auto minmax(var(--space-4), 1fr) auto;
+      gap: var(--space-2);
+      align-items: baseline;
+      padding: var(--space-2) 0;
       font-size: var(--step--1);
-      color: var(--on-cobalt-soft);
     }
-    .proof li { padding-right: var(--space-5); margin-right: var(--space-5); border-right: 1px solid var(--on-cobalt-line); }
-    .proof li:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
-    .proof b {
-      display: block;
-      font: var(--weight-black) var(--step-3)/1.1 var(--font-display);
-      font-stretch: var(--stretch-wide);
-      color: var(--on-cobalt);
-    }
+    .ledger .row + .row { border-top: 1px solid var(--line); }
+    .ledger dt { color: var(--ink-soft); }
+    .ledger .leader { align-self: end; margin-bottom: .35em; border-bottom: 2px dotted var(--line-strong); }
+    .ledger dd { margin: 0; font-weight: var(--weight-bold); text-align: right; font-variant-numeric: tabular-nums; }
 
-    /* ---------- the feed: a phone of Italian brainrot you can tap ---------- */
-    .feed { margin: 0; display: grid; justify-items: center; gap: var(--space-4); }
-    .phone {
-      --field: var(--dome);
-      position: relative;
-      width: clamp(240px, 23vw, 320px);
-      aspect-ratio: 9 / 18.5;
-      padding: 10px;
-      background: var(--ink);
-      border-radius: 46px;
-      box-shadow: var(--shadow-float), 0 0 0 1px rgba(255, 255, 255, .08);
-      rotate: 3deg;
-    }
-    .screen {
-      position: relative;
-      display: block;
-      width: 100%; height: 100%;
-      padding: 0;
-      overflow: hidden;
-      color: var(--white);
-      text-align: left;
-      background: var(--field);
-      border: 0;
-      border-radius: 36px;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: background-color var(--dur-ui) var(--ease-out);
-    }
-    .screen::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: rgba(255, 255, 255, .16);
-      -webkit-mask: var(--tile) 0 0 / 84px repeat;
-      mask: var(--tile) 0 0 / 84px repeat;
-    }
-    .screen::after {
-      content: '';
-      position: absolute; inset: 45% 0 0;
-      background: linear-gradient(rgba(18, 20, 29, 0), rgba(18, 20, 29, .88) 70%);
-    }
-    .screen:focus-visible { outline-offset: 6px; }
-    .post-art {
-      position: absolute; left: 50%; top: 34%; z-index: 1;
-      display: flex; align-items: center;
-      font-size: clamp(84px, 8.5vw, 116px);
-      translate: -50% -50%;
-      filter: drop-shadow(0 14px 18px rgba(18, 20, 29, .28));
-    }
-    .post-art .emo { display: block; width: 1em; height: 1em; margin: 0; }
-    .post-art .emo + .emo { margin-left: -.28em; font-size: .62em; rotate: 14deg; translate: 0 .45em; }
-    .screen.swap .post-art { animation: post-in var(--dur-ui) var(--ease-out); }
-    @keyframes post-in { from { opacity: 0; translate: -50% -38%; } }
-
-    .post-meta {
-      position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
-      display: grid; gap: var(--space-1);
-      padding: var(--space-5) 64px var(--space-5) var(--space-5);
-    }
-    .post-handle { font-size: var(--step--2); font-weight: var(--weight-bold); opacity: .85; }
-    .post-name { font: italic 650 clamp(1.45rem, 1.1rem + 1vw, 1.9rem)/1.02 var(--font-name); }
-    .post-lore { font-size: var(--step--2); line-height: 1.4; opacity: .9; }
-
-    .post-sound {
-      position: absolute; left: var(--space-4); top: var(--space-5); z-index: 2;
-      display: inline-flex; align-items: center; gap: var(--space-2);
-      padding: var(--space-1) var(--space-3) var(--space-1) var(--space-2);
-      font-size: var(--step--2); font-weight: var(--weight-bold);
-      color: var(--ink);
-      background: var(--white);
-      border-radius: var(--radius-pill);
-    }
-    .wave { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
-    .wave i { width: 3px; height: 40%; background: var(--cobalt); border-radius: 2px; }
-    .screen.playing .wave i { animation: wave .5s var(--ease-out) infinite alternate; }
-    .screen.playing .wave i:nth-child(2) { animation-delay: -.2s; }
-    .screen.playing .wave i:nth-child(3) { animation-delay: -.35s; }
-    @keyframes wave { to { height: 100%; } }
-
-    .rail {
-      position: absolute; right: 22px; bottom: 26px; z-index: 3;
-      display: grid; justify-items: center; gap: var(--space-4);
-      color: var(--white);
-      text-align: center;
-    }
-    .rail-aura { display: grid; justify-items: center; font-size: var(--step--2); font-weight: var(--weight-bold); line-height: 1.2; }
-    .rail-aura .emo { display: block; width: 34px; height: 34px; margin: 0 0 2px; }
-    .rail-aura b { display: block; padding: 1px 6px; color: var(--ink); background: var(--saffron); border-radius: var(--radius-pill); }
-    .rail-next {
-      display: grid; place-items: center;
-      width: 40px; height: 40px;
-      padding: 0;
-      color: var(--ink);
-      font-size: 20px; font-weight: var(--weight-black);
-      background: var(--white);
-      border: 0; border-radius: 50%;
-      box-shadow: 0 3px 0 var(--line-strong);
-      cursor: pointer;
-      transition: transform var(--dur-press) var(--ease-out), box-shadow var(--dur-press) var(--ease-out);
-    }
-    .rail-next:active { transform: translateY(3px); box-shadow: 0 0 0 var(--line-strong); }
-
-    .feed figcaption { max-width: 40ch; text-wrap: balance; font-size: var(--step--1); text-align: center; color: var(--on-cobalt-soft); }
-    .feed figcaption a { color: var(--on-cobalt); font-weight: var(--weight-bold); }
-
-    /* the one orchestrated moment: captions pop in word by word, the phone settles */
+    /* the one orchestrated moment: the name rises, the ledger fills in */
     @media (prefers-reduced-motion: no-preference) {
-      .headline .w { animation: word-in 520ms var(--ease-out) both; animation-delay: calc(var(--i) * 60ms); }
-      .phone { animation: phone-in 760ms var(--ease-out) 120ms both; }
-      .lede, .cta-row, .proof { animation: fade-in 500ms var(--ease-out) 300ms both; }
+      .hero-name .ln { animation: rise 700ms var(--ease-out) both; }
+      .hero-name .ln + .ln { animation-delay: 80ms; }
+      .ledger { animation: card-in 600ms var(--ease-out) 150ms both; }
+      .ledger .row { animation: fade 300ms var(--ease-out) both; animation-delay: calc(300ms + var(--i) * 60ms); }
     }
-    @keyframes word-in { from { opacity: 0; transform: translateY(.45em) scale(.92); } }
-    @keyframes phone-in { from { opacity: 0; translate: 0 48px; rotate: -4deg; } }
-    @keyframes fade-in { from { opacity: 0; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(.35em); } }
+    @keyframes card-in { from { opacity: 0; transform: translateY(24px); } }
+    @keyframes fade { from { opacity: 0; } }
 
     /* ---------- sections ---------- */
-    .section { padding-block: var(--section-pad); }
+    .section { padding-block: var(--section-pad) 0; }
     .section-head {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -266,678 +131,451 @@
       align-items: end;
       margin-bottom: var(--space-7);
     }
-    .section-head h2 {
-      margin: 0;
-      font: var(--weight-black) var(--step-4)/var(--leading-tight) var(--font-display);
-      font-stretch: var(--stretch-wide);
-      letter-spacing: -.02em;
-      text-wrap: balance;
-    }
+    .section-head h2 { margin: 0; font: 600 var(--step-4)/var(--leading-tight) var(--font-serif); letter-spacing: -.02em; }
     .section-head p { margin: 0; max-width: 46ch; font-size: var(--step-1); color: var(--ink-soft); }
+    .section-head a { font-weight: var(--weight-bold); }
 
-    /* ---------- services: quiet rows ---------- */
-    .services {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0 var(--space-7);
-      margin: 0; padding: 0;
-      list-style: none;
-    }
-    .service {
+    /* ---------- experience: a real sequence, so a timeline ---------- */
+    .timeline { margin: 0; padding: 0; list-style: none; }
+    .job {
       position: relative;
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: var(--space-5);
-      align-items: center;
-      padding: var(--space-5) var(--space-4);
-      border-radius: var(--radius-m);
-      transition: background-color var(--dur-ui) var(--ease-out);
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: var(--space-6);
+      padding-bottom: var(--space-7);
     }
-    .service::before {
+    .job::before {
       content: '';
-      position: absolute; left: var(--space-4); right: var(--space-4); top: 0;
-      height: 1px;
+      position: absolute; left: 196px; top: var(--space-3); bottom: 0;
+      width: 2px;
       background: var(--line);
     }
-    .service:hover { background: var(--white); }
-    .service:has(a:focus-visible) { outline: 3px solid var(--cobalt); outline-offset: 2px; }
-    .service-icon {
-      display: grid; place-items: center;
-      width: 76px; height: 76px;
-      font-size: 46px;
-      background: var(--tint);
-      border-radius: var(--radius-m);
-    }
-    .service-icon .emo { display: block; width: 1em; height: 1em; margin: 0; }
-    .service h3 {
-      margin: 0 0 var(--space-1);
-      font: var(--weight-black) var(--step-2)/var(--leading-snug) var(--font-display);
-      font-stretch: 118%;
-    }
-    .service h3 a { color: inherit; text-decoration: none; }
-    .service h3 a:focus-visible { outline: none; }
-    /* the whole row is the link */
-    .service h3 a::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-m); }
-    .service p { margin: 0; color: var(--ink-soft); }
-    .service-go {
-      display: grid; place-items: center;
-      width: 44px; height: 44px;
-      font-weight: var(--weight-black);
-      border: var(--border) solid var(--line);
-      border-radius: 50%;
-      transition: background-color var(--dur-ui) var(--ease-out), border-color var(--dur-ui) var(--ease-out), color var(--dur-ui) var(--ease-out), translate var(--dur-ui) var(--ease-out);
-    }
-    .service:hover .service-go { color: var(--on-cobalt); background: var(--cobalt); border-color: var(--cobalt); translate: 4px 0; }
-
-    /* ---------- reviews: one big quote, then the wall ---------- */
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-      gap: var(--space-7);
-      align-items: start;
-    }
-    .stars { margin: 0 0 var(--space-3); color: var(--saffron-deep); letter-spacing: 2px; }
-    .quote-feature { margin: 0; }
-    .quote-feature .avatar { width: 112px; height: 112px; margin-bottom: var(--space-5); font-size: 64px; }
-    .quote-feature blockquote { margin: 0 0 var(--space-5); }
-    .quote-feature blockquote p {
+    .job:last-child::before { bottom: auto; height: 0; }
+    .job-when {
       margin: 0;
-      font: italic 560 var(--step-4)/1.08 var(--font-name);
-      letter-spacing: -.01em;
+      padding-top: .2em;
+      font-size: var(--step--1);
+      font-weight: var(--weight-medium);
+      color: var(--ink-soft);
+      font-variant-numeric: tabular-nums;
     }
-    .quote-feature figcaption { display: grid; gap: 2px; }
-
-    .quotes { columns: 2 250px; column-gap: var(--space-4); }
-    .quote {
-      display: grid; gap: var(--space-4);
-      margin: 0 0 var(--space-4);
-      padding: var(--space-5);
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-l);
-      break-inside: avoid;
-    }
-    .quote .stars { margin: 0; }
-    .quote blockquote { margin: 0; }
-    .quote blockquote p { margin: 0; font: italic 500 var(--step-1)/1.35 var(--font-name); }
-    .quote figcaption { display: flex; align-items: center; gap: var(--space-3); }
-    .avatar {
-      flex: none;
-      display: grid; place-items: center;
-      width: 48px; height: 48px;
-      font-size: 28px;
-      background: var(--tint);
+    .job-body { position: relative; padding-left: var(--space-6); }
+    .job-body::before {
+      content: '';
+      position: absolute; left: -17px; top: .45em;
+      width: 14px; height: 14px;
+      background: var(--paper);
+      border: 3px solid var(--cobalt);
       border-radius: 50%;
     }
-    .avatar .emo { display: block; width: 1em; height: 1em; margin: 0; }
-    cite { display: block; font-style: normal; font-weight: var(--weight-bold); line-height: 1.25; }
-    .quote small, .quote-feature small { display: block; font-size: var(--step--1); color: var(--ink-soft); }
+    .job:first-child .job-body::before { background: var(--cobalt); }
+    .job h3 { margin: 0; font-size: var(--step-1); font-weight: var(--weight-bold); line-height: var(--leading-snug); }
+    .job-where { margin: var(--space-1) 0 var(--space-3); color: var(--ink-soft); }
+    .job ul { margin: 0; padding-left: 1.1em; max-width: var(--max-text); }
+    .job li + li { margin-top: var(--space-1); }
+    .job li::marker { color: var(--cobalt); }
 
-    /* ---------- contact ---------- */
-    .contact {
+    /* ---------- education and ACCA ---------- */
+    .edu {
       display: grid;
-      grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
-      gap: var(--space-8);
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      gap: var(--space-5);
       align-items: start;
     }
-    .contact-side h3 { margin: 0 0 var(--space-2); font: var(--weight-black) var(--step-2)/var(--leading-snug) var(--font-display); font-stretch: 118%; }
-    .contact-side > p { margin: 0 0 var(--space-5); color: var(--ink-soft); }
-    .reasons { margin: 0; padding: 0; list-style: none; }
-    .reasons li {
-      display: flex; align-items: center; gap: var(--space-4);
-      padding: var(--space-4) 0;
-      font-weight: var(--weight-bold);
-      border-top: 1px solid var(--line);
-    }
-    .reasons .ico {
-      flex: none;
-      display: grid; place-items: center;
-      width: 48px; height: 48px;
-      font-size: 28px;
-      background: var(--tint);
-      border-radius: var(--radius-s);
-    }
-    .reasons .ico .emo { display: block; width: 1em; height: 1em; margin: 0; }
-    .reasons small { display: block; font-weight: var(--weight-body); font-size: var(--step--1); color: var(--ink-soft); }
-
-    .form {
-      position: relative;
-      display: grid; gap: var(--space-5);
+    .panel {
       padding: clamp(20px, 3vw, 36px);
       background: var(--white);
       border: 1px solid var(--line);
       border-radius: var(--radius-l);
     }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
-    .fld label { display: block; margin-bottom: var(--space-2); font-size: var(--step--1); font-weight: var(--weight-bold); }
-    .err { margin: var(--space-2) 0 0; font-size: var(--step--1); font-weight: var(--weight-bold); color: var(--pomegranate); }
-    .count { margin: var(--space-2) 0 0; font-size: var(--step--2); color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
-    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-    .form-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); }
-    .form-foot .small { margin: 0; max-width: 30ch; font-size: var(--step--1); color: var(--ink-soft); }
-    .status {
-      margin: 0;
-      padding: var(--space-4);
-      font-weight: var(--weight-bold);
-      border-radius: var(--radius-m);
-      animation: fade-in var(--dur-ui) var(--ease-out);
+    .panel h3 { margin: 0; font: 600 var(--step-3)/1.1 var(--font-serif); letter-spacing: -.01em; }
+    .panel .sub { margin: var(--space-2) 0 var(--space-5); color: var(--ink-soft); }
+    .facts { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-5); padding: 0; list-style: none; }
+    .facts li {
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--step--1); font-weight: var(--weight-bold);
+      background: var(--cobalt-wash);
+      border-radius: var(--radius-pill);
     }
-    .status.ok { background: var(--dome-wash); box-shadow: inset 4px 0 0 var(--dome); }
-    .status.bad { background: var(--pomegranate-wash); box-shadow: inset 4px 0 0 var(--pomegranate); }
+    .modules { margin: 0; padding: 0; list-style: none; }
+    .modules li { padding: var(--space-3) 0; border-top: 1px solid var(--line); }
+    .modules b { display: block; font-weight: var(--weight-bold); }
+    .modules span { font-size: var(--step--1); color: var(--ink-soft); }
+
+    .acca-group { margin: var(--space-5) 0 var(--space-2); font-size: var(--step--1); font-weight: var(--weight-bold); color: var(--ink-soft); }
+    .papers { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+    .paper {
+      display: grid; gap: var(--space-1);
+      align-content: start;
+      padding: var(--space-4);
+      border: var(--border) solid var(--line);
+      border-radius: var(--radius-m);
+    }
+    .paper b { font-size: var(--step-2); font-weight: var(--weight-black); font-stretch: var(--stretch-ui); line-height: 1; }
+    .paper span { font-size: var(--step--1); line-height: 1.35; }
+    .paper em {
+      margin-top: var(--space-2);
+      padding-top: var(--space-2);
+      font-size: var(--step--2); font-style: normal; font-weight: var(--weight-bold);
+      color: var(--ink-soft);
+      border-top: 1px solid var(--line);
+    }
+    .paper.pass { background: var(--dome-wash); border-color: var(--dome); }
+    .paper.pass em { color: var(--dome-deep); border-top-color: var(--dome); }
+    .acca-note { margin: var(--space-5) 0 0; font-size: var(--step--1); color: var(--ink-soft); }
+
+    /* ---------- recognition ---------- */
+    .awards { margin: 0; padding: 0; list-style: none; border-bottom: 1px solid var(--line); }
+    .award {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr) auto;
+      gap: var(--space-6);
+      align-items: baseline;
+      padding: var(--space-5) 0;
+      border-top: 1px solid var(--line);
+    }
+    .award-when { font-size: var(--step--1); font-weight: var(--weight-medium); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+    .award h3 { margin: 0; font: 600 var(--step-2)/1.15 var(--font-serif); }
+    .award p { margin: var(--space-1) 0 0; color: var(--ink-soft); }
+    .award-tag {
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--step--1); font-weight: var(--weight-bold);
+      white-space: nowrap;
+      background: var(--saffron-wash);
+      border-radius: var(--radius-pill);
+    }
+
+    /* ---------- skills ---------- */
+    .skills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
+    .skills h3 { margin: 0 0 var(--space-3); font-size: var(--step-0); font-weight: var(--weight-bold); }
+    .skills ul { margin: 0; padding: 0; list-style: none; }
+    .skills li { padding: var(--space-2) 0; border-top: 1px solid var(--line); }
+    .skills li small { display: block; font-size: var(--step--1); color: var(--ink-soft); }
+
+    /* ---------- contact: the tile closes the page ---------- */
+    .contact { padding: var(--section-pad) var(--space-3) var(--space-3); }
+    .contact-panel {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: clamp(40px, 6vw, 88px) clamp(20px, 5vw, 80px) var(--space-6);
+      border-radius: var(--radius-l);
+    }
+    .contact h2 { margin: 0 0 var(--space-4); font: 600 var(--step-5)/var(--leading-tight) var(--font-serif); font-optical-sizing: none; font-variation-settings: 'opsz' 28; letter-spacing: -.02em; }
+    .contact p { margin: 0; max-width: 46ch; font-size: var(--step-1); color: var(--on-cobalt-soft); }
+    .contact .cta-row { margin-bottom: var(--space-8); }
+    .contact-foot {
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3);
+      padding-top: var(--space-5);
+      font-size: var(--step--1);
+      color: var(--on-cobalt-soft);
+      border-top: 1px solid var(--on-cobalt-line);
+    }
+    .contact-foot a { color: var(--on-cobalt); }
 
     /* ---------- responsive ---------- */
     @media (max-width: 960px) {
-      .hero-panel { grid-template-columns: 1fr; min-height: 0; }
-      .phone { width: min(70vw, 280px); }
-      .services { grid-template-columns: 1fr; }
-      .reviews-grid, .contact { grid-template-columns: 1fr; }
-      .contact { gap: var(--space-7); }
+      .hero-panel, .edu { grid-template-columns: 1fr; }
+      .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 760px) {
-      .js .menu-btn { display: grid; }
-      .js .nav {
-        position: absolute; top: 100%; left: 0; right: 0;
-        flex-direction: column; gap: var(--space-1);
-        padding: var(--space-3) var(--gutter) var(--space-5);
-        background: var(--paper);
-        border-bottom: 1px solid var(--line);
-        visibility: hidden; opacity: 0; translate: 0 -8px;
-        transition: opacity var(--dur-ui) var(--ease-out), translate var(--dur-ui) var(--ease-out), visibility 0s var(--dur-ui);
-      }
-      .js .menu-open .nav { visibility: visible; opacity: 1; translate: none; transition: opacity var(--dur-ui) var(--ease-out), translate var(--dur-ui) var(--ease-out); }
-      .js .nav a { padding: var(--space-3) var(--space-4); font-size: var(--step-1); }
-      .js .nav a.active::after { display: none; }
+      .nav { display: none; }
       .section-head { grid-template-columns: 1fr; }
+      .job, .award { grid-template-columns: 1fr; gap: var(--space-2); }
+      .job { padding-left: var(--space-6); }
+      .job::before { left: 6px; top: var(--space-4); }
+      .job-body { padding-left: 0; }
+      .job-body::before { display: none; }
+      .job-when { position: relative; }
+      .job-when::before {
+        content: '';
+        position: absolute; left: calc(-1 * var(--space-6)); top: .35em;
+        width: 14px; height: 14px;
+        background: var(--paper);
+        border: 3px solid var(--cobalt);
+        border-radius: 50%;
+      }
+      .job:first-child .job-when::before { background: var(--cobalt); }
+      .award-tag { justify-self: start; }
     }
 
     @media (max-width: 600px) {
       .hero { padding: 0 var(--space-2); }
-      .hero-panel { padding: var(--space-7) var(--space-5) var(--space-6); border-radius: var(--radius-l); }
+      .hero-panel { padding: var(--space-6) var(--space-5); }
       .cta-row .btn { flex: 1 1 auto; }
-      .proof { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
-      .proof li, .proof li:nth-child(2) { margin: 0; padding: 0; border: 0; }
-      .service { grid-template-columns: auto minmax(0, 1fr); gap: var(--space-4); padding-inline: var(--space-2); }
-      .service::before { left: var(--space-2); right: var(--space-2); }
-      .service-icon { width: 60px; height: 60px; font-size: 36px; }
-      .service-go { display: none; }
-      .row { grid-template-columns: 1fr; }
-      .form-foot .btn { width: 100%; }
-    }
-
-    @media (max-width: 380px) {
-      .nav-cta { display: none; }
+      .ledger { padding: var(--space-4) var(--space-5) var(--space-3); }
+      .ledger .row { grid-template-columns: 1fr; gap: 0; }
+      .ledger .leader { display: none; }
+      .ledger dd { text-align: left; }
+      .skills { grid-template-columns: 1fr; }
+      .contact { padding-inline: var(--space-2); }
     }
   </style>
 </head>
 <body>
-  <a class="skip" href="#main">skip to content</a>
+  <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar" id="topbar">
-    <a class="logo" href="./">KHADI<span>.uz</span></a>
-    <nav class="nav" id="nav" aria-label="Main">
-      <a href="play.html">Play</a>
-      <a href="#services">Services</a>
-      <a href="#reviews">Reviews</a>
+    <a class="logo" href="./">khadi.uz</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#experience">Experience</a>
+      <a href="#education">Education</a>
+      <a href="#skills">Skills</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a class="btn btn-small btn-cobalt nav-cta" href="#contact">Say hi</a>
-    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav">
-      <span class="bars" aria-hidden="true"></span><span class="sr">Menu</span>
-    </button>
+    <a class="btn btn-small btn-cobalt" href="cv/">View CV</a>
   </header>
 
   <main id="main">
     <!-- ============ HERO ============ -->
-    <section class="hero" id="top">
+    <section class="hero">
       <div class="hero-panel tile">
         <div class="hero-copy">
-          <h1 class="headline">
-            <span class="w" style="--i:0">The</span> <span class="w" style="--i:1">internet’s</span> <span class="w" style="--i:2">most</span> <span class="w" style="--i:3">brainrot</span> <span class="w" style="--i:4">website.</span>
-          </h1>
-          <p class="lede">a meme soundboard, italian brainrot creatures, an aura scanner, a skibidi game, a gen alpha translator and a dictionary for confused parents. <strong>free. no sign-up. no cap.</strong></p>
+          <img class="portrait" src="img/photo.jpg" width="244" height="267" alt="Xadyatullox Muhammadjonov">
+          <h1 class="hero-name"><span class="ln">Xadyatullox</span> <span class="ln">Muhammadjonov</span></h1>
+          <p class="hero-role">Accounting &amp; finance · ACCA · Business analysis</p>
+          <p class="hero-intro">I study Accounting and Finance at British Management University in Tashkent and I'm working through the ACCA qualification. Since 2023 I've run fuel operations and worked as a business analyst for a US logistics company, co-founded a small accounting firm, and have helped hoteliers get the most out of Exely.</p>
           <div class="cta-row">
-            <a class="btn" href="play.html">Start brainrotting</a>
-            <a class="btn btn-ghost" href="#contact">Get in touch</a>
+            <a class="btn" href="cv.pdf" download="Xadyatullox-Muhammadjonov-CV.pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>
+              Download CV
+            </a>
+            <a class="btn btn-ghost" href="mailto:khadyatullokh@gmail.com">Email me</a>
           </div>
-          <ul class="proof">
-            <li><b>11</b>meme sounds</li>
-            <li><b>12</b>creatures</li>
-            <li><b>28</b>words decoded</li>
-            <li><b>0</b>brain cells</li>
-          </ul>
         </div>
 
-        <figure class="feed" aria-label="Italian brainrot feed">
-          <div class="phone">
-            <button class="screen" id="screen" type="button" aria-describedby="feed-tip">
-              <span class="post-sound" aria-hidden="true"><span class="wave"><i></i><i></i><i></i></span><span id="post-sound-label">tap to hear</span></span>
-              <span class="post-art" id="post-art" aria-hidden="true"><img class="emo" src="icons/shark.webp" alt=""><img class="emo" src="icons/running-shoe.webp" alt=""></span>
-              <span class="post-meta">
-                <span class="post-handle">@khadi.uz · tashkent, ohio</span>
-                <span class="post-name" id="post-name">Tralalero Tralala</span>
-                <span class="post-lore" id="post-lore">A shark with three legs in fresh sneakers. Runs faster on land than in water. Nobody asked why.</span>
-              </span>
-            </button>
-            <div class="rail">
-              <span class="rail-aura"><img class="emo" src="icons/moai.webp" alt=""><b id="post-aura">92K</b>aura</span>
-              <button class="rail-next" id="post-next" type="button" aria-label="Next creature" hidden>↓</button>
-            </div>
-          </div>
-          <figcaption id="feed-tip">tap the screen to hear the name. <a id="post-link" href="italian-brainrot/tralalero-tralala/">read the full lore</a></figcaption>
+        <figure class="ledger" aria-labelledby="glance">
+          <figcaption class="ledger-title" id="glance">At a glance <small>Tashkent, Uzbekistan</small></figcaption>
+          <dl>
+            <div class="row" style="--i:0"><dt>Degree</dt><span class="leader" aria-hidden="true"></span><dd>BSc Accounting &amp; Finance</dd></div>
+            <div class="row" style="--i:1"><dt>GPA</dt><span class="leader" aria-hidden="true"></span><dd>3.5</dd></div>
+            <div class="row" style="--i:2"><dt>ACCA</dt><span class="leader" aria-hidden="true"></span><dd>FR passed · 7 exemptions</dd></div>
+            <div class="row" style="--i:3"><dt>Deloitte Case Competition</dt><span class="leader" aria-hidden="true"></span><dd>High-priority winner</dd></div>
+            <div class="row" style="--i:4"><dt>EY Career Launch</dt><span class="leader" aria-hidden="true"></span><dd>Finalist, 2025</dd></div>
+            <div class="row" style="--i:5"><dt>Languages</dt><span class="leader" aria-hidden="true"></span><dd>Uzbek · Russian · English C1</dd></div>
+          </dl>
         </figure>
       </div>
     </section>
 
-    <!-- ============ SERVICES ============ -->
-    <section class="section" id="services">
+    <!-- ============ EXPERIENCE ============ -->
+    <section class="section" id="experience">
       <div class="wrap">
         <header class="section-head">
-          <h2>Services</h2>
-          <p>six professional-grade ways to lose brain cells. all free, all one tap away.</p>
+          <h2>Experience</h2>
+          <p>Accounting, analysis and operations, mostly for US logistics businesses. The full detail is in <a href="cv/">my CV</a>.</p>
         </header>
 
-        <ul class="services">
-          <li class="service" style="--tint:var(--saffron-wash)">
-            <span class="service-icon" aria-hidden="true"><img class="emo" src="icons/speaker-high-volume.webp" alt=""></span>
-            <div>
-              <h3><a href="play.html#sounds">Soundboard</a></h3>
-              <p>Vine boom, metal pipe, MLG airhorn, bruh, the deep sigma meow and a phonk loop. The real sounds, straight from the group chat.</p>
+        <ol class="timeline">
+          <li class="job">
+            <p class="job-when"></p>
+            <div class="job-body">
+              <h3>Technical Specialist</h3>
+              <p class="job-where">Exely</p>
+              <ul>
+                <li>Technical support for hoteliers setting up and using Exely's products.</li>
+              </ul>
             </div>
-            <span class="service-go" aria-hidden="true">→</span>
           </li>
-          <li class="service" style="--tint:var(--pomegranate-wash)">
-            <span class="service-icon" aria-hidden="true"><img class="emo" src="icons/pinched-fingers.webp" alt=""></span>
-            <div>
-              <h3><a href="play.html#italian">Italian Brainrot</a></h3>
-              <p>Twelve creatures, from Tralalero Tralala to Tung Tung Tung Sahur, each saying its own name in an Italian voice. Plus a Fusion Lab that invents new ones.</p>
+          <li class="job">
+            <p class="job-when">Apr 2025 – Aug 2025</p>
+            <div class="job-body">
+              <h3>Co-Founder &amp; Accountant</h3>
+              <p class="job-where">T&amp;M Financials · USA, remote</p>
+              <ul>
+                <li>Co-founded a financial services company supporting US logistics businesses.</li>
+                <li>Prepared and processed invoices for independent trucking clients using QuickManage and Amazon Relay.</li>
+                <li>Built Excel trackers for expenses, income and profitability.</li>
+              </ul>
             </div>
-            <span class="service-go" aria-hidden="true">→</span>
           </li>
-          <li class="service" style="--tint:var(--cobalt-wash)">
-            <span class="service-icon" aria-hidden="true"><img class="emo" src="icons/moai.webp" alt=""></span>
-            <div>
-              <h3><a href="play.html#scan">Aura Scanner</a></h3>
-              <p>Type any name and get its rizz, sigma, cooked and NPC stats. The same name always gets the same result, so no rerolling.</p>
+          <li class="job">
+            <p class="job-when">Feb 2024 – Sep 2025</p>
+            <div class="job-body">
+              <h3>Business Analyst</h3>
+              <p class="job-where">Green Group LLC · Tashkent and Virginia, USA</p>
+              <ul>
+                <li>Gathered business requirements and wrote functional and technical specifications.</li>
+                <li>Cleaned and analyzed data, and built reports and dashboards for management.</li>
+                <li>Supported API integrations, data workflows and TMS/CRM improvements.</li>
+              </ul>
             </div>
-            <span class="service-go" aria-hidden="true">→</span>
           </li>
-          <li class="service" style="--tint:var(--dome-wash)">
-            <span class="service-icon" aria-hidden="true"><img class="emo" src="icons/toilet.webp" alt=""></span>
-            <div>
-              <h3><a href="play.html#smash">Skibidi Smash</a></h3>
-              <p>A 30-second whack-a-toilet game. Smash the skibidi toilets, leave Fanum's burger alone, and turn your score into aura.</p>
+          <li class="job">
+            <p class="job-when">Feb 2023 – Feb 2024</p>
+            <div class="job-body">
+              <h3>Fuel Department Manager</h3>
+              <p class="job-where">Green Group LLC · Tashkent and Virginia, USA</p>
+              <ul>
+                <li>Controlled fleet fuel costs and managed fuel cards: limits, issuance and fraud prevention.</li>
+                <li>Negotiated fuel prices and planned cost-efficient fuel stops by route.</li>
+                <li>Reported fuel KPIs: MPG, idle time and cost per mile.</li>
+              </ul>
             </div>
-            <span class="service-go" aria-hidden="true">→</span>
           </li>
-          <li class="service" style="--tint:var(--saffron-wash)">
-            <span class="service-icon" aria-hidden="true"><img class="emo" src="icons/speaking-head.webp" alt=""></span>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ EDUCATION ============ -->
+    <section class="section" id="education">
+      <div class="wrap">
+        <header class="section-head">
+          <h2>Education</h2>
+          <p>A BSc in Accounting and Finance, alongside the ACCA qualification.</p>
+        </header>
+
+        <div class="edu">
+          <div class="panel">
+            <h3>British Management University</h3>
+            <p class="sub">BSc Accounting and Finance · Tashkent · Sep 2023 – May 2027</p>
+            <ul class="facts">
+              <li>GPA 3.5</li>
+              <li>ACCA-accredited</li>
+            </ul>
+            <ul class="modules">
+              <li><b>Financial Accounting</b><span>Financial statements, journal entries, reconciliations, IFRS</span></li>
+              <li><b>Management Accounting</b><span>Cost classification, job and process costing, cost-volume-profit analysis</span></li>
+              <li><b>Business and Technology</b><span>Business environment, organizational structures, ethics</span></li>
+              <li><b>Financial Markets and Institutions</b><span>Stock and bond valuation, capital budgeting, investment analysis</span></li>
+              <li><b>Microeconomics and Macroeconomics</b><span>Economic principles and policy frameworks</span></li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h3>ACCA qualification</h3>
+            <p class="sub">One exam passed and seven conditional exemptions so far.</p>
+
+            <p class="acca-group" id="acca-skills">Applied Skills</p>
+            <ul class="papers" aria-labelledby="acca-skills">
+              <li class="paper pass"><b>FR</b><span>Financial Reporting</span><em>Passed · Sep 2026</em></li>
+              <li class="paper"><b>AA</b><span>Audit and Assurance</span><em>Conditional exemption</em></li>
+              <li class="paper"><b>TX</b><span>Taxation</span><em>Conditional exemption</em></li>
+              <li class="paper"><b>PM</b><span>Performance Management</span><em>Conditional exemption</em></li>
+              <li class="paper"><b>LW</b><span>Corporate and Business Law</span><em>Conditional exemption</em></li>
+            </ul>
+
+            <p class="acca-group" id="acca-knowledge">Applied Knowledge</p>
+            <ul class="papers" aria-labelledby="acca-knowledge">
+              <li class="paper"><b>FA</b><span>Financial Accounting</span><em>Conditional exemption</em></li>
+              <li class="paper"><b>MA</b><span>Management Accounting</span><em>Conditional exemption</em></li>
+              <li class="paper"><b>BT</b><span>Business and Technology</span><em>Conditional exemption</em></li>
+            </ul>
+
+            <p class="acca-note">Conditional exemptions come from my ACCA-accredited degree and become full exemptions when I graduate.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RECOGNITION ============ -->
+    <section class="section" id="recognition">
+      <div class="wrap">
+        <header class="section-head">
+          <h2>Recognition &amp; leadership</h2>
+        </header>
+
+        <ul class="awards">
+          <li class="award">
+            <span class="award-when">Nov 2025</span>
             <div>
-              <h3><a href="play.html#translate">Brainrot Translator</a></h3>
-              <p>Turns normal English into Gen Alpha slang at three levels: mild, unhinged and terminal. It reads the result aloud, too.</p>
+              <h3>Deloitte Case Competition</h3>
             </div>
-            <span class="service-go" aria-hidden="true">→</span>
+            <span class="award-tag">High-priority winner</span>
           </li>
-          <li class="service" style="--tint:var(--cobalt-wash)">
-            <span class="service-icon" aria-hidden="true"><img class="emo" src="icons/open-book.webp" alt=""></span>
+          <li class="award">
+            <span class="award-when">Apr 2025</span>
             <div>
-              <h3><a href="meaning/">Brainrot Dictionary</a></h3>
-              <p>Rizz, sigma, fanum tax, mewing, 67 and 23 more words, explained in plain English for parents and teachers.</p>
+              <h3>World Scholar's Cup, Tashkent regional round</h3>
+              <p>Co-organized the event: check-ins, room allocation, volunteer teams and award distribution.</p>
             </div>
-            <span class="service-go" aria-hidden="true">→</span>
+            <span class="award-tag">Co-organizer</span>
+          </li>
+          <li class="award">
+            <span class="award-when">Mar 2025</span>
+            <div>
+              <h3>EY Career Launch</h3>
+              <p>Reached the final.</p>
+            </div>
+            <span class="award-tag">Finalist</span>
           </li>
         </ul>
       </div>
     </section>
 
-    <!-- ============ REVIEWS ============ -->
-    <section class="section" id="reviews">
+    <!-- ============ SKILLS ============ -->
+    <section class="section" id="skills">
       <div class="wrap">
         <header class="section-head">
-          <h2>The reviews are in</h2>
-          <p>what the community is saying. mostly creatures. none of them were paid, mainly because we couldn't find their wallets.</p>
+          <h2>Skills</h2>
         </header>
 
-        <div class="reviews-grid">
-          <figure class="quote-feature">
-            <span class="avatar" style="--tint:var(--saffron-wash)" aria-hidden="true"><img class="emo" src="icons/wood.webp" alt=""></span>
-            <p class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</p>
-            <blockquote><p>“Tung tung tung tung tung tung tung tung tung. Sahur.”</p></blockquote>
-            <figcaption><cite>Tung Tung Tung Sahur</cite><small>wooden log · Indonesia</small></figcaption>
-          </figure>
-
-          <div class="quotes">
-            <figure class="quote">
-              <p class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</p>
-              <blockquote><p>“I played my own name 41 times in a row. The voice is better than my real voice.”</p></blockquote>
-              <figcaption>
-                <span class="avatar" style="--tint:var(--cobalt-wash)" aria-hidden="true"><img class="emo" src="icons/shark.webp" alt=""></span>
-                <span><cite>Tralalero Tralala</cite><small>shark in sneakers · the beach</small></span>
-              </figcaption>
-            </figure>
-
-            <figure class="quote">
-              <p class="stars" role="img" aria-label="4 out of 5 stars">★★★★☆</p>
-              <blockquote><p>“The dictionary finally told me what ‘fanum tax’ means. Very helpful. I wish I didn't know.”</p></blockquote>
-              <figcaption>
-                <span class="avatar" style="--tint:var(--saffron-wash)" aria-hidden="true"><img class="emo" src="icons/old-man.webp" alt=""></span>
-                <span><cite>A dad, age 47</cite><small>now says “no cap” unironically</small></span>
-              </figcaption>
-            </figure>
-
-            <figure class="quote">
-              <p class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</p>
-              <blockquote><p>“Scanned my own aura. Over 9,000. Sigma. Exactly as expected.”</p></blockquote>
-              <figcaption>
-                <span class="avatar" style="--tint:var(--dome-wash)" aria-hidden="true"><img class="emo" src="icons/crocodile.webp" alt=""></span>
-                <span><cite>Bombardiro Crocodilo</cite><small>crocodile bomber plane · the sky</small></span>
-              </figcaption>
-            </figure>
-
-            <figure class="quote">
-              <p class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</p>
-              <blockquote><p>“Finally, a website that respects dancers with a cappuccino for a head.”</p></blockquote>
-              <figcaption>
-                <span class="avatar" style="--tint:var(--pomegranate-wash)" aria-hidden="true"><img class="emo" src="icons/ballet-shoes.webp" alt=""></span>
-                <span><cite>Ballerina Cappuccina</cite><small>prima ballerina · espresso cup</small></span>
-              </figcaption>
-            </figure>
-
-            <figure class="quote">
-              <p class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</p>
-              <blockquote><p>“Got 112 on Skibidi Smash and my aura went through the roof. My mom asked why I was yelling.”</p></blockquote>
-              <figcaption>
-                <span class="avatar" style="--tint:var(--cobalt-wash)" aria-hidden="true"><img class="emo" src="icons/zany-face.webp" alt=""></span>
-                <span><cite>A certified sigma, 13</cite><small>Ohio, unfortunately</small></span>
-              </figcaption>
-            </figure>
-
-            <figure class="quote">
-              <p class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</p>
-              <blockquote><p>“Moo. (Translated: it's giving five stars.)”</p></blockquote>
-              <figcaption>
-                <span class="avatar" style="--tint:var(--dome-wash)" aria-hidden="true"><img class="emo" src="icons/cow.webp" alt=""></span>
-                <span><cite>La Vaca Saturno Saturnita</cite><small>cow · rings of Saturn</small></span>
-              </figcaption>
-            </figure>
-
-            <figure class="quote">
-              <p class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</p>
-              <blockquote><p>“The 67 button changed my life. I press it every single day. Six. Seven.”</p></blockquote>
-              <figcaption>
-                <span class="avatar" style="--tint:var(--saffron-wash)" aria-hidden="true"><img class="emo" src="icons/banana.webp" alt=""></span>
-                <span><cite>Chimpanzini Bananini</cite><small>monkey in a banana · the jungle</small></span>
-              </figcaption>
-            </figure>
+        <div class="skills">
+          <div>
+            <h3>Finance &amp; accounting</h3>
+            <ul>
+              <li>Financial statements and IFRS</li>
+              <li>Journal entries and reconciliations</li>
+              <li>Costing and cost-volume-profit analysis</li>
+              <li>Invoicing and billing</li>
+              <li>Expense and profitability tracking</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Analysis</h3>
+            <ul>
+              <li>Requirements and specifications</li>
+              <li>Process mapping</li>
+              <li>Data cleaning and reporting</li>
+              <li>Dashboards and KPIs</li>
+              <li>API and TMS/CRM integrations</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Tools</h3>
+            <ul>
+              <li>Excel, Word, PowerPoint</li>
+              <li>Looker Studio</li>
+              <li>QuickManage</li>
+              <li>Amazon Relay</li>
+              <li>Exely</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Languages</h3>
+            <ul>
+              <li>Uzbek<small>Native</small></li>
+              <li>Russian<small>Proficient</small></li>
+              <li>English<small>Advanced, C1 (IELTS)</small></li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ============ CONTACT ============ -->
-    <section class="section" id="contact">
-      <div class="wrap">
-        <header class="section-head">
-          <h2>Contact</h2>
-          <p>collab idea? a word we're missing? a creature that deserves the hall of fame? found a bug? drop it here.</p>
-        </header>
-
-        <div class="contact">
-          <div class="contact-side">
-            <h3>Slide into our inbox</h3>
-            <p>we read every message. we usually reply within a few days, faster if it's bussin.</p>
-            <ul class="reasons">
-              <li><span class="ico" style="--tint:var(--saffron-wash)" aria-hidden="true"><img class="emo" src="icons/sparkles.webp" alt=""></span><span>Suggest a word<small>slang we haven't decoded yet</small></span></li>
-              <li><span class="ico" style="--tint:var(--pomegranate-wash)" aria-hidden="true"><img class="emo" src="icons/pinched-fingers.webp" alt=""></span><span>Nominate a creature<small>for the Italian Brainrot hall of fame</small></span></li>
-              <li><span class="ico" style="--tint:var(--cobalt-wash)" aria-hidden="true"><img class="emo" src="icons/collision.webp" alt=""></span><span>Report a bug<small>tell us what broke and on which device</small></span></li>
-              <li><span class="ico" style="--tint:var(--dome-wash)" aria-hidden="true"><img class="emo" src="icons/people-hugging.webp" alt=""></span><span>Collabs and business<small>creators, brands and schools welcome</small></span></li>
-            </ul>
-          </div>
-
-          <form class="form" id="contact-form" novalidate>
-            <div class="row">
-              <div class="fld">
-                <label for="c-name">Your name</label>
-                <input class="field" id="c-name" name="name" type="text" maxlength="60" autocomplete="name" placeholder="e.g. Skibidi Steve" aria-describedby="c-name-err" required>
-                <p class="err" id="c-name-err" hidden></p>
-              </div>
-              <div class="fld">
-                <label for="c-email">Email</label>
-                <input class="field" id="c-email" name="email" type="email" maxlength="120" autocomplete="email" inputmode="email" placeholder="you@example.com" aria-describedby="c-email-err" required>
-                <p class="err" id="c-email-err" hidden></p>
-              </div>
-            </div>
-
-            <div class="fld">
-              <label for="c-topic">What's it about?</label>
-              <select class="field" id="c-topic" name="topic">
-                <option>Suggest a word</option>
-                <option>Nominate a creature</option>
-                <option>Report a bug</option>
-                <option>Collab or business</option>
-                <option>Just vibing</option>
-              </select>
-            </div>
-
-            <div class="fld">
-              <label for="c-message">Message</label>
-              <textarea class="field" id="c-message" name="message" rows="6" maxlength="1000" placeholder="spill it. no cap." aria-describedby="c-message-err c-count" required></textarea>
-              <p class="err" id="c-message-err" hidden></p>
-              <p class="count" id="c-count">0 / 1000</p>
-            </div>
-
-            <!-- spam trap: people never see this field, bots fill it in -->
-            <div class="hp" aria-hidden="true">
-              <label for="c-gotcha">Leave this empty</label>
-              <input id="c-gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
-            </div>
-
-            <div class="form-foot">
-              <p class="small">we only use your email to reply. no spam, no cap.</p>
-              <button class="btn btn-cobalt" id="c-send" type="submit">Send it <img class="emo" src="icons/outbox-tray.webp" alt=""></button>
-            </div>
-
-            <div id="form-status" role="status" aria-live="polite"></div>
-          </form>
+    <section class="contact" id="contact">
+      <div class="contact-panel tile">
+        <h2>Let's talk</h2>
+        <p>The quickest way to reach me is email. My full CV is one click away.</p>
+        <div class="cta-row">
+          <a class="btn" href="mailto:khadyatullokh@gmail.com">khadyatullokh@gmail.com</a>
+          <a class="btn btn-ghost" href="cv/">View CV</a>
         </div>
+        <footer class="contact-foot">
+          <span>© 2026 Xadyatullox Muhammadjonov · Tashkent, Uzbekistan</span>
+          <a href="cv.pdf" download="Xadyatullox-Muhammadjonov-CV.pdf">Download CV (PDF)</a>
+        </footer>
       </div>
     </section>
   </main>
 
-  <footer class="footer tile">
-    <p class="big">KHADI<span>.uz</span></p>
-    <p>made with 0 brain cells in Tashkent · © 2026 · no cap</p>
-    <p><a href="play.html">soundboard and games</a> · <a href="meaning/">brainrot dictionary</a> · <a href="italian-brainrot/">italian brainrot characters</a></p>
-  </footer>
-
-  <script src="data.js"></script>
-  <script src="icons.js"></script>
   <script>
-    (() => {
-      'use strict';
-
-      // Where contact messages go. With FORM_ENDPOINT left empty, "send it" opens
-      // the visitor's email app with the message filled in, addressed to CONTACT_EMAIL.
-      // Paste a Formspree form URL (https://formspree.io/f/...) into FORM_ENDPOINT
-      // to have messages delivered straight from the page instead.
-      const CONTACT_EMAIL = 'me@khadi.uz';
-      const FORM_ENDPOINT = '';
-
-      const $ = (sel, el = document) => el.querySelector(sel);
-      const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
-
-      /* ---------- the feed: tap to hear a creature, ↓ for the next one ---------- */
-      // the screen color cycles through the brand, like scrolling a feed
-      const FIELDS = ['var(--dome)', 'var(--pomegranate)', 'var(--saffron)', 'var(--cobalt-light)'];
-      const creatures = window.KHADI_DATA ? KHADI_DATA.italian : [];
-      const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      const short = n => (n >= 1000 ? `${Math.round(n / 1000)}K` : String(n));
-      const screen = $('#screen');
-      const nextBtn = $('#post-next');
-      const soundLabel = $('#post-sound-label');
-      let at = 0;
-      let voice = null;
-
-      function stopVoice() {
-        if (voice) voice.pause();
-        screen.classList.remove('playing');
-        soundLabel.textContent = 'tap to hear';
-      }
-
-      function show(i) {
-        const c = creatures[i];
-        stopVoice();
-        screen.style.setProperty('--field', FIELDS[i % FIELDS.length]);
-        $('#post-art').textContent = c.art.join(''); // icons.js swaps these for 3D icons
-        $('#post-name').textContent = c.name;
-        $('#post-lore').textContent = c.lore;
-        $('#post-aura').textContent = short(c.aura);
-        $('#post-link').href = `italian-brainrot/${slug(c.name)}/`;
-        screen.classList.remove('swap');
-        void screen.offsetWidth; // restart the swap animation
-        screen.classList.add('swap');
-      }
-
-      if (creatures.length) {
-        nextBtn.hidden = false;
-        nextBtn.addEventListener('click', () => {
-          at = (at + 1) % creatures.length;
-          show(at);
-        });
-        screen.addEventListener('click', () => {
-          stopVoice();
-          voice = new Audio(`sounds/names/${slug(creatures[at].name)}.mp3`);
-          voice.addEventListener('ended', stopVoice, { once: true });
-          voice.play().then(() => {
-            screen.classList.add('playing');
-            soundLabel.textContent = 'playing';
-          }).catch(stopVoice);
-        });
-      }
-
-      /* ---------- mobile menu ---------- */
-      const header = $('#topbar');
-      const menuBtn = $('#menu-btn');
-      const nav = $('#nav');
-
-      function setMenu(open) {
-        header.classList.toggle('menu-open', open);
-        menuBtn.setAttribute('aria-expanded', String(open));
-      }
-      menuBtn.addEventListener('click', () => setMenu(!header.classList.contains('menu-open')));
-      nav.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
-      document.addEventListener('click', e => { if (!header.contains(e.target)) setMenu(false); });
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && header.classList.contains('menu-open')) {
-          setMenu(false);
-          menuBtn.focus();
-        }
-      });
-      matchMedia('(min-width: 761px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
-
-      /* ---------- top bar gets its line once the page moves ---------- */
-      const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
-      addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-
-      /* ---------- highlight the nav link for the section on screen ---------- */
-      const links = $$('a', nav);
-      const spy = new IntersectionObserver(entries => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          for (const a of links) {
-            const here = a.hash === '#' + e.target.id;
-            a.classList.toggle('active', here);
-            if (here) a.setAttribute('aria-current', 'location');
-            else a.removeAttribute('aria-current');
-          }
-        }
-      }, { rootMargin: '-45% 0px -50% 0px' });
-      $$('main > section').forEach(s => spy.observe(s));
-
-      /* ---------- contact form ---------- */
-      const form = $('#contact-form');
-      const status = $('#form-status');
-      const message = $('#c-message');
-      const count = $('#c-count');
-      const sendBtn = $('#c-send');
-      const MAX = Number(message.maxLength);
-
-      const rules = {
-        name: v => v ? '' : 'we need a name. a nickname works.',
-        email: v => !v ? 'drop your email so we can reply.'
-          : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'that email looks a bit ohio. check it?',
-        message: v => v.length >= 10 ? '' : 'say a little more (10 characters at least).',
-      };
-
-      function check(field) {
-        const problem = rules[field.name](field.value.trim());
-        const err = $('#' + field.id + '-err');
-        field.setAttribute('aria-invalid', String(Boolean(problem)));
-        err.textContent = problem;
-        err.hidden = !problem;
-        return !problem;
-      }
-      for (const name of Object.keys(rules)) {
-        const field = form.elements[name];
-        // only nag once someone has left a field they started, then re-check as they fix it
-        field.addEventListener('blur', () => { if (field.value.trim()) check(field); });
-        field.addEventListener('input', () => { if (field.getAttribute('aria-invalid') === 'true') check(field); });
-      }
-
-      const updateCount = () => { count.textContent = `${message.value.length} / ${MAX}`; };
-      message.addEventListener('input', updateCount);
-
-      function say(text, ok) {
-        const p = document.createElement('p');
-        p.className = 'status ' + (ok ? 'ok' : 'bad');
-        p.textContent = text;
-        status.replaceChildren(p);
-      }
-
-      form.addEventListener('submit', async e => {
-        e.preventDefault();
-        const failed = Object.keys(rules).map(n => form.elements[n]).filter(f => !check(f));
-        if (failed.length) {
-          failed[0].focus();
-          return;
-        }
-
-        const data = Object.fromEntries(new FormData(form));
-        if (data._gotcha) {
-          // a bot filled in the hidden field: act like it worked and drop it
-          form.reset();
-          updateCount();
-          say("sent! we'll slide back into your inbox soon.", true);
-          return;
-        }
-
-        if (!FORM_ENDPOINT) {
-          const subject = `[khadi.uz] ${data.topic} from ${data.name}`;
-          const body = `${data.message}\n\n— ${data.name} (${data.email})`;
-          location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-          say("your email app should open with the message ready. hit send there and you're done.", true);
-          return;
-        }
-
-        sendBtn.disabled = true;
-        try {
-          const res = await fetch(FORM_ENDPOINT, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: { Accept: 'application/json' },
-          });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          form.reset();
-          updateCount();
-          say("sent! we'll slide back into your inbox soon.", true);
-        } catch {
-          say(`that didn't go through. try again, or email ${CONTACT_EMAIL}.`, false);
-        } finally {
-          sendBtn.disabled = false;
-        }
-      });
-    })();
+    // the top bar gets its line once the page moves
+    const topbar = document.getElementById('topbar');
+    const onScroll = () => topbar.classList.toggle('scrolled', window.scrollY > 8);
+    addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   </script>
 </body>
 </html>
