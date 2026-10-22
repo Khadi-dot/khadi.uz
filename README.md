@@ -8,7 +8,7 @@ If the page's script can't run at all (a very old browser, a failed load, an err
 
 | Address | File | What it is |
 |---|---|---|
-| khadi.uz | `index.html` | Home: the hero, the ACCA so far, the path to audit, education and recognition, side projects, contact |
+| khadi.uz | `index.html` | Home: the hero, the ACCA so far, the path to audit, education and recognition, skills and languages, side projects, contact |
 | khadi.uz/cv/ | `cv/index.html` | The full CV, laid out as an A4 page. It prints cleanly. |
 | khadi.uz/cv.pdf | `cv.pdf` | The CV as a PDF, made from the page above |
 | any missing address | `404.html` | "Off the map", with a link home |
@@ -49,6 +49,7 @@ The photos arrived at 768×1024, smaller than the page shows them on a Retina sc
 - **Text**: edit it in `index.html`. The words animate in on their own; nothing needs re-timing.
 - **After an exam result** (FM in December, then the rest): in the script in `index.html`, move the paper into `PASSED` and set `NEXT_EXAM` to the next one. The map's trace, lit exams and pulse follow. Then update the numbers by hand: the hero's "ACCA progress" panel and "Next exam" panel, the ACCA block's intro, status line and plate, the journey's "Next" row (its count and the `done` / `next` cells), and the CV's ACCA table.
 - **The journey** is a list of rows in `index.html`, in date order. A job is a *route card*: a line with one point per month there, and hovering or tapping a point names the month. Its `data-from` and `data-to` give the first and last month (`2025-04`); `data-to="now"` keeps the job running, so the card adds a point each month and its count updates by itself. The words on the card (name, role, dates, tags) are plain HTML beside them, so edit those to match. `data-seed` only changes the line's bends. Shorter rows between the jobs are *note cards* (a degree, an award, an exam). A centre row is a job or the "Next" card; a side row is a note card, alternating `data-align="right"` and `"left"`.
+- **Skills and languages** are plain HTML in `index.html`: three language cards, then three groups of skills, each with where it was used. Keep each "where" line to one fact. After an exam result, update the Accounting & audit group too.
 - **The strip of results** under education: edit the `LOG` list near the end of the script. Mark the one ahead `live` (it pulses) and the rest `done`.
 - **The ACCA map's islands** are the `ISLANDS` list in the script; the Options island lists two `Option` papers until you choose them. On a phone the map only names the exams sat and still to sit; the exemptions keep their markers.
 
