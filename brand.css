@@ -17,9 +17,6 @@
   --raw-color-ink-700: #2a2d36;
   --raw-color-ink-alpha-35: rgb(9 10 11 / 0.35);
   --raw-color-ink-alpha-60: rgb(9 10 11 / 0.6);
-  --raw-color-slate-500: #7a7a7a;     /* the games map: halftone */
-  --raw-color-slate-600: #4d4d4d;     /* the games map: grid, inner ring */
-  --raw-color-slate-900: #1e1e1e;     /* the games map: outer rings */
   --raw-color-cyan-400: #02d2e3;      /* the accent */
   --raw-color-cyan-700: #007a85;      /* the accent as text on light ground (AA) */
   --raw-color-cyan-alpha-25: rgb(2 210 227 / 0.25);
@@ -63,9 +60,9 @@
   --border-muted: var(--raw-color-ice-200);
   --border-on-dark: var(--raw-color-ink-700);
   --rule-on-dark: var(--raw-color-white-alpha-15);
-  --map-dot: var(--raw-color-slate-500);
-  --map-grid: var(--raw-color-slate-600);
-  --map-grid-ghost: var(--raw-color-slate-900);
+  --map-island-top: var(--raw-color-ink-800);
+  --map-island-side: var(--raw-color-ink-900);
+  --map-island-edge: var(--raw-color-white-alpha-10);
   --map-mark: var(--raw-color-ice-50);
   --timeline-outline: var(--raw-color-stone-600);
   --timeline-fill: var(--raw-color-white-alpha-10);

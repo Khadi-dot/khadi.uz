@@ -384,8 +384,15 @@
     .split-word { white-space: nowrap; }
     [data-hidden] { opacity: 0; }
 
-    /* ---------- the chequered dissolve ---------- */
-    .dissolve { position: absolute; left: 0; right: 0; top: 0; z-index: 10; width: 100%; height: 34svh; pointer-events: none; }
+    /* ---------- seams: the colour of the block above, fading off ---------- */
+    .seam {
+      position: absolute; left: 0; right: 0; top: 0; z-index: 10;
+      height: 34svh;
+      pointer-events: none;
+      background: linear-gradient(to bottom, var(--seam) 0%, var(--seam) 12%, transparent 100%);
+    }
+    .seam[data-seam="light"] { --seam: var(--background); }
+    .seam[data-seam="dark"] { --seam: var(--surface-black); }
 
     /* ---------- 2 · now building (Chrono Spires) ---------- */
     .acca {
@@ -404,27 +411,33 @@
     .stage { position: absolute; left: 0; top: 0; width: 1440px; height: 800px; transform-origin: top left; }
     .stage > canvas, .stage > svg { position: absolute; inset: 0; width: 1440px; height: 800px; }
     .map { overflow: visible; }
-    .map .axis { stroke: var(--map-grid); stroke-width: 1.2; stroke-dasharray: 6.83 4.7; fill: none; }
-    .map .ring { fill: none; stroke: var(--map-grid); }
-    .map .ring.ghost { stroke: var(--map-grid-ghost); }
-    .map .tick, .map .hub { fill: var(--map-mark); }
-    .map .ping { fill: none; stroke: var(--accent); stroke-width: 1.2; }
-    .map .track { fill: none; stroke: var(--foreground-on-dark); stroke-opacity: 0.4; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
-    .map .track-lit { fill: none; stroke: var(--accent); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+    /* the islands: flat shapes, so the route is the loudest thing on the map */
+    .map .island-top { fill: var(--map-island-top); stroke: var(--map-island-edge); stroke-width: 1; }
+    .map .island-side { fill: var(--map-island-side); }
+    .map .island-side.shade { opacity: 0.6; }
+    .map .island-spire { fill: url(#spire-fade); }
+    /* still to come: thin grey dashes; done: a thick cyan line drawn over them */
+    .map .track { fill: none; stroke: var(--foreground-on-dark-muted); stroke-opacity: 0.6; stroke-width: 2; stroke-dasharray: 7 7; stroke-linecap: round; stroke-linejoin: round; }
+    .map .track-lit { fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
     /* exams: credited ones light as the trace reaches them, FM waits as a ring, the rest stay hollow */
     .map .node { fill: var(--map-mark); opacity: 0.55; transition: fill 300ms, opacity 300ms; }
-    .map .node.later { fill: none; stroke: var(--foreground-on-dark-muted); stroke-width: 1.2; opacity: 0.6; }
+    .map .node.later { fill: var(--surface-black); stroke: var(--foreground-on-dark-muted); stroke-width: 1.4; opacity: 0.9; }
     .map .node.lit { fill: var(--accent); opacity: 1; }
     .map .node.pass.lit { fill: var(--foreground-on-dark); }
-    .map .node.next { fill: var(--surface-black); stroke: var(--accent); stroke-width: 1.6; opacity: 1; }
-    .map .node-pulse { fill: none; stroke: var(--accent); stroke-width: 1.2; }
-    .map .exam-code { font: 500 var(--map-type, 10px)/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; fill: var(--foreground-on-dark-muted); transition: fill 300ms; }
+    .map .node.next { fill: var(--surface-black); stroke: var(--accent); stroke-width: 2.4; opacity: 1; }
+    .map .node-pulse { fill: none; stroke: var(--accent); stroke-width: 1.6; }
+    /* labels carry a halo in the ground's colour, so a line passing under them never cuts through */
+    .map .exam-code, .map .world-label { paint-order: stroke; stroke-width: calc(var(--map-type, 10px) * 0.35); stroke-linejoin: round; }
+    .map .exam-code { font: 500 var(--map-type, 10px)/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; fill: var(--foreground-on-dark-muted); stroke: var(--map-island-top); transition: fill 300ms; }
     .map .exam-code.lit { fill: var(--foreground-on-dark); }
     .map .exam-code.next { fill: var(--accent); font-weight: 700; }
+    /* on a phone the map is too small to name all thirteen: it names the exams sat and still to sit */
+    .map.is-small .exam-code.exempt { display: none; }
     .map .gate { fill: var(--map-mark); opacity: 0.35; transition: fill 300ms, opacity 300ms; }
     .map .gate.lit { fill: var(--accent); opacity: 1; }
-    .map .finish { fill: var(--map-mark); }
-    .map .world-label { font: 500 var(--map-type, 10.5px)/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; fill: var(--foreground-on-dark-muted); }
+    .map .finish path { fill: none; stroke: var(--foreground-on-dark-muted); stroke-width: 1.4; }
+    .map .finish .finish-core { fill: var(--foreground-on-dark-muted); stroke: none; }
+    .map .world-label { font: 500 var(--map-type, 10.5px)/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; fill: var(--foreground-on-dark-muted); stroke: var(--surface-black); }
     .map .world-label tspan.n { fill: var(--accent); }
 
     .acca-copy {
@@ -516,7 +529,7 @@
     }
     @media (max-width: 639px) {
       .acca { --head-min: 40px; --head-air: 20px; --season-h: 720px; --copy-min-w: 100%; }
-      .acca .dissolve { z-index: 0; }
+      .acca .seam { z-index: 0; }
     }
 
     /* ---------- 3 · the journey ---------- */
@@ -532,13 +545,13 @@
       --gutter: max(calc(32 * var(--u)), var(--gutter-min, 0px));
       position: relative;
       width: 100%;
-      padding-top: calc(169 * var(--u) + var(--top-pad-extra, 0px));
+      padding-top: calc(169 * var(--u));
       padding-bottom: calc(150 * var(--u));
     }
     .journey-title {
       position: absolute; z-index: 20;
-      top: var(--head-top, var(--gutter)); right: var(--gutter);
-      width: max(calc(420 * var(--u)), var(--head-w-min, 0px));
+      top: var(--gutter); right: var(--gutter);
+      width: calc(420 * var(--u));
       margin: 0;
       font: 700 max(calc(55 * var(--u)), var(--head-min, 0px))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
@@ -553,12 +566,15 @@
       top: var(--rail-top, 0); bottom: calc(150 * var(--u));
       width: calc(16 * var(--u));
     }
+    .rail { pointer-events: none; }
     .rail svg { display: block; width: 100%; height: 100%; overflow: visible; }
     .rail .rail-line { stroke: var(--timeline-rail); stroke-width: 1; vector-effect: non-scaling-stroke; fill: none; }
     .rail .rail-thread, .rail .rail-mark { fill: var(--foreground-on-dark); }
     .rows { margin: 0; padding: 0; list-style: none; }
-    .row { position: relative; height: calc(var(--h) * var(--u)); transition: opacity var(--duration-plate) var(--ease-plate); }
-    .row-plate { position: absolute; top: 0; bottom: 0; width: calc(var(--w) * var(--u)); }
+    .row { --h: 462; position: relative; height: calc(var(--h) * var(--u)); transition: opacity var(--duration-plate) var(--ease-plate); }
+    .row[data-frame="side"] { --h: 217; }
+    .row-plate { --w: 710; position: absolute; top: 0; bottom: 0; width: calc(var(--w) * var(--u)); }
+    .row[data-frame="side"] .row-plate { --w: 333; }
     .row[data-frame="centre"] .row-plate { left: 50%; transform: translateX(-50%); }
     .row[data-align="right"] .row-plate { right: var(--gutter); }
     .row[data-align="left"] .row-plate { left: var(--gutter); }
@@ -569,15 +585,13 @@
       clip-path: url(#plate-clip);
       transition: inset var(--duration-plate) var(--ease-plate);
     }
-    .plate-slot { position: absolute; left: 0; right: 0; top: -10%; height: 100%; }
-    .plate-slot > img, .plate-slot > svg, .plate-slot > .plate-compose { position: absolute; left: 0; top: 0; width: 100%; height: 110%; object-fit: cover; object-position: top; }
-    .plate-slot > img.face { object-position: 50% 42%; }
     .plate-outline { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; fill: none; stroke: var(--timeline-outline); stroke-width: 1; vector-effect: non-scaling-stroke; pointer-events: none; }
     .row-year {
       position: absolute; left: 50%; top: 50%; z-index: 20;
       transform: translate(-50%, -50%);
-      font: 700 max(calc(36 * var(--u)), var(--year-min, 0px))/var(--leading-headline) var(--font-display);
+      font: 700 calc(36 * var(--u))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
+      width: max-content;
       color: var(--accent);
       pointer-events: none;
       white-space: nowrap;
@@ -585,55 +599,116 @@
     .row-copy-layer { position: absolute; top: 0; bottom: 0; left: calc(1020 * var(--u)); z-index: 20; display: flex; align-items: center; pointer-events: none; }
     .row-copy {
       margin: 0;
-      width: min(max(calc(var(--cw) * var(--u)), var(--copy-min-w, 0px)), var(--copy-max-w, 100vw));
-      font-size: max(calc(18 * var(--u)), var(--copy-min-size, 0px));
+      width: calc(var(--cw) * var(--u));
+      font-size: calc(18 * var(--u));
       line-height: var(--leading-display);
       text-transform: uppercase;
     }
     .row-copy b { font-weight: 700; }
-    .plate-compose { background: #0d0f13; }
-    .plate-compose .shot { position: absolute; border: 1px solid var(--border-on-dark); }
-    .plate-compose .shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
-    .plate-compose .cap {
-      position: absolute;
-      font: 500 max(calc(11 * var(--u)), 9px)/1 var(--font-sans);
+
+    /* the cards on the plates, set in pixels with a floor so they stay legible at any width */
+    .journey-card {
+      --pad: max(calc(32 * var(--u)), 16px);
+      position: absolute; inset: 0;
+      background: var(--surface-dark);
+      font: 500 max(calc(15 * var(--u)), var(--type-floor))/1.35 var(--font-sans);
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: var(--foreground-on-dark-muted);
     }
+    .card-head { position: absolute; z-index: 1; left: var(--pad); right: var(--pad); top: var(--pad); display: flex; flex-direction: column; align-items: flex-start; margin: 0; }
+    .card-title { color: var(--foreground-on-dark); }
+    .name-short { display: none; }
+    /* the side plates are at their narrowest here: the long name would run into the year */
+    @media (min-width: 1024px) and (max-width: 1279px) {
+      .name-long { display: none; }
+      .name-short { display: inline; }
+    }
+    .card-when { color: var(--accent); }
+    /* the foot of every card sits above the plate's stepped corner, the bottom 9.4% */
+    .card-tags, .note-mark, .exam-bar { position: absolute; z-index: 1; left: var(--pad); right: var(--pad); bottom: calc(9.4% + var(--pad) / 2); margin: 0; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.6em 1.6em; padding: 0; list-style: none; }
+    .card-tags li { padding-bottom: 0.5em; border-bottom: 3px solid var(--accent); }
+    .note-mark { padding-bottom: 0.5em; text-align: right; color: var(--accent); border-bottom: 1px solid var(--timeline-outline); }
+    .note-ghost {
+      position: absolute; left: 50%; top: 52%;
+      transform: translate(-50%, -50%);
+      font: 700 calc(150 * var(--u))/1 var(--font-display);
+      letter-spacing: 0;
+      color: var(--foreground-on-dark);
+      opacity: 0.06;
+      white-space: nowrap;
+    }
+    .exam-ghost { left: 42%; font-size: calc(300 * var(--u)); }
+    .exam-count { margin: 0 0 0.6em; color: var(--foreground-on-dark); }
+    .exam-cells { display: grid; grid-template-columns: repeat(13, 1fr); gap: 0.5em 4px; max-width: calc(560 * var(--u)); margin: 0; padding: 0; list-style: none; }
+    .exam-cells li { display: flex; flex-direction: column; align-items: center; gap: 0.45em; }
+    .exam-cells li::before { content: ""; align-self: stretch; height: max(calc(10 * var(--u)), 6px); background: var(--border-on-dark); }
+    .exam-cells .done::before { background: var(--accent); }
+    .exam-cells .next { color: var(--foreground-on-dark); }
+    .exam-cells .next::before { background: none; box-shadow: inset 0 0 0 1px var(--foreground-on-dark); }
+
+    /* route cards: one point per month at the job */
+    .route { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; touch-action: pan-y; }
+    .route-grid { fill: none; stroke: var(--border-on-dark); stroke-dasharray: 3 6; }
+    .route-line { fill: none; stroke: var(--foreground-on-dark); stroke-opacity: 0.85; stroke-width: 2.4; stroke-linecap: round; }
+    .route g, .route text { transition: opacity var(--duration-normal) var(--ease-entrance); }
+    .route-point { fill: var(--accent); transition: transform var(--duration-fast) var(--ease-entrance), fill var(--duration-fast); }
+    .route-point.on { fill: var(--foreground-on-dark); transform: scale(1.7); }
+    .route-ring { fill: none; stroke: var(--accent); stroke-width: 1.6; }
+    .route text { fill: var(--foreground-on-dark-muted); }
+    .route-tip {
+      position: absolute; left: 0; top: 0; z-index: 25;
+      display: flex; flex-direction: column; gap: 0.25em;
+      padding: 0.55em 0.8em;
+      font: 500 max(calc(14 * var(--u)), var(--type-floor))/1.2 var(--font-sans);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: var(--foreground-on-dark-muted);
+      background: var(--surface-black);
+      border: 1px solid var(--border-on-dark);
+      border-top: 2px solid var(--accent);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--duration-fast) var(--ease-entrance);
+    }
+    .route-tip b { font-weight: 700; color: var(--foreground-on-dark); }
+    .route-tip.is-on { opacity: 1; }
     @media (hover: hover) {
       .rows:has(.plate:hover) .row { opacity: 0.3; }
       .rows:has(.plate:hover) .row:has(.plate:hover) { opacity: 1; }
-      .plate:hover .plate-fill { inset: 5%; }
+      .side-plate:hover .plate-fill { inset: 5%; }
     }
     @media (max-width: 1279px) {
       .journey-title { width: auto; left: var(--gutter); text-align: center; top: calc(96 * var(--u)); }
       .journey-title .split, .journey-title .line { justify-content: center; }
       .journey-title { --justify: center; }
-      .journey-wrap { padding-top: calc(265 * var(--u) + var(--top-pad-extra, 0px)); }
-      .rail { --rail-top: calc(265 * var(--u) + var(--top-pad-extra, 0px)); }
+      .journey-wrap { padding-top: calc(265 * var(--u)); }
+      .rail { --rail-top: calc(265 * var(--u)); }
     }
+    /* below lg the rows stack, each plate full size above its words */
     @media (max-width: 1023px) {
       .journey { overflow-x: clip; }
-      .journey-wrap { --copy-min-size: 17px; --head-min: 6.6667cqw; --year-min: 30px; --copy-min-w: 200px; }
-    }
-    @media (min-width: 640px) and (max-width: 1023px) {
-      .journey-wrap { --top-pad-extra: 16cqw; }
-    }
-    @media (max-width: 639px) {
-      .journey-wrap { --gutter-min: 24px; --head-min: 40px; display: flex; flex-direction: column; gap: 2.5rem; padding: 7rem var(--gutter) 4rem; }
+      .journey-wrap { --u: min(1px, calc(100cqw / 760)); --gutter-min: 24px; --head-min: 40px; display: flex; flex-direction: column; gap: 2.5rem; padding: 7rem var(--gutter) 4rem; }
       .journey-title { position: static; text-align: left; --justify: flex-start; width: auto; }
       .journey-title .split, .journey-title .line { justify-content: flex-start; }
       .journey-title .line { display: inline-flex; margin-right: 0.28em; }
       .rail { display: none; }
       .rows { display: flex; flex-direction: column; gap: 2.5rem; }
       .row { height: auto; display: flex; flex-direction: column; gap: 0.75rem; }
-      .row-plate, .row[data-frame] .row-plate { position: relative; top: auto !important; bottom: auto !important; left: auto; right: auto; transform: none; width: 82%; aspect-ratio: 710 / 462; }
-      .row:nth-child(odd) .row-plate { margin-right: auto; }
-      .row:nth-child(even) .row-plate { margin-left: auto; }
+      .row-plate, .row[data-frame] .row-plate { position: relative; top: auto !important; bottom: auto !important; left: auto; right: auto; transform: none; width: 60%; aspect-ratio: 710 / 462; }
+      .row[data-frame="centre"] .row-plate { width: 100%; }
+      .row[data-align="left"] .row-plate { margin-right: auto; }
+      .row[data-align="right"] .row-plate { margin-left: auto; }
       .row-copy-layer { position: static; top: auto !important; bottom: auto !important; }
-      .row-copy { width: 100%; font-size: 17px; }
+      .row-copy { width: 100%; max-width: 40em; font-size: 17px; }
       .row-year { font-size: 30px; }
+    }
+    @media (max-width: 639px) {
+      .row-plate, .row[data-frame] .row-plate { width: 82%; }
+      .row[data-frame="centre"] .row-plate { width: 100%; aspect-ratio: 8 / 7; }
+      .exam-cells { grid-template-columns: repeat(7, 1fr); max-width: none; }
     }
 
     /* ---------- 4 · education and recognition ---------- */
@@ -660,7 +735,7 @@
       height: calc(169 * var(--u));
       background: linear-gradient(to bottom, rgb(9 10 11 / 0) 0%, var(--surface-black) 38.685%);
     }
-    .education .dissolve { z-index: 30; }
+    .education .seam { z-index: 30; }
     .ed-title {
       position: absolute; z-index: 20; left: calc(32 * var(--u)); top: calc(32 * var(--u));
       margin: 0;
@@ -941,11 +1016,12 @@
     <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" data-burger><span></span><span></span></button>
   </div>
 
-  <!-- the plate's stepped corner, as a clip shared by every plate -->
+  <!-- the plate's stepped corner, as a clip and an outline shared by every plate -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <clipPath id="plate-clip" clipPathUnits="objectBoundingBox">
       <path d="M 0.01915,0.00107H 0.98085C 0.98574,0.00107 0.99044,0.00300 0.99390,0.00642C 0.99736,0.00984 0.99930,0.01449 0.99930,0.01933V 0.88815C 0.99930,0.89299 0.99736,0.89763 0.99390,0.90105C 0.99044,0.90448 0.98574,0.90640 0.98085,0.90640H 0.64733C 0.63864,0.90640 0.63007,0.90834 0.62224,0.91206C 0.61442,0.91579 0.60754,0.92122 0.60212,0.92794L 0.56153,0.97830C 0.55635,0.98474 0.54976,0.98993 0.54227,0.99350C 0.53478,0.99707 0.52656,0.99892 0.51825,0.99892H 0.01915C 0.01426,0.99892 0.00956,0.99700 0.00610,0.99358C 0.00264,0.99016 0.00070,0.98551 0.00070,0.98067V 0.01933C 0.00070,0.01449 0.00264,0.00984 0.00610,0.00642C 0.00956,0.00300 0.01426,0.00107 0.01915,0.00107Z"/>
     </clipPath>
+    <defs><path id="plate-path" vector-effect="non-scaling-stroke" d="M13.6168 0.497469H697.378C700.858 0.497469 704.195 1.38786 706.655 2.97277C709.115 4.55769 710.498 6.70729 710.498 8.94869V411.208C710.498 413.449 709.115 415.599 706.655 417.183C704.195 418.768 700.858 419.659 697.378 419.659H460.249C454.073 419.659 447.976 420.555 442.411 422.281C436.847 424.008 431.958 426.519 428.107 429.63L399.246 452.95C395.559 455.928 390.878 458.333 385.55 459.986C380.223 461.639 374.385 462.497 368.472 462.497H13.6168C10.1373 462.497 6.80038 461.607 4.34003 460.022C1.87968 458.437 0.497469 456.288 0.497469 454.046V8.94869C0.497469 6.70729 1.87968 4.55769 4.34003 2.97277C6.80038 1.38786 10.1373 0.497469 13.6168 0.497469Z"/></defs>
     <symbol id="corner" viewBox="0 0 10.5 10.5"><path d="M0 0.5H10V10.5"/></symbol>
     <symbol id="arrow" viewBox="0 0 13.7071 10.7071"><path d="M0 5.35355H13M8 10.3536L13 5.35355L8 0.353553"/></symbol>
   </svg>
@@ -1069,12 +1145,11 @@
           <section class="acca on-dark" id="acca" data-season aria-labelledby="acca-title">
             <div class="stage-frame" aria-hidden="true">
               <div class="stage" data-stage>
-                <canvas data-dots></canvas>
                 <svg class="map" data-map viewBox="0 0 1440 800"></svg>
                 <canvas data-trace></canvas>
               </div>
             </div>
-            <canvas class="dissolve" data-dissolve="light" aria-hidden="true"></canvas>
+            <div class="seam" data-seam="light" aria-hidden="true"></div>
 
             <div class="acca-copy">
               <div>
@@ -1114,7 +1189,6 @@
       <!-- ============ 3 · THE JOURNEY ============ -->
       <div class="layer-last" data-layer-last>
         <section class="journey on-dark" id="journey" aria-labelledby="journey-title">
-          <canvas class="dissolve" data-dissolve="light" aria-hidden="true" style="z-index: 30"></canvas>
           <div class="journey-wrap" data-journey>
             <h2 class="journey-title" id="journey-title">
               <span class="line" data-reveal="words" data-reveal-at="0">The path</span>
@@ -1123,105 +1197,134 @@
             <div class="rail" data-rail aria-hidden="true"></div>
 
             <ol class="rows">
-              <li class="row" data-frame="centre" style="--h: 462">
-                <div class="row-plate" data-travel="20" style="--w: 710">
+              <li class="row" data-frame="centre">
+                <div class="row-plate" data-travel="20">
                   <figure class="plate">
-                    <div class="plate-fill"><div class="plate-slot" data-slot>
-                      <svg viewBox="0 0 710 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration: a fuel route with five fuel stops, and the three numbers the fuel department reported">
-                        <rect width="710" height="520" fill="#101217"/>
-                        <g stroke="#2a2d36" stroke-dasharray="3 6">
-                          <path d="M71 0V520M142 0V520M213 0V520M284 0V520M355 0V520M426 0V520M497 0V520M568 0V520M639 0V520"/>
-                          <path d="M0 65H710M0 130H710M0 195H710M0 260H710M0 325H710M0 390H710M0 455H710"/>
-                        </g>
-                        <g transform="translate(0 -60)">
-                        <path d="M28 428C110 410 150 342 214 318S330 330 384 284S470 170 548 158S650 96 690 74" fill="none" stroke="#fff" stroke-opacity="0.85" stroke-width="2.4" stroke-linecap="round"/>
-                        <g fill="#02d2e3"><path d="M120 384l7 7-7 7-7-7z"/><path d="M214 311l7 7-7 7-7-7z"/><path d="M384 277l7 7-7 7-7-7z"/><path d="M548 151l7 7-7 7-7-7z"/><path d="M652 87l7 7-7 7-7-7z"/></g>
-                        </g>
-                        <g font-family="Space Grotesk, sans-serif" font-size="15" fill="#b6c1c8" letter-spacing=".04em">
-                          <text x="32" y="44">GREEN GROUP LLC · FUEL DEPARTMENT</text>
-                          <text x="32" y="396">MPG</text><text x="110" y="396">IDLE TIME</text><text x="226" y="396">COST PER MILE</text>
-                        </g>
-                        <g fill="#02d2e3"><rect x="32" y="408" width="56" height="3"/><rect x="110" y="408" width="92" height="3"/><rect x="226" y="408" width="124" height="3"/></g>
-                      </svg>
+                    <div class="plate-fill"><div class="journey-card" data-route data-from="2023-02" data-to="2024-02" data-seed="3">
+                      <p class="card-head"><span class="card-title">Green Group LLC</span><span>Fuel department manager</span><span class="card-when">Feb 2023 – Feb 2024 · 13 months</span></p>
+                      <ul class="card-tags"><li>MPG</li><li>Idle time</li><li>Cost per mile</li></ul>
                     </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><path d="M13.6168 0.497469H697.378C700.858 0.497469 704.195 1.38786 706.655 2.97277C709.115 4.55769 710.498 6.70729 710.498 8.94869V411.208C710.498 413.449 709.115 415.599 706.655 417.183C704.195 418.768 700.858 419.659 697.378 419.659H460.249C454.073 419.659 447.976 420.555 442.411 422.281C436.847 424.008 431.958 426.519 428.107 429.63L399.246 452.95C395.559 455.928 390.878 458.333 385.55 459.986C380.223 461.639 374.385 462.497 368.472 462.497H13.6168C10.1373 462.497 6.80038 461.607 4.34003 460.022C1.87968 458.437 0.497469 456.288 0.497469 454.046V8.94869C0.497469 6.70729 1.87968 4.55769 4.34003 2.97277C6.80038 1.38786 10.1373 0.497469 13.6168 0.497469Z"/></svg>
+                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
                   </figure>
                   <span class="row-year" data-year>2023</span>
                 </div>
-                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 284"><b>Fuel and figures.</b> Joined Green Group LLC as fuel department manager for a US trucking fleet, and started a BSc in accounting and finance.</p></div>
+                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 300"><b>Fuel and figures.</b> Fuel department manager at Green Group LLC for a US trucking fleet: fuel cards, prices and stops, reported as MPG, idle time and cost per mile.</p></div>
               </li>
 
-              <li class="row" data-frame="side" data-align="right" style="--h: 217">
-                <div class="row-plate" data-travel="60" style="--w: 333">
+              <li class="row" data-frame="side" data-align="right">
+                <div class="row-plate" data-travel="60">
                   <figure class="plate">
-                    <div class="plate-fill"><div class="plate-slot" data-slot>
-                      <svg viewBox="0 0 333 245" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration: a business analyst's dashboard, Green Group LLC, 2024">
-                        <rect width="333" height="245" fill="#101217"/>
-                        <g fill="#2a2d36"><rect x="24" y="150" width="20" height="44"/><rect x="54" y="134" width="20" height="60"/><rect x="84" y="142" width="20" height="52"/><rect x="114" y="118" width="20" height="76"/><rect x="204" y="96" width="20" height="98"/><rect x="234" y="104" width="20" height="90"/><rect x="264" y="78" width="20" height="116"/><rect x="294" y="64" width="20" height="130"/></g>
-                        <path d="M24 170L74 150L104 156L134 128L224 108L254 112L284 88L314 70" fill="none" stroke="#02d2e3" stroke-width="2"/>
-                        <path d="M0 194.5H333" stroke="#535450"/>
-                        <g font-family="Space Grotesk, sans-serif" font-size="14" fill="#b6c1c8" letter-spacing=".04em"><text x="24" y="30">BUSINESS ANALYST</text><text x="24" y="50">GREEN GROUP LLC</text></g>
-                      </svg>
+                    <div class="plate-fill"><div class="journey-card">
+                      <span class="note-ghost" aria-hidden="true">BSc</span>
+                      <p class="card-head"><span class="card-title"><span class="name-long">British Management University</span><span class="name-short">BMU</span></span><span>BSc accounting and finance</span></p>
+                      <p class="note-mark">Started</p>
                     </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><path d="M13.6168 0.497469H697.378C700.858 0.497469 704.195 1.38786 706.655 2.97277C709.115 4.55769 710.498 6.70729 710.498 8.94869V411.208C710.498 413.449 709.115 415.599 706.655 417.183C704.195 418.768 700.858 419.659 697.378 419.659H460.249C454.073 419.659 447.976 420.555 442.411 422.281C436.847 424.008 431.958 426.519 428.107 429.63L399.246 452.95C395.559 455.928 390.878 458.333 385.55 459.986C380.223 461.639 374.385 462.497 368.472 462.497H13.6168C10.1373 462.497 6.80038 461.607 4.34003 460.022C1.87968 458.437 0.497469 456.288 0.497469 454.046V8.94869C0.497469 6.70729 1.87968 4.55769 4.34003 2.97277C6.80038 1.38786 10.1373 0.497469 13.6168 0.497469Z"/></svg>
+                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+                  </figure>
+                  <span class="row-year" data-year>Sep 2023</span>
+                </div>
+              </li>
+
+              <li class="row" data-frame="centre">
+                <div class="row-plate" data-travel="20">
+                  <figure class="plate">
+                    <div class="plate-fill"><div class="journey-card" data-route data-from="2024-02" data-to="2025-09" data-seed="8">
+                      <p class="card-head"><span class="card-title">Green Group LLC</span><span>Business analyst</span><span class="card-when">Feb 2024 – Sep 2025 · 20 months</span></p>
+                      <ul class="card-tags"><li>Requirements</li><li>Dashboards</li><li>Integrations</li></ul>
+                    </div></div>
+                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
                   </figure>
                   <span class="row-year" data-year>2024</span>
                 </div>
+                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 300"><b>Into the data.</b> Business analyst at Green Group: requirements and specifications, data cleaning, reports and dashboards for management, and TMS and CRM integrations.</p></div>
               </li>
 
-              <li class="row" data-frame="centre" style="--h: 462">
-                <div class="row-plate" data-travel="20" style="--w: 710">
+              <li class="row" data-frame="side" data-align="left">
+                <div class="row-plate" data-travel="60">
                   <figure class="plate">
-                    <div class="plate-fill"><div class="plate-slot" data-slot>
-                      <img class="face" src="img/journey/2025.jpg" width="768" height="1024" loading="lazy" decoding="async" alt="Xadyatullox in a cream overshirt, arms crossed, talking under a studio light">
+                    <div class="plate-fill"><div class="journey-card">
+                      <span class="note-ghost" aria-hidden="true">EY</span>
+                      <p class="card-head"><span class="card-title">EY</span><span>Career Launch</span></p>
+                      <p class="note-mark">Finalist</p>
                     </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><path d="M13.6168 0.497469H697.378C700.858 0.497469 704.195 1.38786 706.655 2.97277C709.115 4.55769 710.498 6.70729 710.498 8.94869V411.208C710.498 413.449 709.115 415.599 706.655 417.183C704.195 418.768 700.858 419.659 697.378 419.659H460.249C454.073 419.659 447.976 420.555 442.411 422.281C436.847 424.008 431.958 426.519 428.107 429.63L399.246 452.95C395.559 455.928 390.878 458.333 385.55 459.986C380.223 461.639 374.385 462.497 368.472 462.497H13.6168C10.1373 462.497 6.80038 461.607 4.34003 460.022C1.87968 458.437 0.497469 456.288 0.497469 454.046V8.94869C0.497469 6.70729 1.87968 4.55769 4.34003 2.97277C6.80038 1.38786 10.1373 0.497469 13.6168 0.497469Z"/></svg>
+                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+                  </figure>
+                  <span class="row-year" data-year>Mar 2025</span>
+                </div>
+              </li>
+
+              <li class="row" data-frame="centre">
+                <div class="row-plate" data-travel="20">
+                  <figure class="plate">
+                    <div class="plate-fill"><div class="journey-card" data-route data-from="2025-04" data-to="2025-08" data-seed="5">
+                      <p class="card-head"><span class="card-title">T&amp;M Financials</span><span>Co-founder and accountant</span><span class="card-when">Apr 2025 – Aug 2025 · 5 months</span></p>
+                      <ul class="card-tags"><li>Invoicing</li><li>QuickManage</li><li>Amazon Relay</li></ul>
+                    </div></div>
+                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
                   </figure>
                   <span class="row-year" data-year>2025</span>
                 </div>
-                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 300"><b>A firm of my own.</b> Co-founded T&amp;M Financials to handle invoicing for independent US truckers. Reached the EY Career Launch final, and won high priority at the Deloitte Case Competition.</p></div>
+                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 290"><b>A firm of my own.</b> Co-founded T&amp;M Financials to invoice for independent US truckers, with Excel trackers for their income, expenses and profit.</p></div>
               </li>
 
-              <li class="row" data-frame="side" data-align="left" style="--h: 217">
-                <div class="row-plate" data-travel="60" style="--w: 333">
+              <li class="row" data-frame="side" data-align="right">
+                <div class="row-plate" data-travel="60">
                   <figure class="plate">
-                    <div class="plate-fill"><div class="plate-slot" data-slot>
-                      <svg viewBox="0 0 333 245" preserveAspectRatio="xMidYMid slice" role="img" aria-label="ACCA Financial Reporting (FR), passed in September 2026">
-                        <rect width="333" height="245" fill="#101217"/>
-                        <text x="166" y="196" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="190" fill="#fff" fill-opacity="0.06">FR</text>
-                        <g font-family="Space Grotesk, sans-serif" font-size="14" letter-spacing=".04em"><text x="24" y="30" fill="#b6c1c8">ACCA · FINANCIAL REPORTING</text><text x="309" y="190" text-anchor="end" fill="#02d2e3">PASSED · SEP 2026</text></g>
-                        <path d="M24 196.5H309" stroke="#535450"/>
-                      </svg>
+                    <div class="plate-fill"><div class="journey-card">
+                      <span class="note-ghost" aria-hidden="true">Case</span>
+                      <p class="card-head"><span class="card-title">Deloitte</span><span>Case Competition</span></p>
+                      <p class="note-mark">High-priority winner</p>
                     </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><path d="M13.6168 0.497469H697.378C700.858 0.497469 704.195 1.38786 706.655 2.97277C709.115 4.55769 710.498 6.70729 710.498 8.94869V411.208C710.498 413.449 709.115 415.599 706.655 417.183C704.195 418.768 700.858 419.659 697.378 419.659H460.249C454.073 419.659 447.976 420.555 442.411 422.281C436.847 424.008 431.958 426.519 428.107 429.63L399.246 452.95C395.559 455.928 390.878 458.333 385.55 459.986C380.223 461.639 374.385 462.497 368.472 462.497H13.6168C10.1373 462.497 6.80038 461.607 4.34003 460.022C1.87968 458.437 0.497469 456.288 0.497469 454.046V8.94869C0.497469 6.70729 1.87968 4.55769 4.34003 2.97277C6.80038 1.38786 10.1373 0.497469 13.6168 0.497469Z"/></svg>
+                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
                   </figure>
-                  <span class="row-year" data-year>2026</span>
+                  <span class="row-year" data-year>Nov 2025</span>
                 </div>
               </li>
 
-              <li class="row" data-frame="centre" style="--h: 462">
-                <div class="row-plate" data-travel="20" style="--w: 710">
+              <li class="row" data-frame="centre">
+                <div class="row-plate" data-travel="20">
                   <figure class="plate">
-                    <div class="plate-fill"><div class="plate-slot" data-slot>
-                      <svg viewBox="0 0 710 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label="ACCA progress: 8 of 13 exams credited, Financial Management next in December 2026">
-                        <rect width="710" height="520" fill="#101217"/>
-                        <text x="300" y="330" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="300" fill="#fff" fill-opacity="0.05">FM</text>
-                        <g font-family="Space Grotesk, sans-serif" font-size="15" letter-spacing=".04em">
-                          <text x="32" y="44" fill="#b6c1c8">ACCA · FINANCIAL MANAGEMENT</text>
-                          <text x="32" y="64" fill="#02d2e3">DECEMBER 2026 SESSION</text>
-                          <text x="32" y="356" fill="#fff">8 OF 13 CREDITED</text>
-                        </g>
-                        <g fill="#02d2e3"><rect x="32" y="372" width="38" height="10"/><rect x="74" y="372" width="38" height="10"/><rect x="116" y="372" width="38" height="10"/><rect x="158" y="372" width="38" height="10"/><rect x="200" y="372" width="38" height="10"/><rect x="242" y="372" width="38" height="10"/><rect x="284" y="372" width="38" height="10"/><rect x="326" y="372" width="38" height="10"/></g>
-                        <rect x="368.5" y="372.5" width="37" height="9" fill="none" stroke="#fff"/>
-                        <g fill="#2a2d36"><rect x="410" y="372" width="38" height="10"/><rect x="452" y="372" width="38" height="10"/><rect x="494" y="372" width="38" height="10"/><rect x="536" y="372" width="38" height="10"/></g>
-                        <g font-family="Space Grotesk, sans-serif" font-size="14" letter-spacing=".04em" fill="#b6c1c8" text-anchor="middle"><text x="51" y="400">BT</text><text x="93" y="400">MA</text><text x="135" y="400">FA</text><text x="177" y="400">LW</text><text x="219" y="400">PM</text><text x="261" y="400">TX</text><text x="303" y="400">FR</text><text x="345" y="400">AA</text><text x="387" y="400" fill="#fff">FM</text><text x="429" y="400">SBL</text><text x="471" y="400">SBR</text><text x="513" y="400">OPT</text><text x="555" y="400">OPT</text></g>
-                      </svg>
+                    <div class="plate-fill"><div class="journey-card" data-route data-from="2026-06" data-to="now" data-seed="11">
+                      <p class="card-head"><span class="card-title">Exely</span><span>Technical specialist</span><span class="card-when">Since Jun 2026</span></p>
+                      <ul class="card-tags"><li>Hoteliers</li><li>Setup</li><li>Support</li></ul>
                     </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><path d="M13.6168 0.497469H697.378C700.858 0.497469 704.195 1.38786 706.655 2.97277C709.115 4.55769 710.498 6.70729 710.498 8.94869V411.208C710.498 413.449 709.115 415.599 706.655 417.183C704.195 418.768 700.858 419.659 697.378 419.659H460.249C454.073 419.659 447.976 420.555 442.411 422.281C436.847 424.008 431.958 426.519 428.107 429.63L399.246 452.95C395.559 455.928 390.878 458.333 385.55 459.986C380.223 461.639 374.385 462.497 368.472 462.497H13.6168C10.1373 462.497 6.80038 461.607 4.34003 460.022C1.87968 458.437 0.497469 456.288 0.497469 454.046V8.94869C0.497469 6.70729 1.87968 4.55769 4.34003 2.97277C6.80038 1.38786 10.1373 0.497469 13.6168 0.497469Z"/></svg>
+                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+                  </figure>
+                  <span class="row-year" data-year>Now</span>
+                </div>
+                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 280"><b>Supporting hoteliers.</b> Technical specialist at Exely since June 2026, helping hoteliers set up and use its products.</p></div>
+              </li>
+
+              <li class="row" data-frame="side" data-align="left">
+                <div class="row-plate" data-travel="60">
+                  <figure class="plate">
+                    <div class="plate-fill"><div class="journey-card">
+                      <span class="note-ghost" aria-hidden="true">FR</span>
+                      <p class="card-head"><span class="card-title">ACCA</span><span>Financial Reporting</span></p>
+                      <p class="note-mark">Passed</p>
+                    </div></div>
+                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+                  </figure>
+                  <span class="row-year" data-year>Sep 2026</span>
+                </div>
+              </li>
+
+              <li class="row" data-frame="centre">
+                <div class="row-plate" data-travel="20">
+                  <figure class="plate">
+                    <div class="plate-fill"><div class="journey-card">
+                      <span class="note-ghost exam-ghost" aria-hidden="true">FM</span>
+                      <p class="card-head"><span class="card-title">ACCA · Financial Management</span><span class="card-when">December 2026 session</span></p>
+                      <div class="exam-bar">
+                        <p class="exam-count">8 of 13 credited</p>
+                        <ol class="exam-cells" aria-label="ACCA exams in order: the first eight credited, FM next, four to go"><li class="done">BT</li><li class="done">MA</li><li class="done">FA</li><li class="done">LW</li><li class="done">PM</li><li class="done">TX</li><li class="done">FR</li><li class="done">AA</li><li class="next">FM</li><li>SBL</li><li>SBR</li><li>OPT</li><li>OPT</li></ol>
+                      </div>
+                    </div></div>
+                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
                   </figure>
                   <span class="row-year" data-year>Next</span>
                 </div>
-                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 290"><b>FM, then audit.</b> Financial Management in the December 2026 session, on the way to the full qualification and a career in audit. Meanwhile, technical specialist at Exely.</p></div>
+                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 290"><b>FM, then audit.</b> Financial Management in the December 2026 session, on the way to the full qualification and a career in audit.</p></div>
               </li>
             </ol>
           </div>
@@ -1231,7 +1334,7 @@
 
     <!-- ============ 4 · EDUCATION & RECOGNITION ============ -->
     <section class="education" id="education" aria-labelledby="education-title">
-      <canvas class="dissolve" data-dissolve="dark" aria-hidden="true"></canvas>
+      <div class="seam" data-seam="dark" aria-hidden="true"></div>
       <div class="ed-frame">
         <canvas class="contours" data-contours="--paddock-contour" aria-hidden="true"></canvas>
         <div class="ed-band" aria-hidden="true"></div>
@@ -1315,7 +1418,7 @@
           <article class="side-card" data-reveal="rise-sm" data-reveal-at="420">
             <figure class="plate side-plate">
               <div class="plate-fill"><img src="img/games/chrono-spires-feature.jpg" width="1024" height="500" loading="lazy" decoding="async" alt="Chrono Spires: the title beside an isometric board of floating tiles and machines" style="object-position: 0% 50%"></div>
-              <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><path d="M13.6168 0.497469H697.378C700.858 0.497469 704.195 1.38786 706.655 2.97277C709.115 4.55769 710.498 6.70729 710.498 8.94869V411.208C710.498 413.449 709.115 415.599 706.655 417.183C704.195 418.768 700.858 419.659 697.378 419.659H460.249C454.073 419.659 447.976 420.555 442.411 422.281C436.847 424.008 431.958 426.519 428.107 429.63L399.246 452.95C395.559 455.928 390.878 458.333 385.55 459.986C380.223 461.639 374.385 462.497 368.472 462.497H13.6168C10.1373 462.497 6.80038 461.607 4.34003 460.022C1.87968 458.437 0.497469 456.288 0.497469 454.046V8.94869C0.497469 6.70729 1.87968 4.55769 4.34003 2.97277C6.80038 1.38786 10.1373 0.497469 13.6168 0.497469Z"/></svg>
+              <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
             </figure>
             <h3><img src="img/games/chrono-spires-icon.png" width="168" height="168" alt="">Chrono Spires</h3>
             <p><span class="tag">Puzzle · Android · In progress.</span> A turn-based puzzle game on floating islands: 32 levels in 4 worlds, with a Google Play closed test next.</p>
@@ -1323,7 +1426,7 @@
           <article class="side-card" data-reveal="rise-sm" data-reveal-at="520">
             <figure class="plate side-plate">
               <div class="plate-fill"><img src="img/games/pocketpywel.jpg" width="1280" height="720" loading="lazy" decoding="async" alt="PocketPywel: Kael on a meadow in Brenwick Vale, with health bars, the quest tracker and touch controls"></div>
-              <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><path d="M13.6168 0.497469H697.378C700.858 0.497469 704.195 1.38786 706.655 2.97277C709.115 4.55769 710.498 6.70729 710.498 8.94869V411.208C710.498 413.449 709.115 415.599 706.655 417.183C704.195 418.768 700.858 419.659 697.378 419.659H460.249C454.073 419.659 447.976 420.555 442.411 422.281C436.847 424.008 431.958 426.519 428.107 429.63L399.246 452.95C395.559 455.928 390.878 458.333 385.55 459.986C380.223 461.639 374.385 462.497 368.472 462.497H13.6168C10.1373 462.497 6.80038 461.607 4.34003 460.022C1.87968 458.437 0.497469 456.288 0.497469 454.046V8.94869C0.497469 6.70729 1.87968 4.55769 4.34003 2.97277C6.80038 1.38786 10.1373 0.497469 13.6168 0.497469Z"/></svg>
+              <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
             </figure>
             <h3>PocketPywel</h3>
             <p><span class="tag">Action RPG · iPhone · In progress.</span> An open-world action RPG for phones, inspired by Crimson Desert. Chapter 1 is playable.</p>
@@ -1807,51 +1910,12 @@
     }
 
     // ---------------------------------------------------------------
-    // The chequered dissolve: a flag coming apart across a seam.
+    // Seams: where a light block meets a dark one, the colour of the
+    // block above lies over the top of the next and fades as it rises.
     // ---------------------------------------------------------------
-    function chequer(canvas) {
-      const context = canvas.getContext("2d");
-      const carry = canvas.dataset.dissolve;
-      const CELL = 24, SOLID_UNTIL = 0.16, LIFT = 2, ACCENT_SHARE = 0.06;
-      const noise = (x, y) => {
-        let h = Math.imul(x, 374761393) + Math.imul(y, 668265263);
-        h = Math.imul(h ^ (h >>> 13), 1274126177);
-        return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
-      };
-      let progress = 0, width = 0, height = 0;
-      const surface = readToken(carry === "light" ? "--background" : "--surface-black");
-      const accent = readToken("--accent");
-      const render = () => {
-        const ratio = Math.min(devicePixelRatio || 1, 2);
-        width = canvas.clientWidth; height = canvas.clientHeight;
-        if (!width || !height) return;
-        if (canvas.width !== Math.round(width * ratio) || canvas.height !== Math.round(height * ratio)) {
-          canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
-        }
-        context.setTransform(ratio, 0, 0, ratio, 0, 0);
-        context.clearRect(0, 0, width, height);
-        const cell = CELL;
-        const columns = Math.ceil(width / cell), rows = Math.ceil(height / cell), lift = progress * LIFT;
-        for (let y = 0; y < rows; y += 1) {
-          const depth = y / Math.max(1, rows - 1) + lift;
-          if (depth > 1) break;
-          const solid = depth <= SOLID_UNTIL;
-          const fade = clamp01(1 - (depth - SOLID_UNTIL) / (1 - SOLID_UNTIL));
-          if (!solid && fade <= 0) break;
-          for (let x = 0; x < columns; x += 1) {
-            if (!solid) {
-              if ((x + y) % 2 !== 0) continue;
-              if (noise(x, y) > fade) continue;
-            }
-            context.fillStyle = !solid && noise(x + 101, y + 57) < ACCENT_SHARE ? accent : surface;
-            context.fillRect(x * cell, y * cell, cell, cell);
-          }
-        }
-      };
-      new ResizeObserver(render).observe(canvas);
-      scrub(canvas, "top_bottom", "top_top", (p) => { progress = p; render(); }, { smooth: CONFIG.TRIGGER });
-    }
-    $$("[data-dissolve]").forEach(chequer);
+    $$("[data-seam]").forEach((seam) => {
+      scrub(seam, "top_bottom", "top_top", (p) => { seam.style.opacity = clamp01(1 - p); }, { smooth: CONFIG.TRIGGER });
+    });
 
     // ---------------------------------------------------------------
     // Contours: the hero's field on a 2D canvas, by marching squares.
@@ -2806,7 +2870,7 @@
         const d = d0 + (d1 - d0) * ((k + 0.5) / island.exams.length);
         const [x, y] = pointAt(d);
         const state = PASSED.has(code) ? "pass" : EXEMPT.has(code) ? "exempt" : code === NEXT_EXAM ? "next" : "later";
-        return { x, y, d, code, state };
+        return { x, y, d, code, state, side: x < island.cx ? -1 : 1 };
       });
     });
     // The trace runs as far as the next exam and waits there.
@@ -2862,43 +2926,18 @@
       return CUMULATIVE[low] + (CUMULATIVE[high] - CUMULATIVE[low]) * ratio;
     };
 
-    // The halftone: every island as dots on one lattice, so a light can find them by arithmetic.
-    const DOT_LATTICE = { pitchX: 4.4, pitchY: 4.33, originX: 2.2, originY: 2.2 };
-    const DOTS = (() => {
-      const spire = (island, u) => {
-        let depth = island.a * 0.55 * Math.pow(Math.max(0, 1 - u * u), 1.5);
-        for (const s of island.spikes) depth = Math.max(depth, s.h * Math.max(0, 1 - Math.abs(u - s.u) / s.w) * (1 - Math.abs(u) * 0.4));
-        return depth;
-      };
-      const classify = (x, y, i, j) => {
-        for (const island of ISLANDS) {
-          const dx = x - island.cx, dy = y - island.cy, a = island.a;
-          if (Math.abs(dx) / a + Math.abs(dy) / (a / 2) <= 1) return 1.05;
-          if (Math.abs(dx) < a) {
-            const lower = island.cy + (a / 2) * (1 - Math.abs(dx) / a);
-            const below = y - lower;
-            if (below > 0 && below <= island.side) return 0.85;
-            if (below > island.side && below <= island.side + spire(island, dx / a)) return (i + j) % 2 === 0 ? 0.7 : 0;
-          }
-        }
-        return 0;
-      };
-      const points = [], columns = [], rows = [], radii = [];
-      const iMax = Math.ceil((1440 - DOT_LATTICE.originX) / DOT_LATTICE.pitchX), jMax = Math.ceil((800 - DOT_LATTICE.originY) / DOT_LATTICE.pitchY);
-      for (let j = 0; j <= jMax; j++) for (let i = 0; i <= iMax; i++) {
-        const x = DOT_LATTICE.originX + i * DOT_LATTICE.pitchX, y = DOT_LATTICE.originY + j * DOT_LATTICE.pitchY;
-        const r = classify(x, y, i, j);
-        if (r > 0) { points.push(x, y); columns.push(i); rows.push(j); radii.push(r); }
-      }
-      return { points: Float32Array.from(points), columns: Int32Array.from(columns), rows: Int32Array.from(rows), radii: Float32Array.from(radii), count: columns.length };
-    })();
+    // An island's underside: a tapering body with a few spires, as a depth below the side faces.
+    const spireDepth = (island, u) => {
+      let depth = island.a * 0.55 * Math.pow(Math.max(0, 1 - u * u), 1.5);
+      for (const s of island.spikes) depth = Math.max(depth, s.h * Math.max(0, 1 - Math.abs(u - s.u) / s.w) * (1 - Math.abs(u) * 0.4));
+      return depth;
+    };
 
     {
       const section = $("[data-season]");
       const stage = $("[data-stage]");
       const frame = stage.parentElement;
       const svg = $("[data-map]");
-      const dotsCanvas = $("[data-dots]");
       const traceCanvas = $("[data-trace]");
       const coarse = matchMedia("(hover: none) and (pointer: coarse)").matches;
       const NS = "http://www.w3.org/2000/svg";
@@ -2910,18 +2949,24 @@
       };
       const fmt = (n) => n.toFixed(1);
 
-      // the grid, crawling; the hub, its rings and its ping; the corner ticks
-      const grid = el("g", {});
-      for (const x of [363, 718.4, 1073.6]) el("path", { class: "axis", d: `M${x} -2250V3050` }, grid);
-      el("path", { class: "axis", d: "M-2250 393H3690" }, grid);
-      const HUB = { x: 719.2, y: 393.5 };
-      el("circle", { class: "ring", cx: HUB.x, cy: HUB.y, r: 39.3, "stroke-width": 1.7 });
-      el("circle", { class: "ring ghost", cx: HUB.x, cy: HUB.y, r: 200.3, "stroke-width": 1.2 });
-      el("circle", { class: "ring ghost", cx: HUB.x, cy: HUB.y, r: 249, "stroke-width": 1.2 });
-      const ping = el("circle", { class: "ping", cx: HUB.x, cy: HUB.y, r: 6 });
-      el("circle", { class: "hub", cx: HUB.x, cy: HUB.y, r: 6 });
-      for (const [x, y] of [[36.7, 43.3], [1390.5, 43.3], [36.7, 524.2], [1390.5, 524.2], [36.7, 755.6]]) {
-        el("rect", { class: "tick", x: x - 4.7, y: y - 4.7, width: 9.4, height: 9.4 });
+      // the islands: flat shapes, a top face over two darker sides and a spire fading out below
+      const pts = (list) => list.map(([x, y]) => `${fmt(x)},${fmt(y)}`).join(" ");
+      const fadeDown = el("linearGradient", { id: "spire-fade", x1: 0, y1: 0, x2: 0, y2: 1 }, el("defs", {}));
+      el("stop", { offset: 0, style: "stop-color: var(--map-island-side)" }, fadeDown);
+      el("stop", { offset: 1, style: "stop-color: var(--map-island-side); stop-opacity: 0" }, fadeDown);
+      for (const island of ISLANDS) {
+        const { cx, cy, a, side } = island;
+        const left = [cx - a, cy], top = [cx, cy - a / 2], right = [cx + a, cy], bottom = [cx, cy + a / 2];
+        const down = ([x, y]) => [x, y + side];
+        const underside = [];
+        for (let k = 40; k >= 0; k--) {
+          const u = -1 + (2 * k) / 40;
+          underside.push([cx + u * a, cy + (a / 2) * (1 - Math.abs(u)) + side + spireDepth(island, u)]);
+        }
+        el("polygon", { class: "island-spire", points: pts([down(left), down(bottom), down(right), ...underside]) });
+        el("polygon", { class: "island-side", points: pts([left, bottom, down(bottom), down(left)]) });
+        el("polygon", { class: "island-side shade", points: pts([bottom, right, down(right), down(bottom)]) });
+        el("polygon", { class: "island-top", points: pts([left, top, right, bottom]) });
       }
 
       // the track and its lit copy, revealed along the lap
@@ -2934,14 +2979,15 @@
       let nextPulse = null;
       const nodes = EXAM_NODES.map((node) => {
         if (node.state === "next") {
-          nextPulse = el("circle", { class: "node-pulse", cx: fmt(node.x), cy: fmt(node.y), r: 5, opacity: 0 });
-          return el("circle", { class: "node next", cx: fmt(node.x), cy: fmt(node.y), r: 5 });
+          nextPulse = el("circle", { class: "node-pulse", cx: fmt(node.x), cy: fmt(node.y), r: 7, opacity: 0 });
+          return el("circle", { class: "node next", cx: fmt(node.x), cy: fmt(node.y), r: 7 });
         }
-        if (node.state === "pass") return el("rect", { class: "node pass", x: node.x - 4, y: node.y - 4, width: 8, height: 8, transform: `rotate(45 ${fmt(node.x)} ${fmt(node.y)})` });
-        return el("rect", { class: `node ${node.state}`, x: node.x - 3, y: node.y - 3, width: 6, height: 6 });
+        if (node.state === "pass") return el("rect", { class: "node pass", x: node.x - 5.5, y: node.y - 5.5, width: 11, height: 11, transform: `rotate(45 ${fmt(node.x)} ${fmt(node.y)})` });
+        return el("rect", { class: `node ${node.state}`, x: node.x - 4, y: node.y - 4, width: 8, height: 8 });
       });
       const codes = EXAM_NODES.map((node) => {
-        const label = el("text", { class: `exam-code${node.state === "next" ? " next" : ""}`, x: fmt(node.x), y: fmt(node.y), dx: "0.8em", dy: "1.5em" });
+        // each code sits on the outer side of its marker, away from the island's middle
+        const label = el("text", { class: `exam-code ${node.state}`, x: fmt(node.x), y: fmt(node.y), dy: "1.5em" });
         label.textContent = node.code;
         return label;
       });
@@ -2955,8 +3001,9 @@
       });
       {
         const [fx, fy] = CIRCUIT_PATH[CIRCUIT_PATH.length - 1];
-        const g = el("g", { class: "finish", transform: `translate(${fmt(fx + 10)} ${fmt(fy - 12)})` });
-        for (const [dx, dy] of [[0, 0], [8, 0], [4, 7], [12, 7], [0, 14], [8, 14], [16, 14]]) el("path", { d: `M${dx} ${dy - 3.4}L${dx + 3.4} ${dy}L${dx} ${dy + 3.4}L${dx - 3.4} ${dy}Z` }, g);
+        const g = el("g", { class: "finish", transform: `translate(${fmt(fx)} ${fmt(fy)})` });
+        el("path", { d: "M0 -11L11 0L0 11L-11 0Z" }, g);
+        el("path", { class: "finish-core", d: "M0 -4L4 0L0 4L-4 0Z" }, g);
       }
 
       // the stage fit: cover from 1024 up; below, the track box fitted to the width
@@ -2964,177 +3011,43 @@
       const fit = () => {
         const w = frame.clientWidth, h = frame.clientHeight;
         if (!w || !h) return;
+        let tx, ty;
         if (w >= 1024) {
           stageScale = Math.max(w / 1440, h / 800);
-          stage.style.transform = `translate(${(w - 1440 * stageScale) / 2}px, ${(h - 800 * stageScale) / 2}px) scale(${stageScale})`;
+          tx = (w - 1440 * stageScale) / 2; ty = (h - 800 * stageScale) / 2;
         } else {
           stageScale = w / TRACK_BOX.width;
           const cx = TRACK_BOX.x + TRACK_BOX.width / 2, cy = TRACK_BOX.y + TRACK_BOX.height / 2;
-          stage.style.transform = `translate(${w / 2 - cx * stageScale}px, ${h / 2 - cy * stageScale + h * 0.04}px) scale(${stageScale})`;
+          tx = w / 2 - cx * stageScale; ty = h / 2 - cy * stageScale + h * 0.04;
         }
+        stage.style.transform = `translate(${tx}px, ${ty}px) scale(${stageScale})`;
         // the map's labels stay at 12.5 real pixels however the stage is scaled
         svg.style.setProperty("--map-type", `${(12.5 / stageScale).toFixed(2)}px`);
-        bake(); renderTrace();
+        svg.classList.toggle("is-small", w < 640);
+        // each code sits on the outer side of its marker, unless that runs off the map's right edge
+        const shownRight = (w - tx) / stageScale - 8;
+        EXAM_NODES.forEach((node, i) => {
+          const label = codes[i];
+          const face = (side) => {
+            label.setAttribute("dx", `${0.8 * side}em`);
+            label.setAttribute("text-anchor", side < 0 ? "end" : "start");
+          };
+          face(node.side);
+          if (node.side > 0) {
+            const box = label.getBBox();
+            if (box.x + box.width > shownRight) face(-1);
+          }
+        });
+        renderTrace();
       };
 
-      // ---- the halftone: baked once per size, lit dots squared into a chequer ----
-      const MAX_RATIO = coarse ? 1 : 2;
-      const MIN_LEVEL = 0.02, POINTER_HEAT = 0.95, RETICLE_OPEN = 236, RETICLE_SETTLE = 506;
-      const SPREAD_OPEN = 0.38, SPREAD_SHUT = 0.09, RETICLE_ARM = 0.82, RETICLE_CORE = 30;
-      const POINTER_TRAIL = 0.07, POINTER_RISE = 0.14, POINTER_FALL = 0.3;
-      const CHEQUER_FILL = 1, CHEQUER_SEED = 0.7, THRESHOLD = 0.34, FADE = 0.9;
-      const approach = (from, to, dt, tau) => to + (from - to) * Math.exp(-dt / Math.max(tau, 1e-4));
-      const falloff = (t) => { if (t >= 1) return 0; const u = 1 - t; return u * u; };
-      const dotContext = dotsCanvas.getContext("2d");
-      const baked = document.createElement("canvas");
-      const level = new Float32Array(DOTS.count), active = new Int32Array(DOTS.count), inList = new Uint8Array(DOTS.count);
-      let activeCount = 0, dirty = true, armed = false;
-      const pointer = { x: 0, y: 0, heat: 0 }, target = { x: 0, y: 0, on: false };
-      let spread = 0, lastFrame = 0;
-      const index = (() => {
-        const { columns, rows, count } = DOTS;
-        let minI = Infinity, maxI = -Infinity, minJ = Infinity, maxJ = -Infinity;
-        for (let i = 0; i < count; i++) { minI = Math.min(minI, columns[i]); maxI = Math.max(maxI, columns[i]); minJ = Math.min(minJ, rows[i]); maxJ = Math.max(maxJ, rows[i]); }
-        const w = maxI - minI + 1, h = maxJ - minJ + 1;
-        const cell = new Int32Array(w * h).fill(-1);
-        for (let i = 0; i < count; i++) cell[(rows[i] - minJ) * w + (columns[i] - minI)] = i;
-        return { cell, w, h, minI, minJ };
-      })();
+      // the trace's colours; `armed` turns true once it has cooled, and the next exam starts to pulse
+      let armed = false;
       const palette = (() => {
         const accent = rgbOf(readToken("--accent")), white = [255, 255, 255];
         const mixRgb = (a, b, t) => a.map((v, k) => Math.round(v + (b[k] - v) * t));
-        return { dot: readToken("--map-dot"), accent, white, bright: mixRgb(accent, white, 0.55), mixRgb };
+        return { accent, white, bright: mixRgb(accent, white, 0.55), mixRgb };
       })();
-      const css = ([r, g, b]) => `rgb(${r} ${g} ${b})`;
-      function bake() {
-        const ratio = Math.min(devicePixelRatio || 1, MAX_RATIO) * Math.min(Math.max(stageScale, 0.5), 1.6);
-        const w = Math.round(1440 * ratio), h = Math.round(800 * ratio);
-        if (dotsCanvas.width !== w || dotsCanvas.height !== h) { dotsCanvas.width = w; dotsCanvas.height = h; }
-        baked.width = w; baked.height = h;
-        const context = baked.getContext("2d");
-        context.setTransform(ratio, 0, 0, ratio, 0, 0);
-        context.clearRect(0, 0, 1440, 800);
-        context.fillStyle = palette.dot;
-        context.beginPath();
-        for (let i = 0; i < DOTS.count; i++) {
-          const x = DOTS.points[i * 2], y = DOTS.points[i * 2 + 1], r = DOTS.radii[i];
-          context.moveTo(x + r, y);
-          context.arc(x, y, r, 0, Math.PI * 2);
-        }
-        context.fill();
-        dirty = true;
-        drawDots();
-      }
-      const add = (i, value) => {
-        if (value <= MIN_LEVEL) return;
-        if (value > level[i]) level[i] = value;
-        if (!inList[i]) { inList[i] = 1; active[activeCount++] = i; }
-      };
-      const addPoint = (source, reach) => {
-        if (source.heat <= 0.01) return;
-        const { cell, w, h, minI, minJ } = index;
-        const i0 = Math.floor((source.x - reach - DOT_LATTICE.originX) / DOT_LATTICE.pitchX), i1 = Math.ceil((source.x + reach - DOT_LATTICE.originX) / DOT_LATTICE.pitchX);
-        const j0 = Math.floor((source.y - reach - DOT_LATTICE.originY) / DOT_LATTICE.pitchY), j1 = Math.ceil((source.y + reach - DOT_LATTICE.originY) / DOT_LATTICE.pitchY);
-        for (let j = Math.max(minJ, j0); j <= Math.min(minJ + h - 1, j1); j++) {
-          const row = (j - minJ) * w;
-          for (let i = Math.max(minI, i0); i <= Math.min(minI + w - 1, i1); i++) {
-            const idx = cell[row + (i - minI)];
-            if (idx < 0) continue;
-            add(idx, falloff(Math.hypot(DOTS.points[idx * 2] - source.x, DOTS.points[idx * 2 + 1] - source.y) / reach) * source.heat);
-          }
-        }
-      };
-      const addReticle = (source) => {
-        if (source.heat <= 0.01) return;
-        const { cell, w, h, minI, minJ } = index;
-        const ci = Math.round((source.x - DOT_LATTICE.originX) / DOT_LATTICE.pitchX);
-        const cj = Math.round((source.y - DOT_LATTICE.originY) / DOT_LATTICE.pitchY);
-        const arm = RETICLE_ARM * source.heat, reach = RETICLE_OPEN * spread;
-        if (reach > 1 && cj >= minJ && cj < minJ + h) {
-          const row = (cj - minJ) * w, span = Math.ceil(reach / DOT_LATTICE.pitchX);
-          for (let i = Math.max(minI, ci - span); i <= Math.min(minI + w - 1, ci + span); i++) {
-            const idx = cell[row + (i - minI)];
-            if (idx >= 0) add(idx, (1 - Math.abs(DOTS.points[idx * 2] - source.x) / reach) * arm);
-          }
-        }
-        if (reach > 1 && ci >= minI && ci < minI + w) {
-          const span = Math.ceil(reach / DOT_LATTICE.pitchY);
-          for (let j = Math.max(minJ, cj - span); j <= Math.min(minJ + h - 1, cj + span); j++) {
-            const idx = cell[(j - minJ) * w + (ci - minI)];
-            if (idx >= 0) add(idx, (1 - Math.abs(DOTS.points[idx * 2 + 1] - source.y) / reach) * arm);
-          }
-        }
-        addPoint(source, RETICLE_CORE);
-      };
-      function drawDots() {
-        if (!dotsCanvas.width) return;
-        const ratio = dotsCanvas.width / 1440;
-        dotContext.setTransform(ratio, 0, 0, ratio, 0, 0);
-        dotContext.clearRect(0, 0, 1440, 800);
-        dotContext.drawImage(baked, 0, 0, 1440, 800);
-        const span = 1 - THRESHOLD || 1;
-        let drew = 0;
-        for (let k = 0; k < activeCount; k++) {
-          const idx = active[k];
-          if (level[idx] < THRESHOLD) continue;
-          dotContext.clearRect(DOTS.points[idx * 2] - 1.6, DOTS.points[idx * 2 + 1] - 1.6, 3.2, 3.2);
-          drew++;
-        }
-        if (!drew) return;
-        for (let k = 0; k < activeCount; k++) {
-          const idx = active[k], value = level[idx];
-          if (value < THRESHOLD) continue;
-          if ((DOTS.columns[idx] + DOTS.rows[idx]) & 1) continue;
-          const t = Math.min(1, (value - THRESHOLD) / span);
-          const side = DOT_LATTICE.pitchX * (CHEQUER_SEED + (CHEQUER_FILL - CHEQUER_SEED) * t);
-          dotContext.fillStyle = css(value > 0.8 ? palette.white : value > 0.5 ? palette.bright : palette.mixRgb(palette.accent, palette.bright, value));
-          dotContext.fillRect(DOTS.points[idx * 2] - side / 2, DOTS.points[idx * 2 + 1] - side / 2, side, side);
-        }
-      }
-      function dotFrame() {
-        const now = performance.now();
-        const dt = lastFrame ? Math.min(0.1, (now - lastFrame) / 1000) : 0;
-        lastFrame = now;
-        const wanted = target.on && armed ? POINTER_HEAT : 0;
-        if (pointer.heat <= 0.001 && wanted > 0) { pointer.x = target.x; pointer.y = target.y; }
-        else if (dt > 0) {
-          const px = pointer.x, py = pointer.y;
-          pointer.x = approach(px, target.x, dt, POINTER_TRAIL);
-          pointer.y = approach(py, target.y, dt, POINTER_TRAIL);
-          const speed = Math.hypot(pointer.x - px, pointer.y - py) / dt;
-          const wantedSpread = Math.max(0, 1 - speed / RETICLE_SETTLE);
-          spread = approach(spread, wantedSpread, dt, wantedSpread > spread ? SPREAD_OPEN : SPREAD_SHUT);
-        }
-        pointer.heat = approach(pointer.heat, wanted, dt, wanted > pointer.heat ? POINTER_RISE : POINTER_FALL);
-        if (pointer.heat < 0.005) { pointer.heat = 0; spread = 0; }
-        const decay = Math.exp(-dt / Math.max(0.05, FADE / 3));
-        let write = 0;
-        for (let k = 0; k < activeCount; k++) {
-          const idx = active[k], value = level[idx] * decay;
-          if (value > MIN_LEVEL) { level[idx] = value; active[write++] = idx; }
-          else { level[idx] = 0; inList[idx] = 0; }
-        }
-        const before = activeCount;
-        activeCount = write;
-        addReticle(pointer);
-        if (activeCount === 0 && before === 0 && !dirty) return;
-        dirty = false;
-        drawDots();
-      }
-      // The cursor, in map units through the canvas's own rect; on only inside the block.
-      if (!reduced && !matchMedia("(hover: none)").matches) {
-        addEventListener("pointermove", (e) => {
-          if (e.pointerType !== "mouse") return;
-          const box = section.getBoundingClientRect();
-          const inside = e.clientX >= box.left && e.clientX <= box.right && e.clientY >= box.top && e.clientY <= box.bottom;
-          const rect = dotsCanvas.getBoundingClientRect();
-          target.x = ((e.clientX - rect.left) / rect.width) * 1440;
-          target.y = ((e.clientY - rect.top) / rect.height) * 800;
-          target.on = inside;
-        }, { passive: true });
-        document.addEventListener("pointerleave", () => { target.on = false; });
-        addEventListener("blur", () => { target.on = false; });
-      }
 
       // ---- the lap: one pass when the block arrives, braking into the next exam ----
       const LAP_MS = 6000, LINE_WIDTH = 5.9, GLOW_WIDTH = 15, HEAD_UNITS = 210, COOL_MS = 800, MARKER_POP_UNITS = 90;
@@ -3250,16 +3163,11 @@
         setTimeout(() => heatSpring.to(0, { config: { duration: COOL_MS, easing: easeOutCubic } }), runMs + 30);
       }, { threshold: 0.35 }).observe(frame);
 
-      // the crawling grid, the ping and the spinning badge — paused off screen
-      const DRIFT_MS = 7000, PING_MS = 4200, PING_REACH = 48.4, SPIN_MS = 10000;
+      // the spinning badge and the pulses — paused off screen
+      const SPIN_MS = 10000;
       const spin = $("[data-spin]", section);
       const pulse = $("[data-pulse]", section);
       const loopFrame = (time) => {
-        grid.setAttribute("stroke-dashoffset", "");
-        for (const path of grid.children) path.style.strokeDashoffset = `${-((time % DRIFT_MS) / DRIFT_MS) * 11.53}`;
-        const v = (time % PING_MS) / PING_MS, e = 1 - (1 - v) * (1 - v);
-        ping.setAttribute("r", `${6 + e * PING_REACH}`);
-        ping.setAttribute("opacity", `${0.4 * (1 - e) * (1 - e)}`);
         const turn = ((time % SPIN_MS) / SPIN_MS) * Math.PI * 2;
         const rx = Math.max(0.5, Math.abs(Math.cos(turn)) * 18);
         spin.setAttribute("points", `${18.5 - rx},11.5 18.5,0.5 ${18.5 + rx},11.5 18.5,22.5`);
@@ -3268,13 +3176,11 @@
         // the next exam pulses once the trace has arrived at it
         if (nextPulse && armed) {
           const pe = 1 - (1 - pv) * (1 - pv);
-          nextPulse.setAttribute("r", `${5 + pe * 5 * 3.4}`);
+          nextPulse.setAttribute("r", `${7 + pe * 7 * 3}`);
           nextPulse.setAttribute("opacity", `${0.6 * (1 - pe) * (1 - pe)}`);
         }
       };
-      if (!reduced) {
-        loopInView(section, (time) => { loopFrame(time); if (armed) dotFrame(); }, () => 0);
-      }
+      if (!reduced) loopInView(section, loopFrame, () => 0);
 
       new ResizeObserver(fit).observe(frame);
       fit();
@@ -3282,37 +3188,33 @@
     }
 
     // ---------------------------------------------------------------
-    // 3 · The journey: rail, rows, parallax, years.
+    // 3 · The journey: rail, rows, parallax, years, route cards.
     // ---------------------------------------------------------------
     {
       const section = $("#journey");
-      const wrap = $("[data-journey]");
       const rail = $("[data-rail]");
       const rowsEls = $$(".row", section);
-      const ROW_HEIGHT = { side: 217, centre: 462 };
-      const TOP_PAD = 169, MARK_RISE = 50, MARK_SIZE = 9, MARK_SIZE_NARROW = 20, RAIL_SOLID = 98, RAIL_GAP = 4;
-      const frames = rowsEls.map((row) => row.dataset.frame);
-      const railHeight = TOP_PAD + frames.reduce((total, f) => total + ROW_HEIGHT[f], 0);
-      const lastTop = TOP_PAD + frames.slice(0, -1).reduce((total, f) => total + ROW_HEIGHT[f], 0);
-      const rest = lastTop + ROW_HEIGHT[frames[frames.length - 1]] / 2 - MARK_RISE;
+      const TOP_PAD = 169, MARK_RISE = 50, MARK_SIZE = 9, RAIL_SOLID = 98, RAIL_GAP = 4;
 
       const NS = "http://www.w3.org/2000/svg";
       const svg = document.createElementNS(NS, "svg");
       rail.append(svg);
-      let thread, mark, viewH = railHeight, origin = 0, restAt = rest;
+      let thread, mark, viewH = 0, origin = 0, restAt = 0;
       const narrow = matchMedia("(max-width: 1279px)");
       const build = () => {
-        // Below xl the rail starts at the first photograph.
+        // Row heights are in design units, set in CSS by the kind of row.
+        const heights = rowsEls.map((row) => Number(getComputedStyle(row).getPropertyValue("--h")));
+        const railHeight = TOP_PAD + heights.reduce((total, h) => total + h, 0);
+        const rest = railHeight - heights[heights.length - 1] / 2 - MARK_RISE;
+        // Below xl the rail starts at the first plate.
         origin = narrow.matches ? TOP_PAD : 0;
         viewH = railHeight - origin;
         restAt = rest - origin;
         svg.setAttribute("viewBox", `0 0 16 ${viewH}`);
         svg.setAttribute("preserveAspectRatio", "none");
-        svg.innerHTML = `<path class="rail-line" d="M8 0V${RAIL_SOLID}"/><path class="rail-line" d="M8 ${RAIL_SOLID + RAIL_GAP}V${restAt}" stroke-dasharray="6 6"/><rect class="rail-thread" x="7.5" y="0" width="1" height="0"/><rect class="rail-mark" x="-4.5" y="-4.5" width="9" height="9"/>`;
+        svg.innerHTML = `<path class="rail-line" d="M8 0V${RAIL_SOLID}"/><path class="rail-line" d="M8 ${RAIL_SOLID + RAIL_GAP}V${restAt}" stroke-dasharray="6 6"/><rect class="rail-thread" x="7.5" y="0" width="1" height="0"/><rect class="rail-mark" x="${-MARK_SIZE / 2}" y="${-MARK_SIZE / 2}" width="${MARK_SIZE}" height="${MARK_SIZE}"/>`;
         thread = svg.querySelector(".rail-thread");
         mark = svg.querySelector(".rail-mark");
-        const size = matchMedia("(max-width: 1023px)").matches ? MARK_SIZE_NARROW : MARK_SIZE;
-        mark.setAttribute("x", -size / 2); mark.setAttribute("y", -size / 2); mark.setAttribute("width", size); mark.setAttribute("height", size);
         setRun(runValue);
       };
       // The marker turns five times over the run and comes to rest on the last entry.
@@ -3328,22 +3230,174 @@
       narrow.addEventListener("change", build);
       scrub(rail, "top_center", "bottom_bottom", setRun, { smooth: CONFIG.TRIGGER });
 
+      // A route card: a job as a line with one point per month there. Pointing
+      // at (or tapping) a point names its month. An ongoing job grows by itself.
+      const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      const monthIndex = (value) => {
+        if (value === "now") { const today = new Date(); return today.getFullYear() * 12 + today.getMonth(); }
+        const [year, month] = value.split("-").map(Number);
+        return year * 12 + month - 1;
+      };
+      const monthName = (index, short = false) => `${MONTHS[index % 12].slice(0, short ? 3 : undefined)} ${Math.floor(index / 12)}`;
+      const fmt = (v) => v.toFixed(1);
+      const routeCard = (card) => {
+        const from = monthIndex(card.dataset.from), to = Math.max(from, monthIndex(card.dataset.to));
+        const ongoing = card.dataset.to === "now";
+        const count = to - from + 1;
+        if (ongoing) $(".card-when", card).textContent = `${monthName(from, true)} – now · ${count} month${count === 1 ? "" : "s"}`;
+        // the same seed draws the same line at every width
+        let seed = Number(card.dataset.seed) || 1;
+        const random = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+        const jitter = [random(), random()].map((r) => (r - 0.5) * 0.14);
+        const plate = card.closest(".row-plate");
+        const year = $("[data-year]", plate);
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "route");
+        svg.setAttribute("aria-hidden", "true");
+        card.append(svg);
+        const tip = document.createElement("span");
+        tip.className = "route-tip";
+        tip.setAttribute("aria-hidden", "true");
+        plate.append(tip);
+        const el = (tag, attrs, parent = svg) => {
+          const node = document.createElementNS(NS, tag);
+          for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
+          parent.append(node);
+          return node;
+        };
+
+        let width = 0, points = [], line = null, length = 0, ring = null, labels = [], drawn = reduced ? 1 : 0, active = -1;
+        const apply = (v) => {
+          drawn = v;
+          if (!line) return;
+          line.style.strokeDashoffset = `${length * (1 - v)}`;
+          for (const point of points) point.g.style.opacity = v >= point.share - 0.001 ? 1 : 0;
+          labels.forEach((label, i) => { label.style.opacity = (i === 0 ? v > 0 : v >= 0.999) ? 1 : 0; });
+        };
+        const build = () => {
+          width = card.clientWidth;
+          const height = card.clientHeight;
+          if (!width || !height) return;
+          svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+          svg.replaceChildren();
+          // the line runs between the card's head and its tags, and passes under the year
+          const box = card.getBoundingClientRect(), k = width / box.width;
+          const local = (rect) => ({ left: (rect.left - box.left) * k, right: (rect.right - box.left) * k, top: (rect.top - box.top) * k, bottom: (rect.bottom - box.top) * k });
+          const head = local($(".card-head", card).getBoundingClientRect());
+          const tags = local($(".card-tags", card).getBoundingClientRect());
+          const clear = local(year.getBoundingClientRect());
+          const font = parseFloat(getComputedStyle(card).fontSize);
+          const top = head.bottom + font + 16, bottom = tags.top - 22;
+          const x0 = head.left + 8, x1 = Math.min(width - head.left - 8, width * 0.86);
+          const waypoints = [0, 0.2, 0.4, 0.6, 0.8, 1].map((t, i) => {
+            const rise = Math.pow(t, 2.6) + (i === 1 ? jitter[0] : i === 4 ? jitter[1] : 0);
+            const x = x0 + (x1 - x0) * t;
+            let y = bottom - (bottom - top) * clamp01(rise);
+            if (x > clear.left - 24 && x < clear.right + 24) y = Math.max(y, Math.min(bottom, clear.bottom + 18));
+            return [x, y];
+          });
+          let d = `M${fmt(waypoints[0][0])} ${fmt(waypoints[0][1])}`;
+          for (let i = 0; i < waypoints.length - 1; i += 1) {
+            const p0 = waypoints[i - 1] || waypoints[i], p1 = waypoints[i], p2 = waypoints[i + 1], p3 = waypoints[i + 2] || p2;
+            d += `C${fmt(p1[0] + (p2[0] - p0[0]) / 6)} ${fmt(p1[1] + (p2[1] - p0[1]) / 6)} ${fmt(p2[0] - (p3[0] - p1[0]) / 6)} ${fmt(p2[1] - (p3[1] - p1[1]) / 6)} ${fmt(p2[0])} ${fmt(p2[1])}`;
+          }
+          const cell = width / 10;
+          let grid = "";
+          for (let x = cell; x < width - 1; x += cell) grid += `M${fmt(x)} 0V${fmt(height)}`;
+          for (let y = cell; y < height - 1; y += cell) grid += `M0 ${fmt(y)}H${fmt(width)}`;
+          el("path", { class: "route-grid", d: grid });
+          line = el("path", { class: "route-line", d });
+          length = line.getTotalLength();
+          line.style.strokeDasharray = `${length}`;
+          const size = Math.max(4, Math.min(6, length / Math.max(1, count - 1) / 4));
+          points = Array.from({ length: count }, (_, i) => {
+            const share = count === 1 ? 1 : i / (count - 1);
+            const at = line.getPointAtLength(length * share);
+            const g = el("g", { transform: `translate(${fmt(at.x)} ${fmt(at.y)})` });
+            if (ongoing && i === count - 1) ring = el("circle", { class: "route-ring", r: size, opacity: 0 }, g);
+            const markPath = el("path", { class: "route-point", d: `M0 ${-size}L${size} 0L0 ${size}L${-size} 0Z` }, g);
+            return { x: at.x, y: at.y, month: from + i, share, g, mark: markPath };
+          });
+          const first = points[0], last = points[points.length - 1];
+          labels = [el("text", { x: fmt(first.x - size), y: fmt(first.y - size - 10) })];
+          labels[0].textContent = monthName(from, true).toUpperCase();
+          if (count > 1) {
+            labels.push(el("text", { x: fmt(last.x + size), y: fmt(last.y - size - 10), "text-anchor": "end" }));
+            labels[1].textContent = monthName(to, true).toUpperCase();
+          }
+          active = -1;
+          tip.classList.remove("is-on");
+          apply(drawn);
+        };
+
+        const show = (index) => {
+          if (index === active) return;
+          points[active]?.mark.classList.remove("on");
+          active = index;
+          if (index < 0) { tip.classList.remove("is-on"); return; }
+          const point = points[index];
+          point.mark.classList.add("on");
+          const now = ongoing && index === count - 1;
+          tip.innerHTML = `<b>${monthName(point.month)}</b><span>Month ${index + 1}${ongoing ? (now ? " · now" : "") : ` of ${count}`}</span>`;
+          // above the point, kept inside the plate
+          const svgBox = svg.getBoundingClientRect(), plateBox = plate.getBoundingClientRect();
+          const k = svgBox.width / width;
+          const x = svgBox.left - plateBox.left + point.x * k, y = svgBox.top - plateBox.top + point.y * k;
+          const half = tip.offsetWidth / 2;
+          const left = Math.min(Math.max(x, half), plateBox.width - half);
+          tip.style.transform = `translate(${left - half}px, ${y - tip.offsetHeight - 14}px)`;
+          tip.classList.add("is-on");
+        };
+        const REACH = 36;
+        const nearest = (event) => {
+          const box = svg.getBoundingClientRect(), k = width / box.width;
+          const x = (event.clientX - box.left) * k, y = (event.clientY - box.top) * k;
+          let best = -1, bestDistance = REACH * REACH;
+          points.forEach((point, i) => {
+            if (point.share > drawn + 0.001) return;
+            const distance = (point.x - x) ** 2 + (point.y - y) ** 2;
+            if (distance < bestDistance) { best = i; bestDistance = distance; }
+          });
+          return best;
+        };
+        svg.addEventListener("pointermove", (event) => show(nearest(event)));
+        svg.addEventListener("pointerdown", (event) => show(nearest(event)));
+        svg.addEventListener("pointerleave", (event) => { if (event.pointerType !== "touch") show(-1); });
+        document.addEventListener("pointerdown", (event) => { if (!svg.contains(event.target)) show(-1); });
+        addEventListener("scroll", () => show(-1), { passive: true });
+
+        // the month it is now pulses once the line has reached it
+        if (ongoing && !reduced) {
+          loopInView(card, (time) => {
+            if (!ring) return;
+            const pe = 1 - Math.pow(1 - (time % 2400) / 2400, 2);
+            ring.setAttribute("r", fmt(6 + pe * 14));
+            ring.setAttribute("opacity", drawn >= 0.999 ? fmt(0.6 * (1 - pe) * (1 - pe)) : 0);
+          }, () => 0);
+        }
+
+        const draw = new Spring(drawn, apply);
+        new ResizeObserver(build).observe(card);
+        build();
+        return { play: (delay) => draw.to(1, { config: CONFIG.REVEAL, delay }) };
+      };
+
       // Three parallax layers per row: each passes its design position mid-screen.
-      const phone = matchMedia("(max-width: 639px)");
+      const stacked = matchMedia("(max-width: 1023px)");
       for (const row of rowsEls) {
         const layers = $$("[data-travel]", row);
-        const slot = $("[data-slot]", row);
+        const route = $("[data-route]", row);
+        const routeIn = route ? routeCard(route) : null;
         scrub(row, "top_bottom", "bottom_top", (p) => {
           const unit = section.clientWidth / 1440;
           for (const layer of layers) {
-            if (phone.matches) { layer.style.top = ""; layer.style.bottom = ""; continue; }
+            if (stacked.matches) { layer.style.top = ""; layer.style.bottom = ""; continue; }
             const travel = Number(layer.dataset.travel) * unit;
             const offset = travel - 2 * travel * p;
             layer.style.top = `${offset}px`;
             layer.style.bottom = `${-offset}px`;
           }
         });
-        scrub(row, "top_bottom", "top_center", (p) => { slot.style.top = `${-10 + 10 * p}%`; });
 
         // Years assemble letter by letter, then a centre row's settles back to 40%.
         const year = $("[data-year]", row);
@@ -3357,6 +3411,7 @@
           shown = true;
           yearIn.play(0);
           copyIn?.play(220);
+          routeIn?.play(300);
           if (row.dataset.frame === "centre") settle.to(0.6, { config: CONFIG.YEAR_SETTLE, delay: 2200 });
         }, { rootMargin: "0px 0px -10% 0px" }).observe(row);
       }

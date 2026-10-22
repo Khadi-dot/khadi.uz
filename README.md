@@ -35,7 +35,6 @@ hero/       the hero portrait and the maps the WebGL scene needs: diffuse.jpg, a
             (the cut-out), depth.png and normal.png (for the parallax and the relight),
             silhouette.png (the loading veil), portrait.png (the still fallback)
 games/      the side projects: the Chrono Spires icon and banner, and a PocketPywel screenshot
-journey/    the photograph on the 2025 plate
 education/  the cut-out in the education block
 contact/    the cut-out at the foot of the page
 photo.jpg   the CV photo
@@ -46,9 +45,10 @@ The cut-outs were made on this Mac with Apple's Vision framework. The depth and 
 ## Change the home page
 
 - **Text**: edit it in `index.html`. The words animate in on their own; nothing needs re-timing.
-- **After an exam result** (FM in December, then the rest): in the script in `index.html`, move the paper into `PASSED` and set `NEXT_EXAM` to the next one. The map's trace, lit exams and pulse follow. Then update the numbers by hand: the hero's "ACCA progress" panel and "Next exam" panel, the ACCA block's intro, status line and plate, the journey's "Next" row, and the CV's ACCA table.
+- **After an exam result** (FM in December, then the rest): in the script in `index.html`, move the paper into `PASSED` and set `NEXT_EXAM` to the next one. The map's trace, lit exams and pulse follow. Then update the numbers by hand: the hero's "ACCA progress" panel and "Next exam" panel, the ACCA block's intro, status line and plate, the journey's "Next" row (its count and the `done` / `next` cells), and the CV's ACCA table.
+- **The journey** is a list of rows in `index.html`, in date order. A job is a *route card*: a line with one point per month there, and hovering or tapping a point names the month. Its `data-from` and `data-to` give the first and last month (`2025-04`); `data-to="now"` keeps the job running, so the card adds a point each month and its count updates by itself. The words on the card (name, role, dates, tags) are plain HTML beside them, so edit those to match. `data-seed` only changes the line's bends. Shorter rows between the jobs are *note cards* (a degree, an award, an exam). A centre row is a job or the "Next" card; a side row is a note card, alternating `data-align="right"` and `"left"`.
 - **The strip of results** under education: edit the `LOG` list near the end of the script. Mark the one ahead `live` (it pulses) and the rest `done`.
-- **The ACCA map's islands** are the `ISLANDS` list in the script; the Options island lists two `Option` papers until you choose them.
+- **The ACCA map's islands** are the `ISLANDS` list in the script; the Options island lists two `Option` papers until you choose them. On a phone the map only names the exams sat and still to sit; the exemptions keep their markers.
 
 ## Update the CV
 
