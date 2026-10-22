@@ -35,12 +35,14 @@ hero/       the hero portrait and the maps the WebGL scene needs: diffuse.jpg, a
             (the cut-out), depth.png and normal.png (for the parallax and the relight),
             silhouette.png (the loading veil), portrait.png (the still fallback)
 games/      the side projects: the Chrono Spires icon and banner, and a PocketPywel screenshot
-education/  the cut-out in the education block
-contact/    the cut-out at the foot of the page
+education/  portrait.webp, the cut-out in the education block
+contact/    portrait.webp, the cut-out at the foot of the page
 photo.jpg   the CV photo
 ```
 
 The cut-outs were made on this Mac with Apple's Vision framework. The depth and normal maps were derived from them, so they are approximations rather than scans.
+
+The photos arrived at 768×1024, smaller than the page shows them on a Retina screen, so each was enlarged 4× with Real-ESRGAN (open source, run on this Mac) before being cut out. Over each face the enlargement is a plain resample instead, so the model can't change a feature. Full-size originals straight from the phone would be sharper still.
 
 ## Change the home page
 
