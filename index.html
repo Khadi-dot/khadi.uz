@@ -887,13 +887,17 @@
     .skill-group li b { font-size: max(calc(15 * var(--u)), 14px); line-height: 1.15; }
     .skill-group li span { font-size: max(calc(13 * var(--u)), var(--type-floor)); line-height: 1.35; color: var(--foreground-soft); }
     .skills-tools {
-      display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6em 1em;
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25em 0.45em;
       margin: calc(40 * var(--u)) 0 0; padding-top: calc(16 * var(--u));
       border-top: 1px solid var(--border-muted);
       font-size: max(calc(14 * var(--u)), var(--type-floor));
       line-height: 1.4;
       text-transform: uppercase;
     }
+    .skills-tools .eyebrow { margin-right: 0.55em; }
+    /* the dot rides on the word before it, so a wrapped line never starts with one */
+    .skills-tools .tool { white-space: nowrap; }
+    .skills-tools .tool:not(:last-child)::after { content: "\00a0·"; content: "\00a0·" / ""; }
     @media (max-width: 1023px) {
       .skills-wrap { --u: 1px; grid-template-columns: 1fr; gap: 2.5rem; padding: 5rem 2rem 6rem; }
       .skills-title { font-size: clamp(40px, 9vw, 64px); }
@@ -1536,7 +1540,7 @@
             </div>
           </div>
 
-          <p class="skills-tools" data-reveal="fade" data-reveal-at="760"><span class="eyebrow">Tools</span> Excel · Word · PowerPoint · Looker Studio · QuickManage · Amazon Relay</p>
+          <p class="skills-tools" data-reveal="fade" data-reveal-at="760"><span class="eyebrow">Tools</span> <span class="tool">Excel</span> <span class="tool">Word</span> <span class="tool">PowerPoint</span> <span class="tool">Looker Studio</span> <span class="tool">Jira</span> <span class="tool">Confluence</span> <span class="tool">Monday.com</span> <span class="tool">Bitrix24 CRM</span> <span class="tool">QuickManage</span> <span class="tool">Amazon Relay</span></p>
         </div>
       </div>
     </section>
