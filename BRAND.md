@@ -1,6 +1,6 @@
 # khadi.uz brand
 
-The personal site of Xadyatullox Muhammadjonov: accounting and finance by training, games on the side, from Tashkent. A light, art-directed sheet with black type, near-black blocks that come and go, and one cyan accent. It is laid out like an instrument panel: bracket corners, chamfered buttons, dashed grids, figures in a condensed face.
+The personal site of Xadyatullox Muhammadjonov: an ACCA student working toward a career in audit, from Tashkent, with games on the side. A light, art-directed sheet with black type, near-black blocks that come and go, and one cyan accent. It is laid out like an instrument panel: bracket corners, chamfered buttons, dashed grids, figures in a condensed face.
 
 Every value below lives as a CSS variable in `brand.css`, in two tiers. Tier 1 (`--raw-…`) is the only place a hex code appears. Components read the tier 2 roles (`--background`, `--accent`…), never the raw values.
 
@@ -23,6 +23,7 @@ Cyan on the light ground is too pale for text. Use `--accent-ink` for words ther
 
 - **Oswald** (700, 500): the name, the block mastheads, the years and every figure. Always uppercase, tight leading (0.95, 0.72 for figures).
 - **Space Grotesk** (400, 500, 700): everything you read, nav and labels included. Usually uppercase at small sizes.
+- Nothing on screen is set below 12px (`--type-floor`). Small labels take `max(their size, var(--type-floor))`, and the ACCA map sizes its labels against the map's own scale.
 
 ## Voice
 
@@ -39,6 +40,9 @@ Plain and specific. Say what was done and what it changed, in short sentences. N
 ## Motion
 
 - Everything that moves is a spring (tension and friction, mass 1). There are no CSS keyframes. The only CSS transitions are hover colours, the button floods and the plates' inset.
+- Scrolling is the browser's own. Nothing takes over the wheel or the trackpad; in-page links scroll smoothly with the browser's smooth scroll.
+- Text reveals start as soon as a block reaches the screen and only reset once it is entirely below it, so text on screen is never hidden.
+- Once the hero is half gone, a dock with the menu slides down from the top and marks the section on screen.
 - Text arrives word by word or letter by letter, rising 0.35em.
 - The first three blocks are a stack: each pins to the top and the next slides over it while the covered one shrinks to 90% and darkens.
 - The hero opens behind a veil (your silhouette filling from the top). Then a halftone blueprint of the portrait burns away crown to chin, and comes back wherever the cursor has just been.

@@ -1,12 +1,14 @@
 # khadi.uz
 
-The personal site and CV of Xadyatullox Muhammadjonov. Plain HTML, CSS and JavaScript with no build step. The home page pulls in two libraries from a CDN (three.js for the hero, Lenis for smooth scrolling), so nothing needs installing.
+The personal site and CV of Xadyatullox Muhammadjonov. Plain HTML, CSS and JavaScript with no build step, so nothing needs installing. The one library, three.js for the hero, is kept in `vendor/` and served from khadi.uz itself rather than a CDN, so a network that blocks CDNs can't break the page.
+
+If the page's script can't run at all (a very old browser, a failed load, an error before the loading screen lifts), a small fallback script in `index.html` lifts the loading screen after a moment and shows everything as plain HTML with the still portrait.
 
 ## Pages
 
 | Address | File | What it is |
 |---|---|---|
-| khadi.uz | `index.html` | Home: the hero, Chrono Spires, the journey so far, PocketPywel, contact |
+| khadi.uz | `index.html` | Home: the hero, the ACCA so far, the path to audit, education and recognition, side projects, contact |
 | khadi.uz/cv/ | `cv/index.html` | The full CV, laid out as an A4 page. It prints cleanly. |
 | khadi.uz/cv.pdf | `cv.pdf` | The CV as a PDF, made from the page above |
 | any missing address | `404.html` | "Off the map", with a link home |
@@ -19,6 +21,7 @@ brand.css     the brand as CSS variables, plus the pieces every page shares
 index.html    home, with its layout and all of its scripts inside the file
 cv/           the CV page
 cv.pdf        the CV as a PDF
+vendor/       three.js 0.185 (MIT): the two files the hero imports
 404.html      shown for addresses that don't exist
 img/          everything the pages show (see below)
 sitemap.xml, robots.txt, google42f0761f873f0cfb.html   for search engines
@@ -31,9 +34,9 @@ CNAME         points GitHub Pages at khadi.uz
 hero/       the hero portrait and the maps the WebGL scene needs: diffuse.jpg, alpha.png
             (the cut-out), depth.png and normal.png (for the parallax and the relight),
             silhouette.png (the loading veil), portrait.png (the still fallback)
-games/      the Chrono Spires icon and screenshots, and a PocketPywel screenshot
+games/      the side projects: the Chrono Spires icon and banner, and a PocketPywel screenshot
 journey/    the photograph on the 2025 plate
-workshop/   the cut-out in the PocketPywel block
+education/  the cut-out in the education block
 contact/    the cut-out at the foot of the page
 photo.jpg   the CV photo
 ```
@@ -43,8 +46,9 @@ The cut-outs were made on this Mac with Apple's Vision framework. The depth and 
 ## Change the home page
 
 - **Text**: edit it in `index.html`. The words animate in on their own; nothing needs re-timing.
-- **The development log** under PocketPywel: edit the `LOG` list near the end of the script in `index.html`. Mark one entry `live` (the pulsing one), finished ones `done`, upcoming ones `ring`.
-- **Chrono Spires' numbers** (32 levels, 4 worlds): they are in the block's plate in the HTML, and the map's worlds are the `ISLANDS` list in the script.
+- **After an exam result** (FM in December, then the rest): in the script in `index.html`, move the paper into `PASSED` and set `NEXT_EXAM` to the next one. The map's trace, lit exams and pulse follow. Then update the numbers by hand: the hero's "ACCA progress" panel and "Next exam" panel, the ACCA block's intro, status line and plate, the journey's "Next" row, and the CV's ACCA table.
+- **The strip of results** under education: edit the `LOG` list near the end of the script. Mark the one ahead `live` (it pulses) and the rest `done`.
+- **The ACCA map's islands** are the `ISLANDS` list in the script; the Options island lists two `Option` papers until you choose them.
 
 ## Update the CV
 

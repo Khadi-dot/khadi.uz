@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CV · Xadyatullox Muhammadjonov</title>
-  <meta name="description" content="CV of Xadyatullox Muhammadjonov: BSc Accounting and Finance, ACCA, business analysis and accounting experience. Tashkent, Uzbekistan.">
+  <meta name="description" content="CV of Xadyatullox Muhammadjonov, ACCA student and aspiring auditor: BSc Accounting and Finance, ACCA FR passed and FM next, business analysis and accounting experience. Tashkent, Uzbekistan.">
   <link rel="canonical" href="https://khadi.uz/cv/">
   <meta name="theme-color" content="#f7fafb">
   <meta property="og:type" content="profile">
   <meta property="og:site_name" content="khadi.uz">
   <meta property="og:url" content="https://khadi.uz/cv/">
   <meta property="og:title" content="CV · Xadyatullox Muhammadjonov">
-  <meta property="og:description" content="Accounting & finance, ACCA, business analysis. Tashkent, Uzbekistan.">
+  <meta property="og:description" content="ACCA student and aspiring auditor. Tashkent, Uzbekistan.">
   <meta property="og:image" content="https://khadi.uz/img/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="../img/favicon.png">
@@ -69,9 +69,11 @@
       font-size: var(--cv-text);
       line-height: 1.5;
       /* plain glyphs only: the PDF export can't map ligatures or alternates back to text,
-         and recruiters' screening software reads that text */
+         and recruiters' screening software reads that text. Kerning goes too: with ligatures
+         off and kerning on, Chrome writes "setting" into the PDF as "set ting". */
       font-variant-ligatures: none;
-      font-feature-settings: "liga" 0, "calt" 0;
+      font-feature-settings: "liga" 0, "calt" 0, "kern" 0;
+      font-kerning: none;
       background: var(--raw-color-white);
       border: 1px solid var(--border-muted);
     }
@@ -136,6 +138,7 @@
     .acca td:first-child { font-weight: 700; }
     .acca .pass td { background: rgb(2 210 227 / 0.1); }
     .acca .pass td:first-child { box-shadow: inset 3px 0 0 var(--accent); padding-left: 0.5rem; }
+    .acca .next td:first-child { box-shadow: inset 3px 0 0 var(--foreground); padding-left: 0.5rem; }
 
     .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
     .cols h3 { margin: 0 0 0.25rem; font-size: 0.9375rem; font-weight: 700; }
@@ -158,6 +161,8 @@
       body { background: #fff; }
       .bar, .skip { display: none; }
       .sheet { max-width: none; margin: 0; padding: 0; border: 0; }
+      /* tracking splits words in the PDF's text too */
+      .sheet * { letter-spacing: 0 !important; }
       .sheet::after { display: none; }
       .cv-head h1 { font-size: 25pt; }
       .cv-section { margin-top: 11pt; }
@@ -192,7 +197,7 @@
       <img class="cv-photo" src="../img/photo.jpg" width="244" height="267" alt="Xadyatullox Muhammadjonov">
       <div>
         <h1>Xadyatullox Muhammadjonov</h1>
-        <p class="cv-role">Accounting &amp; finance · ACCA student · Business analyst</p>
+        <p class="cv-role">ACCA student · Aspiring auditor</p>
         <ul class="cv-contact">
           <li>Tashkent, Uzbekistan</li>
           <li><a href="mailto:khadyatullokh@gmail.com">khadyatullokh@gmail.com</a></li>
@@ -221,6 +226,7 @@
         <table class="acca">
           <thead><tr><th>Exam</th><th>Status</th><th>Session</th></tr></thead>
           <tbody>
+            <tr class="next"><td>Financial Management (FM)</td><td>Sitting</td><td>Dec 2026</td></tr>
             <tr class="pass"><td>Financial Reporting (FR)</td><td>Pass</td><td>Sep 2026</td></tr>
             <tr><td>Audit and Assurance (AA)</td><td>Conditional exemption</td><td>Mar 2026</td></tr>
             <tr><td>Taxation (TX)</td><td>Conditional exemption</td><td>Mar 2026</td></tr>
