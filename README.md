@@ -11,6 +11,7 @@ If the page's script can't run at all (a very old browser, a failed load, an err
 | khadi.uz | `index.html` | Home: the hero, the ACCA so far, the path to audit, education and recognition, skills and languages, side projects, contact |
 | khadi.uz/cv/ | `cv/index.html` | The full CV, laid out as an A4 page. It prints cleanly. |
 | khadi.uz/cv.pdf | `cv.pdf` | The CV as a PDF, made from the page above |
+| khadi.uz/architecture/ | `architecture/` | How the site is built: an interactive map of its parts, drawn by graphify. The bracketed button in the top corner opens it. |
 | any missing address | `404.html` | "Off the map", with a link home |
 
 ## Files
@@ -22,6 +23,8 @@ index.html    home, with its layout and all of its scripts inside the file
 cv/           the CV page
 cv.pdf        the CV as a PDF
 vendor/       three.js 0.185 (MIT): the two files the hero imports
+architecture/ the architecture page and graph.json, the map it draws
+tools/        export-architecture.py, which turns graphify's graph into that graph.json
 404.html      shown for addresses that don't exist
 img/          everything the pages show (see below)
 sitemap.xml, robots.txt, google42f0761f873f0cfb.html   for search engines
@@ -52,6 +55,10 @@ The photos arrived at 768×1024, smaller than the page shows them on a Retina sc
 - **Skills and languages** are plain HTML in `index.html`: three language cards, then three groups of skills, each with where it was used. Keep each "where" line to one fact. After an exam result, update the Accounting & audit group too.
 - **The strip of results** under education: edit the `LOG` list near the end of the script. Mark the one ahead `live` (it pulses) and the rest `done`.
 - **The ACCA map's islands** are the `ISLANDS` list in the script; the Options island lists two `Option` papers until you choose them. On a phone the map only names the exams sat and still to sit; the exemptions keep their markers.
+
+## Refresh the architecture map
+
+The map is a snapshot. After changing the site, rebuild it in Claude Code with `/graphify . --update` (or `/graphify .` for a full rebuild), then run `python3 tools/export-architecture.py` and commit `architecture/graph.json`. graphify's own output stays in `graphify-out/`, which is never committed. The export joins the same real-world thing named in several files into one part, and `FIXES` in the script corrects any note graphify got wrong.
 
 ## Update the CV
 

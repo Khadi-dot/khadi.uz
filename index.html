@@ -94,6 +94,36 @@
       transform: translateY(-100%);
     }
     .dock .logo { font-size: max(1.25rem, 18px); color: var(--foreground-on-dark); }
+    .mast-end, .dock-end { display: flex; align-items: center; gap: 1.25rem; }
+
+    /* the architecture button: a small bracketed square in the top corner, named on hover */
+    .arch-link {
+      position: relative;
+      display: grid; place-items: center;
+      width: 2rem; height: 2rem; flex: none;
+      color: var(--foreground);
+      transition: color var(--duration-fast) var(--ease-entrance);
+    }
+    .dock .arch-link { color: var(--foreground-on-dark); }
+    .arch-link > .corner { width: 0.4rem; height: 0.4rem; }
+    .arch-link .glyph { width: 1.05rem; height: 1.05rem; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.2; }
+    .arch-link .glyph circle { fill: currentColor; stroke: none; }
+    .arch-link:hover, .arch-link:focus-visible { color: var(--accent-ink); }
+    .dock .arch-link:hover, .dock .arch-link:focus-visible { color: var(--accent); }
+    .arch-link::after {
+      content: attr(data-tip);
+      position: absolute; top: calc(100% + 0.5rem); right: 0;
+      padding: 0.45rem 0.6rem;
+      font-size: max(var(--type-eyebrow), var(--type-floor)); font-weight: 500; line-height: 1;
+      text-transform: uppercase; white-space: nowrap;
+      color: var(--foreground-on-dark);
+      background: var(--surface-dark);
+      border-top: 2px solid var(--accent);
+      opacity: 0; transform: translateY(-0.25rem);
+      pointer-events: none;
+      transition: opacity var(--duration-fast) var(--ease-entrance), transform var(--duration-fast) var(--ease-entrance);
+    }
+    .arch-link:hover::after, .arch-link:focus-visible::after { opacity: 1; transform: none; }
     .dock-nav { display: none; }
     .dock-nav ul { display: flex; gap: 3rem; margin: 0; padding: 0; list-style: none; }
     .dock-nav a, .dock-cv {
@@ -1079,8 +1109,11 @@
         <li><a href="#contact" data-jump>Contact</a></li>
       </ul>
     </nav>
-    <a class="dock-cv" href="cv/"><span aria-hidden="true">[ </span>CV<span aria-hidden="true"> → ]</span></a>
-    <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" data-burger><span></span><span></span></button>
+    <div class="dock-end">
+      <a class="dock-cv" href="cv/"><span aria-hidden="true">[ </span>CV<span aria-hidden="true"> → ]</span></a>
+      <a class="arch-link brackets" href="architecture/" aria-label="Site architecture: how this site is built" data-tip="Architecture"><svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg><svg class="glyph" viewBox="0 0 18 18" aria-hidden="true"><path d="M4.5 4.5L13.5 7M4.5 4.5L8 13.5M13.5 7L8 13.5"/><circle cx="4.5" cy="4.5" r="2"/><circle cx="13.5" cy="7" r="2"/><circle cx="8" cy="13.5" r="2"/></svg></a>
+      <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" data-burger><span></span><span></span></button>
+    </div>
   </div>
 
   <!-- the plate's stepped corner, as a clip and an outline shared by every plate -->
@@ -1120,8 +1153,11 @@
                     <li><a href="#contact" data-jump>Contact</a></li>
                   </ul>
                 </nav>
-                <a class="cv-link" href="cv/"><span aria-hidden="true">[ </span>CV<span aria-hidden="true"> → ]</span></a>
-                <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" data-burger><span></span><span></span></button>
+                <div class="mast-end">
+                  <a class="cv-link" href="cv/"><span aria-hidden="true">[ </span>CV<span aria-hidden="true"> → ]</span></a>
+                  <a class="arch-link brackets" href="architecture/" aria-label="Site architecture: how this site is built" data-tip="Architecture"><svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg><svg class="glyph" viewBox="0 0 18 18" aria-hidden="true"><path d="M4.5 4.5L13.5 7M4.5 4.5L8 13.5M13.5 7L8 13.5"/><circle cx="4.5" cy="4.5" r="2"/><circle cx="13.5" cy="7" r="2"/><circle cx="8" cy="13.5" r="2"/></svg></a>
+                  <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" data-burger><span></span><span></span></button>
+                </div>
               </header>
 
               <div class="hero-middle">
@@ -1599,6 +1635,7 @@
             <a href="#education" data-jump data-reveal="letters" data-reveal-at="420" data-stagger="22" data-config="ROW">Education</a>
             <a href="#skills" data-jump data-reveal="letters" data-reveal-at="500" data-stagger="22" data-config="ROW">Skills</a>
             <a href="cv/" data-reveal="letters" data-reveal-at="580" data-stagger="22" data-config="ROW">CV</a>
+            <a href="architecture/" data-reveal="letters" data-reveal-at="660" data-stagger="22" data-config="ROW">Architecture</a>
           </nav>
           <p class="contact-copy" data-reveal="rise" data-reveal-at="640">© 2026 Xadyatullox Muhammadjonov. Tashkent, Uzbekistan.</p>
           <a class="cta contact-cta" href="mailto:khadyatullokh@gmail.com" data-reveal="rise" data-reveal-at="720">
@@ -1977,7 +2014,7 @@
       const burgers = $$("[data-burger]");
       let opener = burgers[0];
       let sheet = null, sheetSpring = null, items = [];
-      const links = [["ACCA", "#acca"], ["Journey", "#journey"], ["Education", "#education"], ["Skills", "#skills"], ["Side projects", "#side"], ["Contact", "#contact"], ["CV", "cv/"]];
+      const links = [["ACCA", "#acca"], ["Journey", "#journey"], ["Education", "#education"], ["Skills", "#skills"], ["Side projects", "#side"], ["Contact", "#contact"], ["CV", "cv/"], ["Architecture", "architecture/"]];
       const onKey = (e) => { if (e.key === "Escape") closeSheet(); };
       const xl = matchMedia("(min-width: 1280px)");
       function openSheet(event) {

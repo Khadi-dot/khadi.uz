@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Architecture · khadi.uz</title>
+  <meta name="description" content="How khadi.uz is built: an interactive map of the site's scripts, sections, pages and design rules, drawn by graphify from the site's own source.">
+  <meta name="theme-color" content="#090a0b">
+  <link rel="canonical" href="https://khadi.uz/architecture/">
+  <link rel="icon" type="image/png" href="../img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../brand.css">
+  <style>
+    /* ==========================================================
+       khadi.uz/architecture — the site mapped by graphify.
+       The map is a canvas: parts are marks shaped by kind, grouped
+       by area, and lit cyan along their links when pointed at.
+       Everything else is HTML: the intro, the details, the list.
+       ========================================================== */
+    html, body { height: 100%; }
+    body { overflow: hidden; background: var(--surface-black); color: var(--foreground-on-dark); }
+    .map { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+    .map.is-panning { cursor: grabbing; }
+    .map.is-over { cursor: pointer; }
+
+    .eyebrow {
+      margin: 0;
+      font-size: max(var(--type-eyebrow), var(--type-floor));
+      font-weight: 500;
+      line-height: var(--leading-flat);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* ---------- the bar ---------- */
+    .bar {
+      position: fixed; z-index: 30; left: 0; right: 0; top: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2rem 1.75rem;
+      background: linear-gradient(var(--surface-black) 55%, rgb(9 10 11 / 0));
+      pointer-events: none;
+    }
+    .bar > * { pointer-events: auto; }
+    .bar .logo { color: var(--foreground-on-dark); }
+    .back {
+      font-size: max(var(--type-body), var(--type-floor)); font-weight: 700;
+      line-height: var(--leading-flat); text-transform: uppercase; text-decoration: none;
+      color: var(--foreground-on-dark);
+      transition: color var(--duration-fast) var(--ease-entrance);
+    }
+    .back:hover { color: var(--accent); }
+
+    /* ---------- panels: near-black slabs with bracket corners ---------- */
+    .panel {
+      position: fixed; z-index: 20;
+      background: rgb(9 10 11 / 0.95);
+      padding: 1.5rem;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-on-dark) transparent;
+    }
+    .panel > .corner { color: var(--foreground-on-dark-faint); }
+
+    /* the intro: what this is, the numbers, search, the areas and the key */
+    .intro { left: 2rem; top: 4.5rem; bottom: 2rem; width: 22rem; display: flex; flex-direction: column; gap: 1.25rem; }
+    .intro h1 {
+      margin: 0.75rem 0 0;
+      font: 700 3rem/var(--leading-headline) var(--font-display);
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .intro h1 .stop { color: var(--foreground-on-dark); }
+    .lede { margin: 0; font-size: max(var(--type-body), var(--type-floor)); line-height: 1.4; text-transform: uppercase; color: var(--foreground-on-dark-muted); }
+    .mini-stats { display: none; margin: 0; font-size: max(var(--type-eyebrow), var(--type-floor)); text-transform: uppercase; color: var(--foreground-on-dark-muted); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; border-top: 1px solid var(--rule-on-dark); border-bottom: 1px solid var(--rule-on-dark); }
+    .stats > div { padding: 0.8rem 0 0.7rem; }
+    .stats > div + div { padding-left: 0.9rem; border-left: 1px solid var(--rule-on-dark); }
+    .stats dt { font: 500 2rem/var(--leading-cap) var(--font-display); letter-spacing: -0.04em; }
+    .stats dd { margin: 0.45rem 0 0; font-size: max(var(--type-eyebrow), var(--type-floor)); text-transform: uppercase; color: var(--foreground-on-dark-muted); }
+
+    .search { position: relative; }
+    .search input {
+      width: 100%; height: 2.75rem; padding: 0 0.9rem;
+      font: 500 max(var(--type-body), var(--type-floor)) var(--font-sans);
+      color: var(--foreground-on-dark);
+      background: var(--surface-dark);
+      border: 1px solid var(--border-on-dark);
+      border-radius: 0;
+      outline: none;
+    }
+    .search input::placeholder { color: var(--foreground-on-dark-faint); text-transform: uppercase; }
+    .search input:focus { border-color: var(--accent); }
+    .results { position: absolute; z-index: 2; left: 0; right: 0; top: calc(100% + 4px); margin: 0; padding: 0; list-style: none; background: var(--surface-dark); border: 1px solid var(--border-on-dark); }
+    .results:empty { display: none; }
+    .results button { width: 100%; }
+
+    .key summary {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.6rem 0; cursor: pointer; list-style: none;
+      font-size: max(var(--type-eyebrow), var(--type-floor)); font-weight: 500;
+      text-transform: uppercase; color: var(--accent);
+      border-bottom: 1px solid var(--rule-on-dark);
+    }
+    .key summary::-webkit-details-marker { display: none; }
+    .key summary::after { content: "+"; color: var(--foreground-on-dark-muted); }
+    .key[open] summary::after { content: "–"; }
+    .areas { margin: 0; padding: 0; list-style: none; }
+
+    /* a row you can press: areas, search results, connections, the list */
+    .row {
+      display: flex; align-items: baseline; gap: 0.6rem;
+      padding: 0.55rem 0.1rem;
+      font: inherit; text-align: left;
+      font-size: max(13px, var(--type-floor)); line-height: 1.25;
+      color: var(--foreground-on-dark);
+      background: none; border: 0; border-bottom: 1px solid var(--rule-on-dark);
+      cursor: pointer;
+      transition: color var(--duration-fast) var(--ease-entrance), background var(--duration-fast) var(--ease-entrance);
+    }
+    .row:hover, .row:focus-visible, .row.is-on { color: var(--accent); }
+    .results .row { padding: 0.6rem 0.9rem; border-bottom-color: var(--border-on-dark); }
+    .row .n { flex: none; width: 1.6rem; font-family: var(--font-display); font-weight: 500; color: var(--accent); }
+    .row .name { flex: 1; min-width: 0; }
+    .row .count { flex: none; color: var(--foreground-on-dark-muted); font-variant-numeric: tabular-nums; }
+    .areas .row { width: 100%; text-transform: uppercase; }
+
+    .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem 1rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+    .legend li { display: flex; align-items: center; gap: 0.55rem; font-size: max(var(--type-eyebrow), var(--type-floor)); text-transform: uppercase; color: var(--foreground-on-dark-muted); }
+    .legend svg { flex: none; width: 16px; height: 16px; overflow: visible; }
+    .note { margin: 1rem 0 0; font-size: max(var(--type-eyebrow), var(--type-floor)); line-height: 1.4; text-transform: uppercase; color: var(--foreground-on-dark-faint); }
+    .note a { color: var(--foreground-on-dark-muted); }
+
+    /* the details of the part you chose */
+    .detail { right: 2rem; top: 4.5rem; width: 23rem; max-height: calc(100% - 6.5rem); }
+    [data-detail-body] { display: flex; flex-direction: column; gap: 1.25rem; }
+    .detail[hidden] { display: none; }
+    .close {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      width: 2.25rem; height: 2.25rem; display: grid; place-items: center;
+      font-size: 1.25rem; line-height: 1; color: var(--foreground-on-dark-muted);
+      background: none; border: 0; cursor: pointer;
+    }
+    .close:hover { color: var(--accent); }
+    .kind { display: flex; align-items: center; gap: 0.5rem; }
+    .kind svg { width: 14px; height: 14px; overflow: visible; }
+    .kind { margin-bottom: -0.6rem; }
+    .detail h2 {
+      margin: 0 2rem 0 0;
+      font: 700 1.75rem/1 var(--font-display);
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+    .area-link { align-self: flex-start; padding: 0; font: inherit; font-size: max(var(--type-body), var(--type-floor)); text-transform: uppercase; color: var(--foreground-on-dark-muted); background: none; border: 0; cursor: pointer; }
+    .area-link:hover { color: var(--accent); }
+    .why { margin: 0; padding: 0.9rem 1rem; font-size: max(var(--type-body), var(--type-floor)); line-height: 1.45; color: var(--foreground-on-dark); background: var(--surface-dark); border-left: 2px solid var(--accent); }
+    .sources { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+    .sources a { font-size: max(var(--type-body), var(--type-floor)); color: var(--foreground-on-dark-muted); text-decoration: none; }
+    .sources a:hover { color: var(--accent); }
+    .sources a span { color: var(--foreground-on-dark); }
+    .group h3 { margin: 0 0 0.35rem; }
+    .group ul { margin: 0; padding: 0; list-style: none; }
+    .group .row { width: 100%; }
+    .group .row .tag { flex: none; font-size: max(var(--type-eyebrow), var(--type-floor)); text-transform: uppercase; color: var(--foreground-on-dark-faint); }
+
+    /* the hover card */
+    .tip {
+      position: fixed; z-index: 40; left: 0; top: 0;
+      max-width: 18rem; padding: 0.55rem 0.75rem;
+      pointer-events: none;
+      background: var(--surface-dark); border: 1px solid var(--border-on-dark); border-top: 2px solid var(--accent);
+    }
+    .tip[hidden] { display: none; }
+    .tip b { display: block; font-size: max(var(--type-body), var(--type-floor)); font-weight: 700; line-height: 1.25; }
+    .tip span { display: block; margin-top: 0.3rem; font-size: max(var(--type-eyebrow), var(--type-floor)); text-transform: uppercase; color: var(--foreground-on-dark-muted); }
+
+    /* zoom and the text view */
+    .controls { position: fixed; z-index: 25; right: 2rem; bottom: 2rem; display: flex; gap: 0.5rem; }
+    .controls button {
+      height: 2.5rem; min-width: 2.5rem; padding: 0 0.8rem;
+      display: grid; place-items: center;
+      font: 500 max(var(--type-eyebrow), var(--type-floor)) var(--font-sans); text-transform: uppercase;
+      color: var(--foreground-on-dark);
+      background: rgb(9 10 11 / 0.9);
+      border: 1px solid var(--border-on-dark);
+      cursor: pointer;
+      transition: color var(--duration-fast), border-color var(--duration-fast);
+    }
+    .controls button:hover { color: var(--accent); border-color: var(--accent); }
+    .controls svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+    body.has-detail .controls { right: 27rem; }
+
+    /* the whole map as text */
+    .list { position: fixed; z-index: 50; inset: 0; overflow-y: auto; padding: 5rem 2rem 4rem; background: var(--surface-black); }
+    .list[hidden] { display: none; }
+    .list-inner { max-width: 72rem; margin: 0 auto; }
+    .list h2 { margin: 0 0 2rem; font: 700 3rem/var(--leading-headline) var(--font-display); text-transform: uppercase; color: var(--accent); }
+    .list-areas { display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: 2.5rem 2rem; }
+    .list h3 { margin: 0 0 0.5rem; font: 700 1.25rem/1 var(--font-display); text-transform: uppercase; }
+    .list h3 span { color: var(--accent); }
+    .list ul { margin: 0; padding: 0; list-style: none; }
+    .list .row { width: 100%; }
+    .list .close { top: 1.25rem; right: 1.5rem; }
+
+    .failed { margin: 0; padding: 0.9rem 1rem; font-size: max(var(--type-body), var(--type-floor)); color: var(--foreground-on-dark); border-left: 3px solid var(--danger); background: var(--surface-dark); }
+
+    /* below lg: the intro sits on top, the details rise from the bottom */
+    @media (max-width: 1023px) {
+      .bar { padding: 1rem 1rem 1.25rem; }
+      .intro { left: 0; right: 0; top: 3.25rem; bottom: auto; width: auto; max-height: 60%; padding: 0.25rem 1rem 0.5rem; gap: 0.6rem; background: var(--surface-black); border-bottom: 1px solid var(--rule-on-dark); }
+      .intro > .corner { display: none; }
+      .intro h1 { margin-top: 0.3rem; font-size: 1.75rem; }
+      .lede, .stats { display: none; }
+      .mini-stats { display: block; }
+      .search input { height: 2.5rem; }
+      .key summary { padding: 0.35rem 0; border-bottom: 0; }
+      .detail { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 58%; padding-top: 1.25rem; border-top: 2px solid var(--accent); }
+      .detail > .corner { display: none; }
+      .controls { right: 1rem; bottom: 1rem; }
+      body.has-detail .controls { display: none; }
+      .list { padding: 4.5rem 1rem 3rem; }
+      .list h2 { font-size: 2.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="corner" viewBox="0 0 10.5 10.5"><path d="M0 0.5H10V10.5"/></symbol>
+  </svg>
+
+  <canvas class="map" data-map role="img" aria-label="An interactive map of how khadi.uz is built. The list view has the same map as text."></canvas>
+
+  <header class="bar">
+    <a class="logo" href="../" aria-label="khadi.uz, home">khadi<span>.</span>uz</a>
+    <a class="back" href="../"><span aria-hidden="true">[ ← </span>Back to the site<span aria-hidden="true"> ]</span></a>
+  </header>
+
+  <main>
+    <aside class="panel intro brackets" aria-labelledby="title">
+      <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg>
+      <svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+      <div>
+        <p class="eyebrow">Architecture</p>
+        <h1 id="title">How this site is built<span class="stop">.</span></h1>
+      </div>
+      <p class="mini-stats" data-mini-stats></p>
+      <p class="lede">A map of khadi.uz drawn from its own source by graphify: the scripts, sections, pages and design rules, and how they connect. Point at a part to light its links; choose it for the details.</p>
+      <dl class="stats">
+        <div><dt data-stat="nodes">–</dt><dd>Parts</dd></div>
+        <div><dt data-stat="links">–</dt><dd>Links</dd></div>
+        <div><dt data-stat="areas">–</dt><dd>Areas</dd></div>
+      </dl>
+      <div class="search">
+        <label class="sr-only" for="find">Find a part</label>
+        <input id="find" type="search" placeholder="Find a part   /" autocomplete="off" spellcheck="false" aria-controls="results">
+        <ul class="results" id="results" data-results></ul>
+      </div>
+      <details class="key" data-key open>
+        <summary>Areas and key</summary>
+        <ol class="areas" data-areas></ol>
+        <ul class="legend" aria-label="Key">
+          <li><svg viewBox="-8 -8 16 16" aria-hidden="true"><circle r="6" fill="#b6c1c8"/></svg>Code</li>
+          <li><svg viewBox="-8 -8 16 16" aria-hidden="true"><rect x="-5.5" y="-5.5" width="11" height="11" fill="#ffffff"/></svg>Page or doc</li>
+          <li><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M0 -7L7 0L0 7L-7 0Z" fill="#b6c1c8"/></svg>Idea or entity</li>
+          <li><svg viewBox="-8 -8 16 16" aria-hidden="true"><circle r="5.2" fill="none" stroke="#b6c1c8" stroke-width="2.2"/></svg>Design reason</li>
+          <li><svg viewBox="0 -8 16 16" aria-hidden="true"><path d="M0 0H16" stroke="#b6c1c8" stroke-width="1.5"/></svg>Found in source</li>
+          <li><svg viewBox="0 -8 16 16" aria-hidden="true"><path d="M0 0H16" stroke="#b6c1c8" stroke-width="1.5" stroke-dasharray="3 3"/></svg>Inferred</li>
+        </ul>
+        <p class="note" data-credit></p>
+      </details>
+      <noscript><p class="failed">The map needs JavaScript. The site's source is public on <a href="https://github.com/Khadi-dot/khadi.uz">GitHub</a>.</p></noscript>
+    </aside>
+
+    <aside class="panel detail brackets" data-detail hidden aria-labelledby="detail-title" tabindex="-1">
+      <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg>
+      <svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+      <button class="close" type="button" data-close aria-label="Close the details">×</button>
+      <div data-detail-body></div>
+    </aside>
+  </main>
+
+  <div class="tip" data-tip hidden></div>
+
+  <div class="controls">
+    <button type="button" data-zoom="in" aria-label="Zoom in"><svg viewBox="0 0 14 14"><path d="M7 1V13M1 7H13"/></svg></button>
+    <button type="button" data-zoom="out" aria-label="Zoom out"><svg viewBox="0 0 14 14"><path d="M1 7H13"/></svg></button>
+    <button type="button" data-zoom="fit" aria-label="Fit the whole map"><svg viewBox="0 0 14 14"><path d="M1 5V1H5M9 1H13V5M13 9V13H9M5 13H1V9"/></svg></button>
+    <button type="button" data-open-list>List view</button>
+  </div>
+
+  <section class="list" data-list hidden aria-labelledby="list-title" tabindex="-1">
+    <button class="close" type="button" data-close-list aria-label="Close the list">×</button>
+    <div class="list-inner">
+      <p class="eyebrow">Architecture</p>
+      <h2 id="list-title">Every part, by area<span style="color: var(--foreground-on-dark)">.</span></h2>
+      <div class="list-areas" data-list-areas></div>
+    </div>
+  </section>
+
+  <script type="module">
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const token = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const COLOR = {
+      ground: token("--surface-black"), ink: token("--foreground-on-dark"), steel: token("--foreground-on-dark-muted"),
+      accent: token("--accent"), raised: token("--surface-dark"),
+    };
+    const KIND = {
+      code: { name: "Code" }, page: { name: "Page or doc" }, idea: { name: "Idea or entity" }, reason: { name: "Design reason" },
+    };
+    // a link read from the other end
+    const REVERSE = { "calls": "called by", "refers to": "referred to by", "implements": "implemented by", "explains": "explained by" };
+    const REPO = "https://github.com/Khadi-dot/khadi.uz";
+    const escape = (text) => String(text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+    const two = (i) => String(i + 1).padStart(2, "0");
+
+    const canvas = $("[data-map]");
+    const ctx = canvas.getContext("2d");
+    const intro = $(".intro");
+    const detail = $("[data-detail]");
+    const tip = $("[data-tip]");
+
+    let data;
+    try {
+      const response = await fetch("graph.json");
+      if (!response.ok) throw new Error(response.status);
+      data = await response.json();
+    } catch (error) {
+      intro.insertAdjacentHTML("beforeend", `<p class="failed">The map's data didn't load (${escape(error.message)}). Try reloading the page.</p>`);
+      throw error;
+    }
+
+    const labelFont = "500 12px 'Space Grotesk', system-ui, sans-serif";
+    const areaFont = "700 16px Oswald, Impact, sans-serif";
+    const AREA_SIZE = 16;  // area names, in map units; on screen they stay between 12 and 18px
+    await Promise.all([document.fonts.load(labelFont), document.fonts.load(areaFont)]).catch(() => {});
+
+    // ---------------------------------------------------------------
+    // The data: parts, links, areas, and who touches whom.
+    // ---------------------------------------------------------------
+    const nodes = data.nodes;
+    const byId = new Map(nodes.map((n) => [n.id, n]));
+    const areas = data.areas.map((a, i) => ({ ...a, i, members: [] }));
+    const areaById = new Map(areas.map((a) => [a.id, a]));
+    const links = data.links.map((l) => ({ ...l, s: byId.get(l.source), t: byId.get(l.target) }));
+    for (const n of nodes) {
+      n.areaRef = areaById.get(n.area);
+      n.areaRef.members.push(n);
+      n.r = 3.4 + Math.sqrt(n.degree) * 1.75;
+      n.out = []; n.in = []; n.near = new Set([n]);
+      n.sets = data.sets.filter((s) => s.nodes.includes(n.id)).map((s) => s.label);
+    }
+    for (const l of links) {
+      l.s.out.push(l); l.t.in.push(l);
+      l.s.near.add(l.t); l.t.near.add(l.s);
+    }
+    $("[data-stat=nodes]").textContent = nodes.length;
+    $("[data-stat=links]").textContent = links.length;
+    $("[data-stat=areas]").textContent = areas.length;
+    $("[data-mini-stats]").textContent = `${nodes.length} parts · ${links.length} links · ${areas.length} areas`;
+    const built = new Date(`${data.built}T12:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+    $("[data-credit]").innerHTML = `Mapped by graphify ${escape(data.graphify || "")} on ${built}, from commit <a href="${REPO}/tree/${data.commit}">${escape((data.commit || "").slice(0, 7))}</a>. Parts named in several files are shown once.`;
+
+    // ---------------------------------------------------------------
+    // The layout: areas placed first, then each part settles around
+    // its area. Seeded, so the map is the same on every visit.
+    // ---------------------------------------------------------------
+    let seed = 20261030;
+    const random = () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const separate = (a, b, min) => {
+      let dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy;
+      if (d2 >= min * min) return;
+      if (d2 < 0.01) { dx = random() - 0.5; dy = random() - 0.5; d2 = dx * dx + dy * dy; }
+      const d = Math.sqrt(d2), push = ((min - d) / d) * 0.5;
+      a.x -= dx * push; a.y -= dy * push; b.x += dx * push; b.y += dy * push;
+    };
+
+    // 1 · each area on its own: its parts around a centre, held by the links inside it
+    for (const a of areas) {
+      const inside = links.filter((l) => l.s.areaRef === a && l.t.areaRef === a);
+      for (const n of a.members) {
+        const angle = random() * Math.PI * 2, reach = 8 + random() * 10 * Math.sqrt(a.size);
+        n.x = Math.cos(angle) * reach; n.y = Math.sin(angle) * reach; n.vx = 0; n.vy = 0;
+      }
+      let alpha = 1;
+      for (let step = 0; step < 360; step += 1) {
+        const m = a.members;
+        for (let i = 0; i < m.length; i += 1) for (let j = i + 1; j < m.length; j += 1) {
+          const p = m[i], q = m[j];
+          const dx = q.x - p.x, dy = q.y - p.y, d2 = Math.max(1, dx * dx + dy * dy), k = 160 * alpha / d2;
+          p.vx -= dx * k; p.vy -= dy * k; q.vx += dx * k; q.vy += dy * k;
+          separate(p, q, p.r + q.r + 8);
+        }
+        for (const l of inside) {
+          const dx = l.t.x - l.s.x, dy = l.t.y - l.s.y, d = Math.hypot(dx, dy) || 1, f = ((d - 30) / d) * 0.08 * alpha;
+          l.s.vx += dx * f; l.s.vy += dy * f; l.t.vx -= dx * f; l.t.vy -= dy * f;
+        }
+        for (const n of m) {
+          n.vx -= n.x * 0.035 * alpha; n.vy -= n.y * 0.035 * alpha;
+          n.x += n.vx; n.y += n.vy; n.vx *= 0.55; n.vy *= 0.55;
+        }
+        alpha = Math.max(0.05, alpha * 0.99);
+      }
+      a.R = 14 + Math.max(...a.members.map((n) => Math.hypot(n.x, n.y) + n.r));
+    }
+
+    // 2 · the areas as islands, packed in rows like panels; each keeps room for its name,
+    //     and areas that link to each other sit side by side
+    {
+      const A = areas.length;
+      const weight = areas.map(() => new Array(A).fill(0));
+      for (const l of links) if (l.s.areaRef !== l.t.areaRef) { weight[l.s.areaRef.i][l.t.areaRef.i] += 1; weight[l.t.areaRef.i][l.s.areaRef.i] += 1; }
+      const order = [areas[0]];
+      while (order.length < A) {
+        const last = order[order.length - 1];
+        const next = areas.filter((a) => !order.includes(a)).sort((a, b) => (weight[last.i][b.i] - weight[last.i][a.i]) || (b.size - a.size))[0];
+        order.push(next);
+      }
+      const shapeOf = innerWidth >= 1024 ? (innerWidth - 470) / (innerHeight - 170) : Math.max(0.55, (innerWidth - 24) / (innerHeight * 0.55));
+      const GAP = 44;
+      const pack = () => {
+        ctx.font = `700 ${AREA_SIZE}px Oswald, Impact, sans-serif`;
+        const boxes = order.map((a) => {
+          a.labelW = ctx.measureText(`${two(a.i)} ${a.name.toUpperCase()}`).width;
+          return { a, w: Math.max(2 * a.R, a.labelW + 12), h: 2 * a.R + AREA_SIZE + 10 };
+        });
+        const targetW = Math.sqrt(boxes.reduce((t, b) => t + (b.w + GAP) * (b.h + GAP), 0) * shapeOf);
+        const rows = [[]];
+        let rowW = 0;
+        for (const box of boxes) {
+          if (rows[rows.length - 1].length && rowW + box.w > targetW) { rows.push([]); rowW = 0; }
+          rows[rows.length - 1].push(box);
+          rowW += box.w + GAP;
+        }
+        let y = 0, widest = 0;
+        for (const row of rows) {
+          const width = row.reduce((t, b) => t + b.w, 0) + GAP * (row.length - 1);
+          const height = Math.max(...row.map((b) => b.h));
+          let x = -width / 2;
+          for (const box of row) {
+            box.a.x = x + box.w / 2;
+            box.a.y = y + AREA_SIZE + 10 + (height - AREA_SIZE - 10) / 2;
+            x += box.w + GAP;
+          }
+          widest = Math.max(widest, width);
+          y += height + GAP;
+        }
+        return { w: widest, h: y - GAP };
+      };
+      const size = pack();
+      const y = size.h + 44;
+      const shift = y / 2;
+      for (const a of areas) a.y -= shift;
+    }
+
+    // 3 · every part at its area's place
+    for (const n of nodes) {
+      n.x += n.areaRef.x; n.y += n.areaRef.y;
+      n.homeX = n.x; n.homeY = n.y; n.vx = 0; n.vy = 0;
+    }
+    for (const a of areas) { a.lx = a.x; a.ly = a.y - a.R - 8; }
+
+    // While a part is dragged the map gives elastically: links pull, and every part is drawn back home.
+    let pinned = null;
+    const tick = (alpha) => {
+      for (const l of links) {
+        const same = l.s.areaRef === l.t.areaRef;
+        const dx = l.t.x - l.s.x, dy = l.t.y - l.s.y, d = Math.hypot(dx, dy) || 1;
+        const rest = Math.hypot(l.t.homeX - l.s.homeX, l.t.homeY - l.s.homeY);
+        const f = ((d - rest) / d) * (same ? 0.12 : 0.02) * alpha;
+        l.s.vx += dx * f; l.s.vy += dy * f; l.t.vx -= dx * f; l.t.vy -= dy * f;
+      }
+      for (const n of nodes) {
+        if (n === pinned) { n.vx = 0; n.vy = 0; continue; }
+        n.vx += (n.homeX - n.x) * 0.06; n.vy += (n.homeY - n.y) * 0.06;
+        n.x += n.vx; n.y += n.vy; n.vx *= 0.7; n.vy *= 0.7;
+      }
+    };
+
+    // ---------------------------------------------------------------
+    // The camera: world to screen, fitted to the room the panels leave.
+    // ---------------------------------------------------------------
+    const cam = { k: 1, x: 0, y: 0 };
+    let camTween = null, userMoved = false, dpr = 1, W = 0, H = 0;
+    const wide = matchMedia("(min-width: 1024px)");
+    const room = () => {
+      const pad = 28;
+      if (wide.matches) {
+        const left = intro.getBoundingClientRect().right + pad;
+        const right = W - (detail.hidden ? 32 : detail.getBoundingClientRect().width + 64);
+        return { left, right, top: 72, bottom: H - 84 };
+      }
+      const top = intro.getBoundingClientRect().bottom + 12;
+      const bottom = detail.hidden ? H - 64 : detail.getBoundingClientRect().top - 8;
+      return { left: 12, right: W - 12, top, bottom: Math.max(top + 120, bottom) };
+    };
+    const bounds = (list) => {
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      if (!list) {
+        for (const a of areas) { const half = Math.max(a.R, a.labelW / 2 + 6); x0 = Math.min(x0, a.x - half); x1 = Math.max(x1, a.x + half); y0 = Math.min(y0, a.y - a.R - AREA_SIZE - 12); y1 = Math.max(y1, a.y + a.R); }
+        return { x0, y0, x1, y1 };
+      }
+      for (const n of list) { x0 = Math.min(x0, n.homeX - n.r); x1 = Math.max(x1, n.homeX + n.r + 60); y0 = Math.min(y0, n.homeY - n.r - 30); y1 = Math.max(y1, n.homeY + n.r); }
+      return { x0, y0, x1, y1 };
+    };
+    const framing = (list) => {
+      const b = bounds(list), r = room();
+      const k = Math.min(2.2, Math.max(0.12, Math.min((r.right - r.left) / (b.x1 - b.x0), (r.bottom - r.top) / (b.y1 - b.y0)) * 0.94));
+      return { k, x: (r.left + r.right) / 2 - ((b.x0 + b.x1) / 2) * k, y: (r.top + r.bottom) / 2 - ((b.y0 + b.y1) / 2) * k };
+    };
+    const moveCamera = (to, immediate = false) => {
+      if (immediate || reduced) { Object.assign(cam, to); camTween = null; }
+      else camTween = { from: { ...cam }, to, start: performance.now(), length: 650 };
+      redraw();
+    };
+    const toScreen = (x, y) => [x * cam.k + cam.x, y * cam.k + cam.y];
+    const toWorld = (x, y) => [(x - cam.x) / cam.k, (y - cam.y) / cam.k];
+    const zoomAt = (px, py, factor) => {
+      const k = Math.min(4, Math.max(0.12, cam.k * factor));
+      cam.x = px - (px - cam.x) * (k / cam.k); cam.y = py - (py - cam.y) * (k / cam.k); cam.k = k;
+      camTween = null; userMoved = true; redraw();
+    };
+    const centreOn = (n) => {
+      const r = room(), k = Math.max(cam.k, 1.15);
+      moveCamera({ k, x: (r.left + r.right) / 2 - n.x * k, y: (r.top + r.bottom) / 2 - n.y * k });
+    };
+
+    // ---------------------------------------------------------------
+    // State: what is pointed at, chosen, or picked out by area.
+    // ---------------------------------------------------------------
+    let hover = null, selected = null, hoverArea = null, introStart = null, simAlpha = 0;
+    const focusNode = () => hover || selected;
+    const isLit = (n) => {
+      const f = focusNode();
+      if (f) return f.near.has(n);
+      if (hoverArea) return n.areaRef === hoverArea;
+      return true;
+    };
+
+    // ---------------------------------------------------------------
+    // Drawing. A frame is drawn only when something changed or moves.
+    // ---------------------------------------------------------------
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    const shape = (n, x, y, r) => {
+      ctx.beginPath();
+      if (n.kind === "page") { const s = r * 0.88; ctx.rect(x - s, y - s, s * 2, s * 2); }
+      else if (n.kind === "idea") { const s = r * 1.18; ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.closePath(); }
+      else ctx.arc(x, y, r, 0, Math.PI * 2);
+    };
+    const short = (text, max = 38) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
+
+    let frameQueued = false;
+    const redraw = () => { if (!frameQueued) { frameQueued = true; requestAnimationFrame(frame); } };
+    function frame(time) {
+      frameQueued = false;
+      let again = false;
+
+      // the parts assemble from their areas on arrival
+      let introT = 1;
+      if (introStart !== null) {
+        introT = Math.min(1, Math.max(0, (time - introStart) / 1400));
+        if (introT < 1) again = true; else introStart = null;
+      }
+      if (camTween) {
+        // a frame's timestamp can fall just before the tween began; never ease outside 0..1
+        const t = Math.min(1, Math.max(0, (time - camTween.start) / camTween.length)), e = ease(t);
+        for (const key of ["k", "x", "y"]) cam[key] = camTween.from[key] + (camTween.to[key] - camTween.from[key]) * e;
+        if (t >= 1) camTween = null; else again = true;
+      }
+      if (simAlpha > 0.004 || pinned) { tick(Math.max(simAlpha, pinned ? 0.18 : 0)); simAlpha *= 0.94; again = true; }
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.fillStyle = COLOR.ground;
+      ctx.fillRect(0, 0, W, H);
+
+      // the instrument grid, moving with the map
+      let step = 80 * cam.k;
+      if (!(step > 0)) step = 80;
+      while (step < 28) step *= 2;
+      ctx.strokeStyle = "rgb(255 255 255 / 0.05)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 6]);
+      ctx.beginPath();
+      for (let x = ((cam.x % step) + step) % step; x < W; x += step) { ctx.moveTo(Math.round(x) + 0.5, 0); ctx.lineTo(Math.round(x) + 0.5, H); }
+      for (let y = ((cam.y % step) + step) % step; y < H; y += step) { ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(W, Math.round(y) + 0.5); }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const f = focusNode();
+      const anyFocus = Boolean(f || hoverArea);
+      const pos = (n) => {
+        if (introT >= 1) return [n.x, n.y];
+        const delay = Math.min(0.45, (n.areaRef.i * 0.035) + (1 - Math.min(1, n.degree / 12)) * 0.2);
+        const t = ease(Math.max(0, Math.min(1, (introT - delay) / (1 - delay))));
+        return [n.areaRef.x + (n.x - n.areaRef.x) * t, n.areaRef.y + (n.y - n.areaRef.y) * t];
+      };
+      for (const n of nodes) [n.sx, n.sy] = toScreen(...pos(n));
+
+      // links: thin and quiet; lit cyan around the part in focus
+      const fade = introT < 1 ? Math.max(0, (introT - 0.35) / 0.65) : 1;
+      for (const lit of [false, true]) {
+        for (const l of links) {
+          const on = f ? (l.s === f || l.t === f) : hoverArea ? (l.s.areaRef === hoverArea && l.t.areaRef === hoverArea) : false;
+          if (on !== lit) continue;
+          ctx.beginPath();
+          ctx.moveTo(l.s.sx, l.s.sy);
+          ctx.lineTo(l.t.sx, l.t.sy);
+          ctx.setLineDash(l.inferred ? [3, 4] : []);
+          ctx.lineWidth = on ? 1.6 : 1;
+          const across = l.s.areaRef !== l.t.areaRef;
+          ctx.strokeStyle = on ? COLOR.accent : `rgb(182 193 200 / ${(anyFocus ? 0.04 : across ? 0.08 : 0.22) * fade})`;
+          ctx.stroke();
+        }
+      }
+      ctx.setLineDash([]);
+
+      // a pulse runs along each lit link, from the part that does to the part done to
+      if (f && !reduced && introT >= 1) {
+        const phase = (time % 1600) / 1600;
+        ctx.fillStyle = COLOR.accent;
+        for (const l of links) {
+          if (l.s !== f && l.t !== f) continue;
+          const x = l.s.sx + (l.t.sx - l.s.sx) * phase, y = l.s.sy + (l.t.sy - l.s.sy) * phase;
+          ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill();
+        }
+        again = true;
+      }
+
+      // area names over each group
+      const taken = [];
+      const free = (x, y, w, h) => {
+        for (const r of taken) if (x < r.x + r.w && x + w > r.x && y < r.y + r.h && y + h > r.y) return false;
+        taken.push({ x, y, w, h });
+        return true;
+      };
+      ctx.textBaseline = "alphabetic";
+      for (const a of areas) {
+        const [x, y] = toScreen(a.lx, a.ly);
+        const on = hoverArea === a || (f && f.areaRef === a);
+        const quiet = anyFocus && !on;
+        const num = two(a.i), name = a.name.toUpperCase();
+        const px = Math.min(18, Math.max(12, AREA_SIZE * cam.k));
+        ctx.font = `700 ${px}px Oswald, Impact, sans-serif`;
+        const wNum = ctx.measureText(`${num} `).width, wName = ctx.measureText(name).width;
+        const x0 = x - (wNum + wName) / 2;
+        // a name that would collide at this zoom waits until there is room; the panel lists them all
+        if (!free(x0 - 4, y - px, wNum + wName + 8, px + 6) && !on) continue;
+        ctx.globalAlpha = (quiet ? 0.25 : on ? 1 : 0.62) * fade;
+        ctx.fillStyle = COLOR.accent; ctx.fillText(num, x0, y);
+        ctx.fillStyle = COLOR.ink; ctx.fillText(name, x0 + wNum, y);
+      }
+      ctx.globalAlpha = 1;
+
+      // the parts: shaped by kind, sized by how much they touch
+      const order = [...nodes].sort((a, b) => (isLit(a) - isLit(b)) || (a.r - b.r));
+      for (const n of order) {
+        const lit = isLit(n), r = n.r * Math.min(1.6, Math.max(0.7, Math.sqrt(cam.k)));
+        const hot = anyFocus && lit;
+        ctx.globalAlpha = lit ? 1 : 0.16;
+        const colour = hot ? COLOR.accent : n.kind === "page" ? COLOR.ink : COLOR.steel;
+        shape(n, n.sx, n.sy, r + 1.6);
+        ctx.fillStyle = COLOR.ground; ctx.fill();
+        shape(n, n.sx, n.sy, r);
+        if (n.kind === "reason") {
+          ctx.lineWidth = Math.max(1.6, r * 0.38); ctx.strokeStyle = colour;
+          shape(n, n.sx, n.sy, r - ctx.lineWidth / 2); ctx.stroke();
+        } else { ctx.fillStyle = colour; ctx.fill(); }
+        if (n === selected) {
+          const grow = reduced ? 0 : ((time % 1800) / 1800);
+          ctx.strokeStyle = COLOR.accent; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(n.sx, n.sy, r + 6, 0, Math.PI * 2); ctx.stroke();
+          if (!reduced) {
+            ctx.globalAlpha = 0.6 * (1 - grow);
+            ctx.beginPath(); ctx.arc(n.sx, n.sy, r + 6 + grow * 14, 0, Math.PI * 2); ctx.stroke();
+            again = true;
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      // names: the part in focus and its neighbours first, then the busiest parts; never overlapping
+      if (introT >= 1) {
+        const wanted = [];
+        if (f) { wanted.push(f, ...[...f.near].filter((n) => n !== f).sort((a, b) => b.degree - a.degree)); }
+        else if (hoverArea) wanted.push(...[...hoverArea.members].sort((a, b) => b.degree - a.degree));
+        const rest = [...nodes].sort((a, b) => b.degree - a.degree).filter((n) => cam.k >= 1.45 || n.degree >= 7);
+        if (!anyFocus) wanted.push(...rest);
+        ctx.font = labelFont;
+        ctx.lineJoin = "round";
+        for (const n of wanted) {
+          const text = short(n.label), w = ctx.measureText(text).width;
+          const r = n.r * Math.min(1.6, Math.max(0.7, Math.sqrt(cam.k)));
+          const x = n.sx + r + 6, y = n.sy + 4;
+          if (x > W || y < 0 || y > H + 12) continue;
+          if (!free(x - 2, y - 11, w + 4, 15) && n !== f) continue;
+          ctx.strokeStyle = COLOR.ground; ctx.lineWidth = 3.5; ctx.strokeText(text, x, y);
+          ctx.fillStyle = n === f ? COLOR.accent : anyFocus || n.degree >= 7 ? COLOR.ink : COLOR.steel;
+          ctx.fillText(text, x, y);
+        }
+      }
+      if (again) redraw();
+    }
+
+    // ---------------------------------------------------------------
+    // Sizing.
+    // ---------------------------------------------------------------
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = innerWidth; H = innerHeight;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      if (!userMoved) moveCamera(framing(), true);
+      redraw();
+    };
+    addEventListener("resize", resize);
+    wide.addEventListener("change", () => { $("[data-key]").open = wide.matches; userMoved = false; resize(); });
+    if (!wide.matches) $("[data-key]").open = false;
+
+    // ---------------------------------------------------------------
+    // Pointing, dragging, panning, pinching.
+    // ---------------------------------------------------------------
+    const nodeAt = (x, y) => {
+      let best = null, bestD = Infinity;
+      for (const n of nodes) {
+        const r = n.r * Math.min(1.6, Math.max(0.7, Math.sqrt(cam.k)));
+        const d = Math.hypot(n.sx - x, n.sy - y);
+        if (d < Math.max(r + 6, 11) && d < bestD) { best = n; bestD = d; }
+      }
+      return best;
+    };
+    const showTip = (n, x, y) => {
+      if (!n) { tip.hidden = true; return; }
+      tip.innerHTML = `<b>${escape(n.label)}</b><span>${KIND[n.kind].name} · ${escape(n.areaRef.name)} · ${n.degree} link${n.degree === 1 ? "" : "s"}</span>`;
+      tip.hidden = false;
+      const w = tip.offsetWidth, h = tip.offsetHeight;
+      tip.style.transform = `translate(${Math.min(x + 16, W - w - 8)}px, ${y + 18 + h > H ? y - h - 14 : y + 18}px)`;
+    };
+    const pointers = new Map();
+    let gesture = null;
+    canvas.addEventListener("pointerdown", (e) => {
+      canvas.setPointerCapture(e.pointerId);
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2) {
+        const [a, b] = [...pointers.values()];
+        gesture = { type: "pinch", d: Math.hypot(a.x - b.x, a.y - b.y), k: cam.k };
+        if (pinned) { pinned = null; }
+        return;
+      }
+      const n = nodeAt(e.clientX, e.clientY);
+      gesture = { type: n ? "drag" : "pan", node: n, x: e.clientX, y: e.clientY, at: performance.now(), moved: 0 };
+      if (!n) canvas.classList.add("is-panning");
+    });
+    canvas.addEventListener("pointermove", (e) => {
+      const p = pointers.get(e.pointerId);
+      if (!gesture) {
+        if (e.pointerType === "touch") return;
+        const n = nodeAt(e.clientX, e.clientY);
+        if (n !== hover) { hover = n; canvas.classList.toggle("is-over", Boolean(n)); redraw(); }
+        showTip(n, e.clientX, e.clientY);
+        return;
+      }
+      if (!p) return;
+      const dx = e.clientX - p.x, dy = e.clientY - p.y;
+      p.x = e.clientX; p.y = e.clientY;
+      if (gesture.type === "pinch" && pointers.size === 2) {
+        const [a, b] = [...pointers.values()];
+        const d = Math.hypot(a.x - b.x, a.y - b.y);
+        zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, (gesture.k * (d / gesture.d)) / cam.k);
+        return;
+      }
+      gesture.moved += Math.hypot(dx, dy);
+      if (gesture.moved < 4) return;
+      tip.hidden = true;
+      if (gesture.type === "drag") {
+        pinned = gesture.node;
+        [pinned.x, pinned.y] = toWorld(e.clientX, e.clientY);
+        simAlpha = Math.max(simAlpha, 0.18);
+        redraw();
+      } else if (gesture.type === "pan") {
+        cam.x += dx; cam.y += dy; camTween = null; userMoved = true; redraw();
+      }
+    });
+    const release = (e) => {
+      if (!pointers.has(e.pointerId)) return;
+      pointers.delete(e.pointerId);
+      canvas.classList.remove("is-panning");
+      if (gesture && gesture.type !== "pinch" && gesture.moved < 4 && e.type === "pointerup") {
+        const n = gesture.node;
+        if (n) select(n === selected ? null : n); else if (selected) select(null);
+      }
+      if (gesture && gesture.type === "drag" && pinned) { pinned = null; simAlpha = 1; redraw(); }
+      if (pointers.size === 0) gesture = null;
+    };
+    canvas.addEventListener("pointerup", release);
+    canvas.addEventListener("pointercancel", release);
+    canvas.addEventListener("pointerleave", (e) => {
+      if (e.pointerType !== "mouse" || gesture) return;
+      hover = null; tip.hidden = true; canvas.classList.remove("is-over"); redraw();
+    });
+    canvas.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * (e.ctrlKey ? 0.012 : 0.0016)));
+    }, { passive: false });
+    $$("[data-zoom]").forEach((b) => b.addEventListener("click", () => {
+      const r = room(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2;
+      if (b.dataset.zoom === "in") zoomAt(cx, cy, 1.35);
+      else if (b.dataset.zoom === "out") zoomAt(cx, cy, 1 / 1.35);
+      else { userMoved = false; moveCamera(framing()); }
+    }));
+
+    // ---------------------------------------------------------------
+    // The details of the chosen part.
+    // ---------------------------------------------------------------
+    const kindIcon = (kind) => ({
+      code: `<circle r="6" fill="${COLOR.accent}"/>`,
+      page: `<rect x="-5.5" y="-5.5" width="11" height="11" fill="${COLOR.accent}"/>`,
+      idea: `<path d="M0 -7L7 0L0 7L-7 0Z" fill="${COLOR.accent}"/>`,
+      reason: `<circle r="5.2" fill="none" stroke="${COLOR.accent}" stroke-width="2.2"/>`,
+    })[kind];
+    const fill = (n) => {
+      const groups = new Map();
+      const add = (name, other, inferred) => {
+        if (!groups.has(name)) groups.set(name, new Map());
+        const g = groups.get(name);
+        if (!g.has(other.id)) g.set(other.id, { node: other, inferred });
+      };
+      for (const l of n.out) add(l.relation, l.t, l.inferred);
+      for (const l of n.in) add(REVERSE[l.relation] || l.relation, l.s, l.inferred);
+      const sources = n.sources.map((s) => {
+        const href = `${REPO}/blob/${data.commit}/${s.file}${s.line ? `#L${s.line}` : ""}`;
+        return `<li><a href="${href}" target="_blank" rel="noopener"><span>${escape(s.file)}</span>${s.line ? ` · line ${s.line}` : ""} ↗</a></li>`;
+      }).join("");
+      const connections = [...groups].map(([name, members]) => `
+        <div class="group">
+          <h3 class="eyebrow">${escape(name)} · ${members.size}</h3>
+          <ul>${[...members.values()].sort((a, b) => b.node.degree - a.node.degree).map(({ node, inferred }) => `
+            <li><button class="row" type="button" data-go="${node.id}"><span class="name">${escape(node.label)}</span>${inferred ? `<span class="tag">inferred</span>` : ""}</button></li>`).join("")}
+          </ul>
+        </div>`).join("");
+      $("[data-detail-body]").innerHTML = `
+        <p class="eyebrow kind"><svg viewBox="-8 -8 16 16" aria-hidden="true">${kindIcon(n.kind)}</svg>${KIND[n.kind].name}</p>
+        <h2 id="detail-title">${escape(n.label)}</h2>
+        <button class="area-link" type="button" data-area="${n.areaRef.id}">${two(n.areaRef.i)} · ${escape(n.areaRef.name)}</button>
+        ${n.why ? `<p class="why">${escape(n.why)}</p>` : ""}
+        <div class="group"><h3 class="eyebrow">In the source</h3><ul class="sources">${sources}</ul></div>
+        ${n.sets.length ? `<div class="group"><h3 class="eyebrow">Part of</h3><ul>${n.sets.map((s) => `<li class="row" style="cursor: default">${escape(s)}</li>`).join("")}</ul></div>` : ""}
+        ${connections || `<p class="note">Nothing links to this part yet.</p>`}`;
+    };
+    function select(n, { centre = true, focusPanel = false } = {}) {
+      selected = n;
+      hover = null; tip.hidden = true;
+      if (!n) {
+        detail.hidden = true;
+        document.body.classList.remove("has-detail");
+        history.replaceState(null, "", location.pathname);
+        redraw();
+        return;
+      }
+      fill(n);
+      detail.hidden = false;
+      detail.scrollTop = 0;
+      document.body.classList.add("has-detail");
+      history.replaceState(null, "", `#${n.id}`);
+      if (centre) centreOn(n);
+      if (focusPanel) detail.focus({ preventScroll: true });
+      redraw();
+    }
+    detail.addEventListener("click", (e) => {
+      const go = e.target.closest("[data-go]");
+      if (go) select(byId.get(go.dataset.go), { focusPanel: e.detail === 0 });
+      const area = e.target.closest("[data-area]");
+      if (area) showArea(areaById.get(Number(area.dataset.area)));
+    });
+    $("[data-close]").addEventListener("click", () => select(null));
+
+    // ---------------------------------------------------------------
+    // Areas: point to pick one out, choose to fly to it.
+    // ---------------------------------------------------------------
+    const showArea = (a) => { userMoved = true; moveCamera(framing(a.members)); };
+    const areaList = $("[data-areas]");
+    areaList.innerHTML = areas.map((a) => `<li><button class="row" type="button" data-area-row="${a.id}"><span class="n">${two(a.i)}</span><span class="name">${escape(a.name)}</span><span class="count">${a.size}</span></button></li>`).join("");
+    $$("[data-area-row]", areaList).forEach((b) => {
+      const a = areaById.get(Number(b.dataset.areaRow));
+      b.addEventListener("pointerenter", () => { hoverArea = a; redraw(); });
+      b.addEventListener("pointerleave", () => { hoverArea = null; redraw(); });
+      b.addEventListener("focus", () => { hoverArea = a; redraw(); });
+      b.addEventListener("blur", () => { hoverArea = null; redraw(); });
+      b.addEventListener("click", () => { if (!wide.matches) $("[data-key]").open = false; showArea(a); });
+    });
+
+    // ---------------------------------------------------------------
+    // Search.
+    // ---------------------------------------------------------------
+    const find = $("#find"), results = $("[data-results]");
+    const matches = (q) => {
+      q = q.trim().toLowerCase();
+      if (!q) return [];
+      return nodes.filter((n) => n.label.toLowerCase().includes(q))
+        .sort((a, b) => (b.label.toLowerCase().startsWith(q) - a.label.toLowerCase().startsWith(q)) || b.degree - a.degree)
+        .slice(0, 7);
+    };
+    find.addEventListener("input", () => {
+      results.innerHTML = matches(find.value).map((n) => `<li><button class="row" type="button" data-go="${n.id}"><span class="name">${escape(n.label)}</span><span class="count">${KIND[n.kind].name}</span></button></li>`).join("");
+    });
+    find.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { const first = matches(find.value)[0]; if (first) { select(first); results.innerHTML = ""; } }
+      if (e.key === "ArrowDown") { e.preventDefault(); results.querySelector("button")?.focus(); }
+    });
+    results.addEventListener("click", (e) => {
+      const go = e.target.closest("[data-go]");
+      if (!go) return;
+      select(byId.get(go.dataset.go), { focusPanel: e.detail === 0 });
+      results.innerHTML = ""; find.value = "";
+    });
+    results.addEventListener("pointerover", (e) => { const go = e.target.closest("[data-go]"); hover = go ? byId.get(go.dataset.go) : null; redraw(); });
+    results.addEventListener("pointerleave", () => { hover = null; redraw(); });
+
+    // ---------------------------------------------------------------
+    // The list view: the whole map as text, for screen readers and small screens.
+    // ---------------------------------------------------------------
+    const list = $("[data-list]");
+    $("[data-list-areas]").innerHTML = areas.map((a) => `
+      <section aria-labelledby="list-area-${a.id}">
+        <h3 id="list-area-${a.id}"><span>${two(a.i)}</span> ${escape(a.name)}</h3>
+        <ul>${[...a.members].sort((x, y) => y.degree - x.degree).map((n) => `
+          <li><button class="row" type="button" data-go="${n.id}"><span class="name">${escape(n.label)}</span><span class="count">${KIND[n.kind].name}</span></button></li>`).join("")}
+        </ul>
+      </section>`).join("");
+    const openList = () => { list.hidden = false; list.focus(); };
+    const closeList = () => { list.hidden = true; $("[data-open-list]").focus(); };
+    $("[data-open-list]").addEventListener("click", openList);
+    $("[data-close-list]").addEventListener("click", closeList);
+    list.addEventListener("click", (e) => {
+      const go = e.target.closest("[data-go]");
+      if (!go) return;
+      list.hidden = true;
+      select(byId.get(go.dataset.go), { focusPanel: true });
+    });
+
+    addEventListener("keydown", (e) => {
+      const typing = e.target.matches("input, textarea");
+      if (e.key === "/" && !typing) { e.preventDefault(); find.focus(); }
+      if (e.key === "Escape") {
+        if (!list.hidden) closeList();
+        else if (typing) { find.value = ""; results.innerHTML = ""; find.blur(); }
+        else if (selected) select(null);
+      }
+    });
+
+    // ---------------------------------------------------------------
+    // Go: wait for the fonts, fit, assemble; open a part named in the address.
+    // ---------------------------------------------------------------
+    resize();
+    const fromHash = byId.get(decodeURIComponent(location.hash.slice(1)));
+    if (fromHash) select(fromHash, { centre: true });
+    else if (!reduced) { introStart = performance.now(); redraw(); }
+    document.fonts.addEventListener?.("loadingdone", redraw);
+  </script>
+</body>
+</html>
