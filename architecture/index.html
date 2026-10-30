@@ -12,18 +12,48 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../brand.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "../vendor/three/three.module.min.js"
+    }
+  }
+  </script>
+  <link rel="modulepreload" href="../vendor/three/three.module.min.js">
+  <link rel="modulepreload" href="../vendor/three/three.core.min.js">
   <style>
     /* ==========================================================
        khadi.uz/architecture — the site mapped by graphify.
-       The map is a canvas: parts are marks shaped by kind, grouped
-       by area, and lit cyan along their links when pointed at.
-       Everything else is HTML: the intro, the details, the list.
+       The map is a three.js scene: each part a glass bubble holding
+       the shape of its kind, floating in its area's cluster, lit cyan
+       along its links when pointed at. Everything else is HTML:
+       the names, the intro, the details, the list.
        ========================================================== */
     html, body { height: 100%; }
-    body { overflow: hidden; background: var(--surface-black); color: var(--foreground-on-dark); }
+    body { overflow: hidden; color: var(--foreground-on-dark); }
     .map { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
     .map.is-panning { cursor: grabbing; }
     .map.is-over { cursor: pointer; }
+    body { background: radial-gradient(ellipse at 60% 45%, #12151c 0%, var(--surface-black) 65%); }
+
+    /* names over the 3D scene: real text, so they stay crisp; placed each frame */
+    .labels { position: fixed; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; }
+    .lbl, .area-lbl { position: absolute; left: 0; top: 0; white-space: nowrap; visibility: hidden; will-change: transform; }
+    .lbl {
+      font: 500 max(12px, var(--type-floor)) / 1.2 var(--font-sans);
+      color: var(--foreground-on-dark-muted);
+      text-shadow: 0 0 3px var(--surface-black), 0 0 8px var(--surface-black);
+    }
+    .lbl.is-hot { color: var(--foreground-on-dark); }
+    .lbl.is-self { color: var(--accent); font-weight: 700; }
+    .area-lbl {
+      font: 700 15px/1 var(--font-display);
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      color: var(--foreground-on-dark);
+      text-shadow: 0 0 6px var(--surface-black), 0 0 14px var(--surface-black);
+    }
+    .area-lbl b { margin-right: 0.35em; color: var(--accent); }
 
     .eyebrow {
       margin: 0;
@@ -56,7 +86,7 @@
     /* ---------- panels: near-black slabs with bracket corners ---------- */
     .panel {
       position: fixed; z-index: 20;
-      background: rgb(9 10 11 / 0.95);
+      background: rgb(9 10 11 / 0.97);
       padding: 1.5rem;
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -222,6 +252,7 @@
       .controls { right: 1rem; bottom: 1rem; }
       body.has-detail .controls { display: none; }
       .list { padding: 4.5rem 1rem 3rem; }
+      .area-lbl { font-size: 12px; }
       .list h2 { font-size: 2.25rem; }
     }
   </style>
@@ -231,7 +262,8 @@
     <symbol id="corner" viewBox="0 0 10.5 10.5"><path d="M0 0.5H10V10.5"/></symbol>
   </svg>
 
-  <canvas class="map" data-map role="img" aria-label="An interactive map of how khadi.uz is built. The list view has the same map as text."></canvas>
+  <canvas class="map" data-map role="img" aria-label="An interactive 3D map of how khadi.uz is built: each part is a bubble, grouped by area. The list view has the same map as text."></canvas>
+  <div class="labels" data-labels aria-hidden="true"></div>
 
   <header class="bar">
     <a class="logo" href="../" aria-label="khadi.uz, home">khadi<span>.</span>uz</a>
@@ -247,7 +279,7 @@
         <h1 id="title">How this site is built<span class="stop">.</span></h1>
       </div>
       <p class="mini-stats" data-mini-stats></p>
-      <p class="lede">A map of khadi.uz drawn from its own source by graphify: the scripts, sections, pages and design rules, and how they connect. Point at a part to light its links; choose it for the details.</p>
+      <p class="lede">A map of khadi.uz drawn from its own source by graphify: the scripts, sections, pages and design rules, and how they connect. Each bubble is a part. Drag to turn the space, point at a bubble to light its links, choose it for the details.</p>
       <dl class="stats">
         <div><dt data-stat="nodes">–</dt><dd>Parts</dd></div>
         <div><dt data-stat="links">–</dt><dd>Links</dd></div>
@@ -301,28 +333,28 @@
   </section>
 
   <script type="module">
+    import * as THREE from "three";
+
     const $ = (selector, root = document) => root.querySelector(selector);
     const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const token = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    const COLOR = {
-      ground: token("--surface-black"), ink: token("--foreground-on-dark"), steel: token("--foreground-on-dark-muted"),
-      accent: token("--accent"), raised: token("--surface-dark"),
-    };
-    const KIND = {
-      code: { name: "Code" }, page: { name: "Page or doc" }, idea: { name: "Idea or entity" }, reason: { name: "Design reason" },
-    };
+    const COLOR = { ink: token("--foreground-on-dark"), steel: token("--foreground-on-dark-muted"), accent: token("--accent"), ground: token("--surface-black") };
+    const KIND = { code: { name: "Code" }, page: { name: "Page or doc" }, idea: { name: "Idea or entity" }, reason: { name: "Design reason" } };
     // a link read from the other end
     const REVERSE = { "calls": "called by", "refers to": "referred to by", "implements": "implemented by", "explains": "explained by" };
     const REPO = "https://github.com/Khadi-dot/khadi.uz";
     const escape = (text) => String(text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
     const two = (i) => String(i + 1).padStart(2, "0");
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
     const canvas = $("[data-map]");
-    const ctx = canvas.getContext("2d");
+    const labelLayer = $("[data-labels]");
     const intro = $(".intro");
     const detail = $("[data-detail]");
     const tip = $("[data-tip]");
+    const fail = (message) => intro.insertAdjacentHTML("beforeend", `<p class="failed">${message}</p>`);
 
     let data;
     try {
@@ -330,14 +362,10 @@
       if (!response.ok) throw new Error(response.status);
       data = await response.json();
     } catch (error) {
-      intro.insertAdjacentHTML("beforeend", `<p class="failed">The map's data didn't load (${escape(error.message)}). Try reloading the page.</p>`);
+      fail(`The map's data didn't load (${escape(error.message)}). Try reloading the page.`);
       throw error;
     }
-
-    const labelFont = "500 12px 'Space Grotesk', system-ui, sans-serif";
-    const areaFont = "700 16px Oswald, Impact, sans-serif";
-    const AREA_SIZE = 16;  // area names, in map units; on screen they stay between 12 and 18px
-    await Promise.all([document.fonts.load(labelFont), document.fonts.load(areaFont)]).catch(() => {});
+    await document.fonts.ready;
 
     // ---------------------------------------------------------------
     // The data: parts, links, areas, and who touches whom.
@@ -348,9 +376,10 @@
     const areaById = new Map(areas.map((a) => [a.id, a]));
     const links = data.links.map((l) => ({ ...l, s: byId.get(l.source), t: byId.get(l.target) }));
     for (const n of nodes) {
+      n.text = n.label;
       n.areaRef = areaById.get(n.area);
       n.areaRef.members.push(n);
-      n.r = 3.4 + Math.sqrt(n.degree) * 1.75;
+      n.r = 3.4 + Math.sqrt(n.degree) * 2;   // bubble radius, in scene units
       n.out = []; n.in = []; n.near = new Set([n]);
       n.sets = data.sets.filter((s) => s.nodes.includes(n.id)).map((s) => s.label);
     }
@@ -366,50 +395,47 @@
     $("[data-credit]").innerHTML = `Mapped by graphify ${escape(data.graphify || "")} on ${built}, from commit <a href="${REPO}/tree/${data.commit}">${escape((data.commit || "").slice(0, 7))}</a>. Parts named in several files are shown once.`;
 
     // ---------------------------------------------------------------
-    // The layout: areas placed first, then each part settles around
-    // its area. Seeded, so the map is the same on every visit.
+    // The layout, in three dimensions: each area settles on its own,
+    // then the areas float apart as clusters, drawn toward the areas
+    // they link to. Seeded, so the space is the same on every visit.
     // ---------------------------------------------------------------
     let seed = 20261030;
     const random = () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
     const separate = (a, b, min) => {
-      let dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy;
+      let dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z, d2 = dx * dx + dy * dy + dz * dz;
       if (d2 >= min * min) return;
-      if (d2 < 0.01) { dx = random() - 0.5; dy = random() - 0.5; d2 = dx * dx + dy * dy; }
+      if (d2 < 0.01) { dx = random() - 0.5; dy = random() - 0.5; dz = random() - 0.5; d2 = dx * dx + dy * dy + dz * dz; }
       const d = Math.sqrt(d2), push = ((min - d) / d) * 0.5;
-      a.x -= dx * push; a.y -= dy * push; b.x += dx * push; b.y += dy * push;
+      a.x -= dx * push; a.y -= dy * push; a.z -= dz * push; b.x += dx * push; b.y += dy * push; b.z += dz * push;
     };
-
-    // 1 · each area on its own: its parts around a centre, held by the links inside it
     for (const a of areas) {
-      const inside = links.filter((l) => l.s.areaRef === a && l.t.areaRef === a);
-      for (const n of a.members) {
-        const angle = random() * Math.PI * 2, reach = 8 + random() * 10 * Math.sqrt(a.size);
-        n.x = Math.cos(angle) * reach; n.y = Math.sin(angle) * reach; n.vx = 0; n.vy = 0;
+      const m = a.members, inside = links.filter((l) => l.s.areaRef === a && l.t.areaRef === a);
+      for (const n of m) {
+        const u = random() * 2 - 1, phi = random() * Math.PI * 2, reach = 6 + random() * 8 * Math.cbrt(a.size);
+        const s = Math.sqrt(1 - u * u);
+        n.x = s * Math.cos(phi) * reach; n.y = u * reach; n.z = s * Math.sin(phi) * reach; n.vx = n.vy = n.vz = 0;
       }
       let alpha = 1;
-      for (let step = 0; step < 360; step += 1) {
-        const m = a.members;
+      for (let step = 0; step < 320; step += 1) {
         for (let i = 0; i < m.length; i += 1) for (let j = i + 1; j < m.length; j += 1) {
           const p = m[i], q = m[j];
-          const dx = q.x - p.x, dy = q.y - p.y, d2 = Math.max(1, dx * dx + dy * dy), k = 160 * alpha / d2;
-          p.vx -= dx * k; p.vy -= dy * k; q.vx += dx * k; q.vy += dy * k;
-          separate(p, q, p.r + q.r + 8);
+          const dx = q.x - p.x, dy = q.y - p.y, dz = q.z - p.z, d2 = Math.max(1, dx * dx + dy * dy + dz * dz), k = 18 * alpha / d2;
+          p.vx -= dx * k; p.vy -= dy * k; p.vz -= dz * k; q.vx += dx * k; q.vy += dy * k; q.vz += dz * k;
+          separate(p, q, p.r + q.r + 1.6);
         }
         for (const l of inside) {
-          const dx = l.t.x - l.s.x, dy = l.t.y - l.s.y, d = Math.hypot(dx, dy) || 1, f = ((d - 30) / d) * 0.08 * alpha;
-          l.s.vx += dx * f; l.s.vy += dy * f; l.t.vx -= dx * f; l.t.vy -= dy * f;
+          const dx = l.t.x - l.s.x, dy = l.t.y - l.s.y, dz = l.t.z - l.s.z, d = Math.hypot(dx, dy, dz) || 1, f = ((d - (l.s.r + l.t.r + 3)) / d) * 0.08 * alpha;
+          l.s.vx += dx * f; l.s.vy += dy * f; l.s.vz += dz * f; l.t.vx -= dx * f; l.t.vy -= dy * f; l.t.vz -= dz * f;
         }
         for (const n of m) {
-          n.vx -= n.x * 0.035 * alpha; n.vy -= n.y * 0.035 * alpha;
-          n.x += n.vx; n.y += n.vy; n.vx *= 0.55; n.vy *= 0.55;
+          n.vx -= n.x * 0.06; n.vy -= n.y * 0.06; n.vz -= n.z * 0.06;
+          n.x += n.vx; n.y += n.vy; n.z += n.vz; n.vx *= 0.55; n.vy *= 0.55; n.vz *= 0.55;
         }
         alpha = Math.max(0.05, alpha * 0.99);
       }
-      a.R = 14 + Math.max(...a.members.map((n) => Math.hypot(n.x, n.y) + n.r));
+      a.R = 4 + Math.max(...m.map((n) => Math.hypot(n.x, n.y, n.z) + n.r));
     }
-
-    // 2 · the areas as islands, packed in rows like panels; each keeps room for its name,
-    //     and areas that link to each other sit side by side
+    // the areas as a tilted ring of clusters; areas that link to each other sit side by side
     {
       const A = areas.length;
       const weight = areas.map(() => new Array(A).fill(0));
@@ -417,122 +443,226 @@
       const order = [areas[0]];
       while (order.length < A) {
         const last = order[order.length - 1];
-        const next = areas.filter((a) => !order.includes(a)).sort((a, b) => (weight[last.i][b.i] - weight[last.i][a.i]) || (b.size - a.size))[0];
-        order.push(next);
+        order.push(areas.filter((a) => !order.includes(a)).sort((a, b) => (weight[last.i][b.i] - weight[last.i][a.i]) || (b.size - a.size))[0]);
       }
-      const shapeOf = innerWidth >= 1024 ? (innerWidth - 470) / (innerHeight - 170) : Math.max(0.55, (innerWidth - 24) / (innerHeight * 0.55));
-      const GAP = 44;
-      const pack = () => {
-        ctx.font = `700 ${AREA_SIZE}px Oswald, Impact, sans-serif`;
-        const boxes = order.map((a) => {
-          a.labelW = ctx.measureText(`${two(a.i)} ${a.name.toUpperCase()}`).width;
-          return { a, w: Math.max(2 * a.R, a.labelW + 12), h: 2 * a.R + AREA_SIZE + 10 };
-        });
-        const targetW = Math.sqrt(boxes.reduce((t, b) => t + (b.w + GAP) * (b.h + GAP), 0) * shapeOf);
-        const rows = [[]];
-        let rowW = 0;
-        for (const box of boxes) {
-          if (rows[rows.length - 1].length && rowW + box.w > targetW) { rows.push([]); rowW = 0; }
-          rows[rows.length - 1].push(box);
-          rowW += box.w + GAP;
-        }
-        let y = 0, widest = 0;
-        for (const row of rows) {
-          const width = row.reduce((t, b) => t + b.w, 0) + GAP * (row.length - 1);
-          const height = Math.max(...row.map((b) => b.h));
-          let x = -width / 2;
-          for (const box of row) {
-            box.a.x = x + box.w / 2;
-            box.a.y = y + AREA_SIZE + 10 + (height - AREA_SIZE - 10) / 2;
-            x += box.w + GAP;
-          }
-          widest = Math.max(widest, width);
-          y += height + GAP;
-        }
-        return { w: widest, h: y - GAP };
-      };
-      const size = pack();
-      const y = size.h + 44;
-      const shift = y / 2;
-      for (const a of areas) a.y -= shift;
+      const GAP = 26;
+      const total = order.reduce((t, a) => t + 2 * a.R + GAP, 0);
+      const ringR = total / (Math.PI * 2);
+      let along = 0;
+      order.forEach((a, i) => {
+        const angle = ((along + a.R + GAP / 2) / total) * Math.PI * 2;
+        along += 2 * a.R + GAP;
+        a.x = Math.cos(angle) * ringR; a.z = Math.sin(angle) * ringR;
+        a.y = (i % 2 ? 1 : -1) * a.R * 0.35;
+      });
     }
-
-    // 3 · every part at its area's place
+    const centre = new THREE.Vector3();
     for (const n of nodes) {
-      n.x += n.areaRef.x; n.y += n.areaRef.y;
-      n.homeX = n.x; n.homeY = n.y; n.vx = 0; n.vy = 0;
+      n.home = new THREE.Vector3(n.x + n.areaRef.x, n.y + n.areaRef.y, n.z + n.areaRef.z);
+      n.cur = n.home.clone();
+      n.phase = [random() * 6.28, random() * 6.28, random() * 6.28];
+      n.drift = 0.8 + random() * 1.6;
+      centre.add(n.home);
     }
-    for (const a of areas) { a.lx = a.x; a.ly = a.y - a.R - 8; }
+    centre.divideScalar(nodes.length);
+    for (const a of areas) a.anchor = new THREE.Vector3(a.x, a.y, a.z);
+    const spread = Math.max(...nodes.map((n) => n.home.distanceTo(centre) + n.r)) + 12;
 
-    // While a part is dragged the map gives elastically: links pull, and every part is drawn back home.
-    let pinned = null;
-    const tick = (alpha) => {
-      for (const l of links) {
-        const same = l.s.areaRef === l.t.areaRef;
-        const dx = l.t.x - l.s.x, dy = l.t.y - l.s.y, d = Math.hypot(dx, dy) || 1;
-        const rest = Math.hypot(l.t.homeX - l.s.homeX, l.t.homeY - l.s.homeY);
-        const f = ((d - rest) / d) * (same ? 0.12 : 0.02) * alpha;
-        l.s.vx += dx * f; l.s.vy += dy * f; l.t.vx -= dx * f; l.t.vy -= dy * f;
-      }
-      for (const n of nodes) {
-        if (n === pinned) { n.vx = 0; n.vy = 0; continue; }
-        n.vx += (n.homeX - n.x) * 0.06; n.vy += (n.homeY - n.y) * 0.06;
-        n.x += n.vx; n.y += n.vy; n.vx *= 0.7; n.vy *= 0.7;
-      }
+    // ---------------------------------------------------------------
+    // The scene: glass bubbles, each holding the shape of its kind.
+    // ---------------------------------------------------------------
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+    } catch (error) {
+      fail("This browser can't draw the 3D map. The list view below has every part as text.");
+      $("[data-list]").hidden = false;
+      throw error;
+    }
+    renderer.setClearColor(0x000000, 0);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(38, 1, 1, 6000);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x1b1d24, 1.4));
+    const key = new THREE.DirectionalLight(0xffffff, 2.2);
+    key.position.set(-1, 2, 1.5);
+    scene.add(key);
+
+    const accent = new THREE.Color(COLOR.accent), steel = new THREE.Color(COLOR.steel), white = new THREE.Color(COLOR.ink);
+    const shellVertex = `
+      varying vec3 vNormal;
+      varying vec3 vView;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vNormal = normalize(normalMatrix * normal);
+        vView = normalize(-mv.xyz);
+        gl_Position = projectionMatrix * mv;
+      }`;
+    // A bubble: almost clear face-on, bright at the rim, a thin film that shifts
+    // between steel and cyan, and two highlights from the lights.
+    const shellFragment = `
+      uniform vec3 uColor;
+      uniform vec3 uAccent;
+      uniform float uLit;
+      uniform float uOpacity;
+      varying vec3 vNormal;
+      varying vec3 vView;
+      void main() {
+        vec3 n = normalize(vNormal), v = normalize(vView);
+        float rim = pow(1.0 - max(dot(n, v), 0.0), 2.3);
+        vec3 tint = mix(uColor, uAccent, uLit);
+        vec3 film = mix(vec3(0.82, 0.88, 0.93), uAccent, 0.5 + 0.5 * cos(10.0 * rim + 1.4));
+        float spec = pow(max(dot(n, normalize(normalize(vec3(-0.45, 0.75, 0.5)) + v)), 0.0), 110.0);
+        float back = pow(max(dot(n, normalize(normalize(vec3(0.6, -0.5, 0.6)) + v)), 0.0), 30.0) * 0.18;
+        vec3 colour = tint * (0.16 + 0.95 * rim) + film * rim * (0.25 + 0.35 * uLit) + vec3(spec + back);
+        float alpha = clamp(0.1 + 0.85 * rim + spec + back + 0.12 * uLit, 0.0, 1.0) * uOpacity;
+        gl_FragColor = vec4(colour, alpha);
+        #include <colorspace_fragment>
+      }`;
+    const shellGeometry = new THREE.SphereGeometry(1, 32, 22);
+    const coreGeometry = {
+      code: new THREE.SphereGeometry(1, 20, 14),
+      page: new THREE.BoxGeometry(1.45, 1.45, 1.45),
+      idea: new THREE.OctahedronGeometry(1.3),
+      reason: new THREE.TorusGeometry(0.95, 0.3, 12, 36),
     };
+    for (const n of nodes) {
+      n.group = new THREE.Group();
+      n.shell = new THREE.Mesh(shellGeometry, new THREE.ShaderMaterial({
+        uniforms: { uColor: { value: steel.clone() }, uAccent: { value: accent }, uLit: { value: 0 }, uOpacity: { value: 1 } },
+        vertexShader: shellVertex, fragmentShader: shellFragment, transparent: true, depthWrite: false,
+      }));
+      n.shell.renderOrder = 2;
+      n.core = new THREE.Mesh(coreGeometry[n.kind], new THREE.MeshStandardMaterial({
+        color: n.kind === "page" ? white : steel, roughness: 0.35, metalness: 0.15, emissive: accent, emissiveIntensity: 0, transparent: true,
+      }));
+      n.core.scale.setScalar(0.42);
+      n.core.rotation.set(random() * 6, random() * 6, 0);
+      n.group.add(n.core, n.shell);
+      n.group.scale.setScalar(n.r);
+      scene.add(n.group);
+      n.lit = 0; n.fade = 1;
+    }
+
+    // links: faint threads between bubbles, cyan around the one in focus; inferred ones dashed
+    const buildLines = (list, material) => {
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(list.length * 6), 3));
+      geometry.setAttribute("color", new THREE.BufferAttribute(new Float32Array(list.length * 6), 3));
+      const lines = new THREE.LineSegments(geometry, material);
+      lines.frustumCulled = false;
+      scene.add(lines);
+      return { list, lines, geometry };
+    };
+    const solid = buildLines(links.filter((l) => !l.inferred), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+    const dashed = buildLines(links.filter((l) => l.inferred), new THREE.LineDashedMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, dashSize: 2, gapSize: 2.2 }));
+
+    // pulses that run along lit links, from the part that does to the part done to
+    const pulseGeometry = new THREE.BufferGeometry();
+    pulseGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(64 * 3), 3));
+    const pulses = new THREE.Points(pulseGeometry, new THREE.PointsMaterial({ color: accent, size: 5, sizeAttenuation: false, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+    pulses.frustumCulled = false;
+    scene.add(pulses);
+
+    // a ring that breathes around the chosen bubble, always facing you
+    const ring = new THREE.Mesh(new THREE.RingGeometry(1, 1.07, 64), new THREE.MeshBasicMaterial({ color: accent, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
+    ring.visible = false;
+    scene.add(ring);
+
+    // dust: a few hundred specks drifting far out, for depth
+    let dust;
+    {
+      const count = 420, positions = new Float32Array(count * 3);
+      for (let i = 0; i < count; i += 1) {
+        const u = random() * 2 - 1, phi = random() * Math.PI * 2, rad = spread * (1.4 + random() * 2.2), s = Math.sqrt(1 - u * u);
+        positions.set([centre.x + s * Math.cos(phi) * rad, centre.y + u * rad * 0.7, centre.z + s * Math.sin(phi) * rad], i * 3);
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      dust = new THREE.Points(geometry, new THREE.PointsMaterial({ color: steel, size: 1.6, sizeAttenuation: false, transparent: true, opacity: 0.35, depthWrite: false }));
+      scene.add(dust);
+    }
 
     // ---------------------------------------------------------------
-    // The camera: world to screen, fitted to the room the panels leave.
+    // Names: HTML laid over the scene, so they stay crisp at any zoom.
     // ---------------------------------------------------------------
-    const cam = { k: 1, x: 0, y: 0 };
-    let camTween = null, userMoved = false, dpr = 1, W = 0, H = 0;
+    for (const n of nodes) {
+      n.tag = document.createElement("span");
+      n.tag.className = "lbl";
+      n.tag.textContent = n.text.length > 38 ? `${n.text.slice(0, 37)}…` : n.text;
+      labelLayer.append(n.tag);
+    }
+    for (const a of areas) {
+      a.tag = document.createElement("span");
+      a.tag.className = "area-lbl";
+      a.tag.innerHTML = `<b>${two(a.i)}</b>${escape(a.name)}`;
+      labelLayer.append(a.tag);
+    }
+
+    // ---------------------------------------------------------------
+    // The camera orbits a target; it fits the space into the room the panels leave.
+    // ---------------------------------------------------------------
+    const orbit = { target: centre.clone(), theta: 0.5, phi: 1.02, dist: 600 };
+    let flight = null, userMoved = false, idleSince = 0, W = 0, H = 0;
     const wide = matchMedia("(min-width: 1024px)");
     const room = () => {
-      const pad = 28;
       if (wide.matches) {
-        const left = intro.getBoundingClientRect().right + pad;
-        const right = W - (detail.hidden ? 32 : detail.getBoundingClientRect().width + 64);
-        return { left, right, top: 72, bottom: H - 84 };
+        const left = intro.getBoundingClientRect().right + 20;
+        const right = W - (detail.hidden ? 24 : detail.getBoundingClientRect().width + 56);
+        return { left, right, top: 64, bottom: H - 72 };
       }
-      const top = intro.getBoundingClientRect().bottom + 12;
-      const bottom = detail.hidden ? H - 64 : detail.getBoundingClientRect().top - 8;
-      return { left: 12, right: W - 12, top, bottom: Math.max(top + 120, bottom) };
+      const top = intro.getBoundingClientRect().bottom + 8;
+      const bottom = detail.hidden ? H - 56 : detail.getBoundingClientRect().top - 8;
+      return { left: 8, right: W - 8, top, bottom: Math.max(top + 120, bottom) };
     };
-    const bounds = (list) => {
-      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-      if (!list) {
-        for (const a of areas) { const half = Math.max(a.R, a.labelW / 2 + 6); x0 = Math.min(x0, a.x - half); x1 = Math.max(x1, a.x + half); y0 = Math.min(y0, a.y - a.R - AREA_SIZE - 12); y1 = Math.max(y1, a.y + a.R); }
-        return { x0, y0, x1, y1 };
+    const half = THREE.MathUtils.degToRad(camera.fov / 2);
+    const fitDistance = (radius) => {
+      const r = room();
+      const byHeight = radius / (Math.tan(half) * ((r.bottom - r.top) / H));
+      const byWidth = radius / (Math.tan(half) * camera.aspect * ((r.right - r.left) / W));
+      return Math.max(byHeight, byWidth) * 1.02;
+    };
+    const frameRoom = () => {
+      const r = room();
+      camera.setViewOffset(W, H, W / 2 - (r.left + r.right) / 2, H / 2 - (r.top + r.bottom) / 2, W, H);
+    };
+    const fly = (target, dist) => {
+      const to = { target: target.clone(), dist };
+      if (reduced) { orbit.target.copy(to.target); orbit.dist = to.dist; flight = null; }
+      else flight = { from: { target: orbit.target.clone(), dist: orbit.dist }, to, start: null, length: 900 };
+      kick();
+    };
+    // the distance at which every bubble, seen from the current angle, fills the room
+    const fitRing = () => {
+      const r = room();
+      let dist = fitDistance(spread);
+      const saved = { ...orbit, target: orbit.target.clone() };
+      orbit.target.copy(centre);
+      for (let pass = 0; pass < 4; pass += 1) {
+        orbit.dist = dist;
+        placeCamera();
+        camera.updateMatrixWorld();
+        let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+        for (const n of nodes) {
+          const at = project(n.home), d = depthOf(n.home), rad = (n.r * focal()) / d;
+          x0 = Math.min(x0, at.x - rad); x1 = Math.max(x1, at.x + rad); y0 = Math.min(y0, at.y - rad - 26); y1 = Math.max(y1, at.y + rad);
+        }
+        // room at the sides for the area names, which run wider than their clusters
+        dist *= Math.max((x1 - x0 + Math.min(150, (r.right - r.left) * 0.12)) / (r.right - r.left), (y1 - y0) / (r.bottom - r.top)) / 0.94;
       }
-      for (const n of list) { x0 = Math.min(x0, n.homeX - n.r); x1 = Math.max(x1, n.homeX + n.r + 60); y0 = Math.min(y0, n.homeY - n.r - 30); y1 = Math.max(y1, n.homeY + n.r); }
-      return { x0, y0, x1, y1 };
+      Object.assign(orbit, saved);
+      return dist;
     };
-    const framing = (list) => {
-      const b = bounds(list), r = room();
-      const k = Math.min(2.2, Math.max(0.12, Math.min((r.right - r.left) / (b.x1 - b.x0), (r.bottom - r.top) / (b.y1 - b.y0)) * 0.94));
-      return { k, x: (r.left + r.right) / 2 - ((b.x0 + b.x1) / 2) * k, y: (r.top + r.bottom) / 2 - ((b.y0 + b.y1) / 2) * k };
-    };
-    const moveCamera = (to, immediate = false) => {
-      if (immediate || reduced) { Object.assign(cam, to); camTween = null; }
-      else camTween = { from: { ...cam }, to, start: performance.now(), length: 650 };
-      redraw();
-    };
-    const toScreen = (x, y) => [x * cam.k + cam.x, y * cam.k + cam.y];
-    const toWorld = (x, y) => [(x - cam.x) / cam.k, (y - cam.y) / cam.k];
-    const zoomAt = (px, py, factor) => {
-      const k = Math.min(4, Math.max(0.12, cam.k * factor));
-      cam.x = px - (px - cam.x) * (k / cam.k); cam.y = py - (py - cam.y) * (k / cam.k); cam.k = k;
-      camTween = null; userMoved = true; redraw();
-    };
-    const centreOn = (n) => {
-      const r = room(), k = Math.max(cam.k, 1.15);
-      moveCamera({ k, x: (r.left + r.right) / 2 - n.x * k, y: (r.top + r.bottom) / 2 - n.y * k });
+    const fitAll = () => { userMoved = false; frameRoom(); fly(centre, fitRing()); };
+    const placeCamera = () => {
+      const { target, theta, phi, dist } = orbit;
+      camera.position.set(target.x + dist * Math.sin(phi) * Math.sin(theta), target.y + dist * Math.cos(phi), target.z + dist * Math.sin(phi) * Math.cos(theta));
+      camera.lookAt(target);
     };
 
     // ---------------------------------------------------------------
     // State: what is pointed at, chosen, or picked out by area.
     // ---------------------------------------------------------------
-    let hover = null, selected = null, hoverArea = null, introStart = null, simAlpha = 0;
+    let hover = null, selected = null, hoverArea = null, introStart = null;
     const focusNode = () => hover || selected;
     const isLit = (n) => {
       const f = focusNode();
@@ -540,275 +670,285 @@
       if (hoverArea) return n.areaRef === hoverArea;
       return true;
     };
-
-    // ---------------------------------------------------------------
-    // Drawing. A frame is drawn only when something changed or moves.
-    // ---------------------------------------------------------------
-    const ease = (t) => 1 - Math.pow(1 - t, 3);
-    const shape = (n, x, y, r) => {
-      ctx.beginPath();
-      if (n.kind === "page") { const s = r * 0.88; ctx.rect(x - s, y - s, s * 2, s * 2); }
-      else if (n.kind === "idea") { const s = r * 1.18; ctx.moveTo(x, y - s); ctx.lineTo(x + s, y); ctx.lineTo(x, y + s); ctx.lineTo(x - s, y); ctx.closePath(); }
-      else ctx.arc(x, y, r, 0, Math.PI * 2);
+    let linesDirty = true;
+    const paintLines = () => {
+      const f = focusNode();
+      const quiet = new THREE.Color(0x1c2226), inside = new THREE.Color(0x3a434a), off = new THREE.Color(0x0d1012);
+      for (const set of [solid, dashed]) {
+        const colours = set.geometry.attributes.color.array;
+        set.list.forEach((l, i) => {
+          const on = f ? (l.s === f || l.t === f) : hoverArea ? (l.s.areaRef === hoverArea && l.t.areaRef === hoverArea) : false;
+          const c = on ? accent : (f || hoverArea) ? off : l.s.areaRef === l.t.areaRef ? inside : quiet;
+          c.toArray(colours, i * 6); c.toArray(colours, i * 6 + 3);
+        });
+        set.geometry.attributes.color.needsUpdate = true;
+      }
+      linesDirty = false;
     };
-    const short = (text, max = 38) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
 
-    let frameQueued = false;
-    const redraw = () => { if (!frameQueued) { frameQueued = true; requestAnimationFrame(frame); } };
-    function frame(time) {
-      frameQueued = false;
-      let again = false;
+    // ---------------------------------------------------------------
+    // The loop: bubbles float, the space turns slowly, names follow.
+    // With reduced motion nothing moves on its own; frames are drawn on demand.
+    // ---------------------------------------------------------------
+    const v = new THREE.Vector3();
+    const project = (p) => {
+      v.copy(p).project(camera);
+      return { x: (v.x + 1) / 2 * W, y: (1 - v.y) / 2 * H, front: v.z < 1 };
+    };
+    const focal = () => (H / 2) / Math.tan(half);
+    const depthOf = (p) => v.copy(p).applyMatrix4(camera.matrixWorldInverse).z * -1;
 
-      // the parts assemble from their areas on arrival
-      let introT = 1;
+    let running = false, last = 0;
+    const kick = () => { if (!running) { running = true; requestAnimationFrame(loop); } };
+    function loop(time) {
+      const dt = Math.min(0.05, (time - (last || time)) / 1000);
+      last = time;
+      const t = time / 1000;
+      let moving = !reduced;
+
+      if (flight) {
+        if (flight.start === null) flight.start = time;
+        const k = ease(clamp01((time - flight.start) / flight.length));
+        orbit.target.lerpVectors(flight.from.target, flight.to.target, k);
+        orbit.dist = flight.from.dist + (flight.to.dist - flight.from.dist) * k;
+        if (k >= 1) flight = null; else moving = true;
+      }
+      // the space turns slowly on its own on wide screens; a phone keeps its view until you turn it
+      if (!reduced && wide.matches && !dragging && !hover && time - idleSince > 3500) orbit.theta += dt * 0.05;
+      placeCamera();
+
+      // arrival: bubbles swell out of each area's centre
+      let arrive = 1;
       if (introStart !== null) {
-        introT = Math.min(1, Math.max(0, (time - introStart) / 1400));
-        if (introT < 1) again = true; else introStart = null;
+        arrive = clamp01((time - introStart) / 1800);
+        if (arrive >= 1) introStart = null; else moving = true;
       }
-      if (camTween) {
-        // a frame's timestamp can fall just before the tween began; never ease outside 0..1
-        const t = Math.min(1, Math.max(0, (time - camTween.start) / camTween.length)), e = ease(t);
-        for (const key of ["k", "x", "y"]) cam[key] = camTween.from[key] + (camTween.to[key] - camTween.from[key]) * e;
-        if (t >= 1) camTween = null; else again = true;
+      for (const n of nodes) {
+        const delay = Math.min(0.5, n.areaRef.i * 0.03 + (1 - Math.min(1, n.degree / 12)) * 0.2);
+        const k = ease(clamp01((arrive - delay) / (1 - delay)));
+        n.cur.lerpVectors(n.areaRef.anchor, n.home, k);
+        if (!reduced) {
+          const [a, b, c] = n.phase;
+          n.cur.x += Math.sin(t * 0.45 + a) * n.drift;
+          n.cur.y += Math.sin(t * 0.6 + b) * n.drift * 1.2;
+          n.cur.z += Math.cos(t * 0.38 + c) * n.drift;
+          n.core.rotation.x += dt * 0.35; n.core.rotation.y += dt * 0.5;
+        }
+        n.group.position.copy(n.cur);
+        const lit = isLit(n), hot = (focusNode() || hoverArea) && lit;
+        n.lit += ((hot ? 1 : 0) - n.lit) * (reduced ? 1 : 0.18);
+        n.fade += ((lit ? 1 : 0.14) - n.fade) * (reduced ? 1 : 0.18);
+        const swell = n === selected && !reduced ? 1 + 0.06 * Math.sin(t * 3) : 1;
+        n.group.scale.setScalar(n.r * Math.max(0.001, k) * swell);
+        n.shell.material.uniforms.uLit.value = n.lit;
+        n.shell.material.uniforms.uOpacity.value = n.fade;
+        n.core.material.emissiveIntensity = n.lit * 1.4;
+        n.core.material.opacity = 0.25 + 0.75 * n.fade;
+        if (Math.abs(n.lit - (hot ? 1 : 0)) > 0.01 || Math.abs(n.fade - (lit ? 1 : 0.14)) > 0.01) moving = true;
       }
-      if (simAlpha > 0.004 || pinned) { tick(Math.max(simAlpha, pinned ? 0.18 : 0)); simAlpha *= 0.94; again = true; }
 
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = COLOR.ground;
-      ctx.fillRect(0, 0, W, H);
-
-      // the instrument grid, moving with the map
-      let step = 80 * cam.k;
-      if (!(step > 0)) step = 80;
-      while (step < 28) step *= 2;
-      ctx.strokeStyle = "rgb(255 255 255 / 0.05)";
-      ctx.lineWidth = 1;
-      ctx.setLineDash([2, 6]);
-      ctx.beginPath();
-      for (let x = ((cam.x % step) + step) % step; x < W; x += step) { ctx.moveTo(Math.round(x) + 0.5, 0); ctx.lineTo(Math.round(x) + 0.5, H); }
-      for (let y = ((cam.y % step) + step) % step; y < H; y += step) { ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(W, Math.round(y) + 0.5); }
-      ctx.stroke();
-      ctx.setLineDash([]);
+      // threads follow the bubbles
+      if (linesDirty) paintLines();
+      for (const set of [solid, dashed]) {
+        const p = set.geometry.attributes.position.array;
+        set.list.forEach((l, i) => { l.s.cur.toArray(p, i * 6); l.t.cur.toArray(p, i * 6 + 3); });
+        set.geometry.attributes.position.needsUpdate = true;
+      }
+      dashed.lines.computeLineDistances();
+      const intro01 = clamp01((arrive - 0.4) / 0.6);
+      solid.lines.material.opacity = dashed.lines.material.opacity = intro01;
 
       const f = focusNode();
-      const anyFocus = Boolean(f || hoverArea);
-      const pos = (n) => {
-        if (introT >= 1) return [n.x, n.y];
-        const delay = Math.min(0.45, (n.areaRef.i * 0.035) + (1 - Math.min(1, n.degree / 12)) * 0.2);
-        const t = ease(Math.max(0, Math.min(1, (introT - delay) / (1 - delay))));
-        return [n.areaRef.x + (n.x - n.areaRef.x) * t, n.areaRef.y + (n.y - n.areaRef.y) * t];
-      };
-      for (const n of nodes) [n.sx, n.sy] = toScreen(...pos(n));
-
-      // links: thin and quiet; lit cyan around the part in focus
-      const fade = introT < 1 ? Math.max(0, (introT - 0.35) / 0.65) : 1;
-      for (const lit of [false, true]) {
-        for (const l of links) {
-          const on = f ? (l.s === f || l.t === f) : hoverArea ? (l.s.areaRef === hoverArea && l.t.areaRef === hoverArea) : false;
-          if (on !== lit) continue;
-          ctx.beginPath();
-          ctx.moveTo(l.s.sx, l.s.sy);
-          ctx.lineTo(l.t.sx, l.t.sy);
-          ctx.setLineDash(l.inferred ? [3, 4] : []);
-          ctx.lineWidth = on ? 1.6 : 1;
-          const across = l.s.areaRef !== l.t.areaRef;
-          ctx.strokeStyle = on ? COLOR.accent : `rgb(182 193 200 / ${(anyFocus ? 0.04 : across ? 0.08 : 0.22) * fade})`;
-          ctx.stroke();
-        }
-      }
-      ctx.setLineDash([]);
-
-      // a pulse runs along each lit link, from the part that does to the part done to
-      if (f && !reduced && introT >= 1) {
+      const p = pulseGeometry.attributes.position.array;
+      let count = 0;
+      if (f && !reduced && arrive >= 1) {
         const phase = (time % 1600) / 1600;
-        ctx.fillStyle = COLOR.accent;
         for (const l of links) {
-          if (l.s !== f && l.t !== f) continue;
-          const x = l.s.sx + (l.t.sx - l.s.sx) * phase, y = l.s.sy + (l.t.sy - l.s.sy) * phase;
-          ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill();
+          if ((l.s !== f && l.t !== f) || count >= 64) continue;
+          v.lerpVectors(l.s.cur, l.t.cur, phase).toArray(p, count * 3);
+          count += 1;
         }
-        again = true;
+        moving = true;
       }
+      pulseGeometry.setDrawRange(0, count);
+      pulseGeometry.attributes.position.needsUpdate = true;
 
-      // area names over each group
+      ring.visible = Boolean(selected);
+      if (selected) {
+        const grow = reduced ? 0 : (time % 1800) / 1800;
+        ring.position.copy(selected.cur);
+        ring.quaternion.copy(camera.quaternion);
+        ring.scale.setScalar(selected.r * (1.35 + grow * 0.9));
+        ring.material.opacity = reduced ? 0.8 : 0.8 * (1 - grow);
+      }
+      if (!reduced) dust.rotation.y += dt * 0.01;
+
+      renderer.render(scene, camera);
+      placeLabels(arrive);
+      running = moving;
+      if (moving) requestAnimationFrame(loop);
+    }
+
+    // names: areas first, then the part in focus and its neighbours, then the busiest parts; never overlapping
+    function placeLabels(arrive) {
       const taken = [];
       const free = (x, y, w, h) => {
         for (const r of taken) if (x < r.x + r.w && x + w > r.x && y < r.y + r.h && y + h > r.y) return false;
         taken.push({ x, y, w, h });
         return true;
       };
-      ctx.textBaseline = "alphabetic";
+      // names stay in the room the panels leave, nudged in from its edges
+      const R = room();
+      const inRoom = (at) => at.x >= R.left && at.x <= R.right && at.y >= R.top && at.y <= R.bottom;
+      const show = (el, x, y, opacity) => { x = Math.max(R.left + 4, Math.min(x, R.right - el.offsetWidth - 4)); el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; el.style.opacity = opacity; el.style.visibility = "visible"; };
+      const hide = (el) => { el.style.visibility = "hidden"; };
+      const f = focusNode(), anyFocus = Boolean(f || hoverArea);
+      const k = focal();
+      const near = orbit.dist * 0.6, far = orbit.dist + spread;
+      const depthFade = (d) => 1 - 0.55 * clamp01((d - near) / (far - near));
+
       for (const a of areas) {
-        const [x, y] = toScreen(a.lx, a.ly);
+        if (arrive < 1) { hide(a.tag); continue; }
+        const at = project(a.anchor), d = depthOf(a.anchor);
+        at.y -= (a.R * k) / d + 4;
+        const w = a.tag.offsetWidth, h = a.tag.offsetHeight;
         const on = hoverArea === a || (f && f.areaRef === a);
-        const quiet = anyFocus && !on;
-        const num = two(a.i), name = a.name.toUpperCase();
-        const px = Math.min(18, Math.max(12, AREA_SIZE * cam.k));
-        ctx.font = `700 ${px}px Oswald, Impact, sans-serif`;
-        const wNum = ctx.measureText(`${num} `).width, wName = ctx.measureText(name).width;
-        const x0 = x - (wNum + wName) / 2;
-        // a name that would collide at this zoom waits until there is room; the panel lists them all
-        if (!free(x0 - 4, y - px, wNum + wName + 8, px + 6) && !on) continue;
-        ctx.globalAlpha = (quiet ? 0.25 : on ? 1 : 0.62) * fade;
-        ctx.fillStyle = COLOR.accent; ctx.fillText(num, x0, y);
-        ctx.fillStyle = COLOR.ink; ctx.fillText(name, x0 + wNum, y);
+        const ax = Math.max(R.left + 4, Math.min(at.x - w / 2, R.right - w - 4));
+        if (!at.front || d < 1 || !inRoom(at) || !free(ax - 4, at.y - h, w + 8, h + 4) && !on) { hide(a.tag); continue; }
+        show(a.tag, ax, at.y - h, (anyFocus && !on ? 0.3 : on ? 1 : 0.85) * depthFade(d));
       }
-      ctx.globalAlpha = 1;
-
-      // the parts: shaped by kind, sized by how much they touch
-      const order = [...nodes].sort((a, b) => (isLit(a) - isLit(b)) || (a.r - b.r));
-      for (const n of order) {
-        const lit = isLit(n), r = n.r * Math.min(1.6, Math.max(0.7, Math.sqrt(cam.k)));
-        const hot = anyFocus && lit;
-        ctx.globalAlpha = lit ? 1 : 0.16;
-        const colour = hot ? COLOR.accent : n.kind === "page" ? COLOR.ink : COLOR.steel;
-        shape(n, n.sx, n.sy, r + 1.6);
-        ctx.fillStyle = COLOR.ground; ctx.fill();
-        shape(n, n.sx, n.sy, r);
-        if (n.kind === "reason") {
-          ctx.lineWidth = Math.max(1.6, r * 0.38); ctx.strokeStyle = colour;
-          shape(n, n.sx, n.sy, r - ctx.lineWidth / 2); ctx.stroke();
-        } else { ctx.fillStyle = colour; ctx.fill(); }
-        if (n === selected) {
-          const grow = reduced ? 0 : ((time % 1800) / 1800);
-          ctx.strokeStyle = COLOR.accent; ctx.lineWidth = 1.5;
-          ctx.beginPath(); ctx.arc(n.sx, n.sy, r + 6, 0, Math.PI * 2); ctx.stroke();
-          if (!reduced) {
-            ctx.globalAlpha = 0.6 * (1 - grow);
-            ctx.beginPath(); ctx.arc(n.sx, n.sy, r + 6 + grow * 14, 0, Math.PI * 2); ctx.stroke();
-            again = true;
-          }
-        }
-      }
-      ctx.globalAlpha = 1;
-
-      // names: the part in focus and its neighbours first, then the busiest parts; never overlapping
-      if (introT >= 1) {
+      for (const n of nodes) n.placed = false;
+      if (arrive >= 1) {
         const wanted = [];
-        if (f) { wanted.push(f, ...[...f.near].filter((n) => n !== f).sort((a, b) => b.degree - a.degree)); }
+        if (f) wanted.push(f, ...[...f.near].filter((n) => n !== f).sort((a, b) => b.degree - a.degree));
         else if (hoverArea) wanted.push(...[...hoverArea.members].sort((a, b) => b.degree - a.degree));
-        const rest = [...nodes].sort((a, b) => b.degree - a.degree).filter((n) => cam.k >= 1.45 || n.degree >= 7);
-        if (!anyFocus) wanted.push(...rest);
-        ctx.font = labelFont;
-        ctx.lineJoin = "round";
+        else wanted.push(...nodes.filter((n) => n.degree >= 8 || orbit.dist < spread * 1.2).sort((a, b) => b.degree - a.degree));
         for (const n of wanted) {
-          const text = short(n.label), w = ctx.measureText(text).width;
-          const r = n.r * Math.min(1.6, Math.max(0.7, Math.sqrt(cam.k)));
-          const x = n.sx + r + 6, y = n.sy + 4;
-          if (x > W || y < 0 || y > H + 12) continue;
-          if (!free(x - 2, y - 11, w + 4, 15) && n !== f) continue;
-          ctx.strokeStyle = COLOR.ground; ctx.lineWidth = 3.5; ctx.strokeText(text, x, y);
-          ctx.fillStyle = n === f ? COLOR.accent : anyFocus || n.degree >= 7 ? COLOR.ink : COLOR.steel;
-          ctx.fillText(text, x, y);
+          const at = project(n.cur), d = depthOf(n.cur);
+          if (!at.front || d < 1 || (!inRoom(at) && n !== f)) continue;
+          const rpx = (n.r * k) / d;
+          const w = n.tag.offsetWidth, x = Math.min(at.x + rpx + 6, R.right - w - 4), y = at.y - 8;
+          if (x > W || y < -16 || y > H) continue;
+          if (!free(x - 2, y - 1, w + 4, 18) && n !== f) continue;
+          n.placed = true;
+          n.tag.classList.toggle("is-self", n === f);
+          n.tag.classList.toggle("is-hot", anyFocus && n !== f);
+          show(n.tag, x, y, depthFade(d));
         }
       }
-      if (again) redraw();
+      for (const n of nodes) if (!n.placed) hide(n.tag);
     }
 
     // ---------------------------------------------------------------
     // Sizing.
     // ---------------------------------------------------------------
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = innerWidth; H = innerHeight;
-      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-      if (!userMoved) moveCamera(framing(), true);
-      redraw();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(W, H, false);
+      camera.aspect = W / H;
+      camera.updateProjectionMatrix();
+      frameRoom();
+      if (!userMoved) {
+        const r = room();
+        orbit.phi = (r.right - r.left) / (r.bottom - r.top) < 1 ? 0.48 : 1.02;
+        orbit.target.copy(centre); orbit.dist = fitRing();
+      }
+      kick();
     };
     addEventListener("resize", resize);
-    wide.addEventListener("change", () => { $("[data-key]").open = wide.matches; userMoved = false; resize(); });
+    wide.addEventListener("change", () => { $("[data-key]").open = wide.matches; resize(); });
     if (!wide.matches) $("[data-key]").open = false;
 
     // ---------------------------------------------------------------
-    // Pointing, dragging, panning, pinching.
+    // Pointing, orbiting, zooming, pinching.
     // ---------------------------------------------------------------
     const nodeAt = (x, y) => {
-      let best = null, bestD = Infinity;
+      let best = null, bestScore = Infinity;
+      const k = focal();
       for (const n of nodes) {
-        const r = n.r * Math.min(1.6, Math.max(0.7, Math.sqrt(cam.k)));
-        const d = Math.hypot(n.sx - x, n.sy - y);
-        if (d < Math.max(r + 6, 11) && d < bestD) { best = n; bestD = d; }
+        const at = project(n.cur), d = depthOf(n.cur);
+        if (!at.front || d < 1) continue;
+        const rpx = (n.r * k) / d, dist = Math.hypot(at.x - x, at.y - y);
+        if (dist < Math.max(rpx + 4, 10) && d < bestScore) { best = n; bestScore = d; }
       }
       return best;
     };
     const showTip = (n, x, y) => {
       if (!n) { tip.hidden = true; return; }
-      tip.innerHTML = `<b>${escape(n.label)}</b><span>${KIND[n.kind].name} · ${escape(n.areaRef.name)} · ${n.degree} link${n.degree === 1 ? "" : "s"}</span>`;
+      tip.innerHTML = `<b>${escape(n.text)}</b><span>${KIND[n.kind].name} · ${escape(n.areaRef.name)} · ${n.degree} link${n.degree === 1 ? "" : "s"}</span>`;
       tip.hidden = false;
       const w = tip.offsetWidth, h = tip.offsetHeight;
       tip.style.transform = `translate(${Math.min(x + 16, W - w - 8)}px, ${y + 18 + h > H ? y - h - 14 : y + 18}px)`;
     };
+    const setHover = (n) => { if (n !== hover) { hover = n; linesDirty = true; canvas.classList.toggle("is-over", Boolean(n)); kick(); } };
     const pointers = new Map();
-    let gesture = null;
+    let gesture = null, dragging = false;
     canvas.addEventListener("pointerdown", (e) => {
       canvas.setPointerCapture(e.pointerId);
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      idleSince = performance.now();
       if (pointers.size === 2) {
         const [a, b] = [...pointers.values()];
-        gesture = { type: "pinch", d: Math.hypot(a.x - b.x, a.y - b.y), k: cam.k };
-        if (pinned) { pinned = null; }
+        gesture = { type: "pinch", d: Math.hypot(a.x - b.x, a.y - b.y), dist: orbit.dist };
         return;
       }
-      const n = nodeAt(e.clientX, e.clientY);
-      gesture = { type: n ? "drag" : "pan", node: n, x: e.clientX, y: e.clientY, at: performance.now(), moved: 0 };
-      if (!n) canvas.classList.add("is-panning");
+      gesture = { type: "orbit", moved: 0 };
     });
     canvas.addEventListener("pointermove", (e) => {
       const p = pointers.get(e.pointerId);
       if (!gesture) {
         if (e.pointerType === "touch") return;
         const n = nodeAt(e.clientX, e.clientY);
-        if (n !== hover) { hover = n; canvas.classList.toggle("is-over", Boolean(n)); redraw(); }
+        setHover(n);
         showTip(n, e.clientX, e.clientY);
         return;
       }
       if (!p) return;
       const dx = e.clientX - p.x, dy = e.clientY - p.y;
       p.x = e.clientX; p.y = e.clientY;
+      idleSince = performance.now();
       if (gesture.type === "pinch" && pointers.size === 2) {
         const [a, b] = [...pointers.values()];
-        const d = Math.hypot(a.x - b.x, a.y - b.y);
-        zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, (gesture.k * (d / gesture.d)) / cam.k);
+        orbit.dist = Math.min(spread * 8, Math.max(40, gesture.dist * (gesture.d / Math.hypot(a.x - b.x, a.y - b.y))));
+        userMoved = true; flight = null; kick();
         return;
       }
       gesture.moved += Math.hypot(dx, dy);
       if (gesture.moved < 4) return;
+      dragging = true;
       tip.hidden = true;
-      if (gesture.type === "drag") {
-        pinned = gesture.node;
-        [pinned.x, pinned.y] = toWorld(e.clientX, e.clientY);
-        simAlpha = Math.max(simAlpha, 0.18);
-        redraw();
-      } else if (gesture.type === "pan") {
-        cam.x += dx; cam.y += dy; camTween = null; userMoved = true; redraw();
-      }
+      canvas.classList.add("is-panning");
+      orbit.theta -= dx * 0.006;
+      orbit.phi = Math.min(Math.PI - 0.25, Math.max(0.25, orbit.phi - dy * 0.005));
+      userMoved = true; kick();
     });
     const release = (e) => {
       if (!pointers.has(e.pointerId)) return;
       pointers.delete(e.pointerId);
       canvas.classList.remove("is-panning");
-      if (gesture && gesture.type !== "pinch" && gesture.moved < 4 && e.type === "pointerup") {
-        const n = gesture.node;
+      if (gesture && gesture.type === "orbit" && gesture.moved < 4 && e.type === "pointerup") {
+        const n = nodeAt(e.clientX, e.clientY);
         if (n) select(n === selected ? null : n); else if (selected) select(null);
       }
-      if (gesture && gesture.type === "drag" && pinned) { pinned = null; simAlpha = 1; redraw(); }
-      if (pointers.size === 0) gesture = null;
+      if (pointers.size === 0) { gesture = null; dragging = false; idleSince = performance.now(); }
     };
     canvas.addEventListener("pointerup", release);
     canvas.addEventListener("pointercancel", release);
     canvas.addEventListener("pointerleave", (e) => {
       if (e.pointerType !== "mouse" || gesture) return;
-      hover = null; tip.hidden = true; canvas.classList.remove("is-over"); redraw();
+      setHover(null); tip.hidden = true;
     });
     canvas.addEventListener("wheel", (e) => {
       e.preventDefault();
-      zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * (e.ctrlKey ? 0.012 : 0.0016)));
+      orbit.dist = Math.min(spread * 8, Math.max(40, orbit.dist * Math.exp(e.deltaY * (e.ctrlKey ? 0.01 : 0.0012))));
+      userMoved = true; flight = null; idleSince = performance.now(); kick();
     }, { passive: false });
     $$("[data-zoom]").forEach((b) => b.addEventListener("click", () => {
-      const r = room(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2;
-      if (b.dataset.zoom === "in") zoomAt(cx, cy, 1.35);
-      else if (b.dataset.zoom === "out") zoomAt(cx, cy, 1 / 1.35);
-      else { userMoved = false; moveCamera(framing()); }
+      if (b.dataset.zoom === "in") fly(orbit.target, Math.max(40, orbit.dist / 1.4));
+      else if (b.dataset.zoom === "out") fly(orbit.target, Math.min(spread * 8, orbit.dist * 1.4));
+      else fitAll();
+      idleSince = performance.now();
     }));
 
     // ---------------------------------------------------------------
@@ -837,26 +977,26 @@
         <div class="group">
           <h3 class="eyebrow">${escape(name)} · ${members.size}</h3>
           <ul>${[...members.values()].sort((a, b) => b.node.degree - a.node.degree).map(({ node, inferred }) => `
-            <li><button class="row" type="button" data-go="${node.id}"><span class="name">${escape(node.label)}</span>${inferred ? `<span class="tag">inferred</span>` : ""}</button></li>`).join("")}
+            <li><button class="row" type="button" data-go="${node.id}"><span class="name">${escape(node.text)}</span>${inferred ? `<span class="tag">inferred</span>` : ""}</button></li>`).join("")}
           </ul>
         </div>`).join("");
       $("[data-detail-body]").innerHTML = `
         <p class="eyebrow kind"><svg viewBox="-8 -8 16 16" aria-hidden="true">${kindIcon(n.kind)}</svg>${KIND[n.kind].name}</p>
-        <h2 id="detail-title">${escape(n.label)}</h2>
+        <h2 id="detail-title">${escape(n.text)}</h2>
         <button class="area-link" type="button" data-area="${n.areaRef.id}">${two(n.areaRef.i)} · ${escape(n.areaRef.name)}</button>
         ${n.why ? `<p class="why">${escape(n.why)}</p>` : ""}
         <div class="group"><h3 class="eyebrow">In the source</h3><ul class="sources">${sources}</ul></div>
         ${n.sets.length ? `<div class="group"><h3 class="eyebrow">Part of</h3><ul>${n.sets.map((s) => `<li class="row" style="cursor: default">${escape(s)}</li>`).join("")}</ul></div>` : ""}
         ${connections || `<p class="note">Nothing links to this part yet.</p>`}`;
     };
-    function select(n, { centre = true, focusPanel = false } = {}) {
+    function select(n, { focusPanel = false } = {}) {
       selected = n;
-      hover = null; tip.hidden = true;
+      hover = null; tip.hidden = true; linesDirty = true;
       if (!n) {
         detail.hidden = true;
         document.body.classList.remove("has-detail");
         history.replaceState(null, "", location.pathname);
-        redraw();
+        frameRoom(); kick();
         return;
       }
       fill(n);
@@ -864,9 +1004,12 @@
       detail.scrollTop = 0;
       document.body.classList.add("has-detail");
       history.replaceState(null, "", `#${n.id}`);
-      if (centre) centreOn(n);
+      frameRoom();
+      userMoved = true;
+      const reach = Math.max(...[...n.near].map((m) => m.home.distanceTo(n.home) + m.r));
+      fly(n.home, fitDistance(Math.min(Math.max(n.r * 4, reach * 0.5), spread * 0.3)));
       if (focusPanel) detail.focus({ preventScroll: true });
-      redraw();
+      kick();
     }
     detail.addEventListener("click", (e) => {
       const go = e.target.closest("[data-go]");
@@ -879,15 +1022,16 @@
     // ---------------------------------------------------------------
     // Areas: point to pick one out, choose to fly to it.
     // ---------------------------------------------------------------
-    const showArea = (a) => { userMoved = true; moveCamera(framing(a.members)); };
+    const showArea = (a) => { userMoved = true; fly(a.anchor, fitDistance(a.R) * 1.1); };
     const areaList = $("[data-areas]");
     areaList.innerHTML = areas.map((a) => `<li><button class="row" type="button" data-area-row="${a.id}"><span class="n">${two(a.i)}</span><span class="name">${escape(a.name)}</span><span class="count">${a.size}</span></button></li>`).join("");
     $$("[data-area-row]", areaList).forEach((b) => {
       const a = areaById.get(Number(b.dataset.areaRow));
-      b.addEventListener("pointerenter", () => { hoverArea = a; redraw(); });
-      b.addEventListener("pointerleave", () => { hoverArea = null; redraw(); });
-      b.addEventListener("focus", () => { hoverArea = a; redraw(); });
-      b.addEventListener("blur", () => { hoverArea = null; redraw(); });
+      const pick = (on) => { hoverArea = on ? a : null; linesDirty = true; kick(); };
+      b.addEventListener("pointerenter", () => pick(true));
+      b.addEventListener("pointerleave", () => pick(false));
+      b.addEventListener("focus", () => pick(true));
+      b.addEventListener("blur", () => pick(false));
       b.addEventListener("click", () => { if (!wide.matches) $("[data-key]").open = false; showArea(a); });
     });
 
@@ -898,12 +1042,12 @@
     const matches = (q) => {
       q = q.trim().toLowerCase();
       if (!q) return [];
-      return nodes.filter((n) => n.label.toLowerCase().includes(q))
-        .sort((a, b) => (b.label.toLowerCase().startsWith(q) - a.label.toLowerCase().startsWith(q)) || b.degree - a.degree)
+      return nodes.filter((n) => n.text.toLowerCase().includes(q))
+        .sort((a, b) => (b.text.toLowerCase().startsWith(q) - a.text.toLowerCase().startsWith(q)) || b.degree - a.degree)
         .slice(0, 7);
     };
     find.addEventListener("input", () => {
-      results.innerHTML = matches(find.value).map((n) => `<li><button class="row" type="button" data-go="${n.id}"><span class="name">${escape(n.label)}</span><span class="count">${KIND[n.kind].name}</span></button></li>`).join("");
+      results.innerHTML = matches(find.value).map((n) => `<li><button class="row" type="button" data-go="${n.id}"><span class="name">${escape(n.text)}</span><span class="count">${KIND[n.kind].name}</span></button></li>`).join("");
     });
     find.addEventListener("keydown", (e) => {
       if (e.key === "Enter") { const first = matches(find.value)[0]; if (first) { select(first); results.innerHTML = ""; } }
@@ -915,8 +1059,8 @@
       select(byId.get(go.dataset.go), { focusPanel: e.detail === 0 });
       results.innerHTML = ""; find.value = "";
     });
-    results.addEventListener("pointerover", (e) => { const go = e.target.closest("[data-go]"); hover = go ? byId.get(go.dataset.go) : null; redraw(); });
-    results.addEventListener("pointerleave", () => { hover = null; redraw(); });
+    results.addEventListener("pointerover", (e) => { const go = e.target.closest("[data-go]"); setHover(go ? byId.get(go.dataset.go) : null); });
+    results.addEventListener("pointerleave", () => setHover(null));
 
     // ---------------------------------------------------------------
     // The list view: the whole map as text, for screen readers and small screens.
@@ -926,7 +1070,7 @@
       <section aria-labelledby="list-area-${a.id}">
         <h3 id="list-area-${a.id}"><span>${two(a.i)}</span> ${escape(a.name)}</h3>
         <ul>${[...a.members].sort((x, y) => y.degree - x.degree).map((n) => `
-          <li><button class="row" type="button" data-go="${n.id}"><span class="name">${escape(n.label)}</span><span class="count">${KIND[n.kind].name}</span></button></li>`).join("")}
+          <li><button class="row" type="button" data-go="${n.id}"><span class="name">${escape(n.text)}</span><span class="count">${KIND[n.kind].name}</span></button></li>`).join("")}
         </ul>
       </section>`).join("");
     const openList = () => { list.hidden = false; list.focus(); };
@@ -951,13 +1095,14 @@
     });
 
     // ---------------------------------------------------------------
-    // Go: wait for the fonts, fit, assemble; open a part named in the address.
+    // Go: fit, then let the bubbles swell in; open a part named in the address.
     // ---------------------------------------------------------------
     resize();
     const fromHash = byId.get(decodeURIComponent(location.hash.slice(1)));
-    if (fromHash) select(fromHash, { centre: true });
-    else if (!reduced) { introStart = performance.now(); redraw(); }
-    document.fonts.addEventListener?.("loadingdone", redraw);
+    if (fromHash) select(fromHash);
+    else if (!reduced) introStart = performance.now();
+    idleSince = performance.now();
+    kick();
   </script>
 </body>
 </html>

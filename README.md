@@ -11,7 +11,7 @@ If the page's script can't run at all (a very old browser, a failed load, an err
 | khadi.uz | `index.html` | Home: the hero, the ACCA so far, the path to audit, education and recognition, skills and languages, side projects, contact |
 | khadi.uz/cv/ | `cv/index.html` | The full CV, laid out as an A4 page. It prints cleanly. |
 | khadi.uz/cv.pdf | `cv.pdf` | The CV as a PDF, made from the page above |
-| khadi.uz/architecture/ | `architecture/` | How the site is built: an interactive map of its parts, drawn by graphify. The bracketed button in the top corner opens it. |
+| khadi.uz/architecture/ | `architecture/` | How the site is built: its parts as floating 3D bubbles (three.js, from `vendor/`), mapped by graphify. The bracketed button in the top corner opens it. |
 | any missing address | `404.html` | "Off the map", with a link home |
 
 ## Files
