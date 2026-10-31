@@ -52,7 +52,7 @@ Cyan is for the things that matter, not the chrome: the ACCA route and the next 
 - Once the hero is half gone, a dock with the menu slides down from the top and marks the section on screen.
 - Text arrives word by word or letter by letter, rising 0.35em.
 - A route card's line draws itself when its row arrives, and each month's point appears as the line reaches it. A job still running pulses on its latest month.
-- The first three blocks are a stack: each pins to the top and the next slides over it while the covered one shrinks to 90% and darkens.
+- The page is one long scroll: every block follows the one before it in ordinary flow, nothing pins or slides over another.
 - The hero opens behind a veil (your silhouette filling from the top). Then a halftone blueprint of the portrait burns away crown to chin, and comes back wherever the cursor has just been.
 - Nothing moves with the scroll: no parallax on the journey rows or the photos, and the contours stand still. Nothing loops unless it is live; the one pulse left is the current month of a job still running.
 - `prefers-reduced-motion` shows everything at once: no smooth scrolling, no reveals, and the hero settles on its final frame.

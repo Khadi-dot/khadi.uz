@@ -42,10 +42,8 @@
   <style>
     /* ==========================================================
        khadi.uz — home
-       Tokens and the shared pieces come from brand.css. Five
-       blocks: the first three are a stack, each pinned and
-       covered by the next; the journey closes the stack and the
-       page returns to ordinary flow under it.
+       Tokens and the shared pieces come from brand.css. One long
+       page: the blocks follow each other in ordinary flow.
        ========================================================== */
 
     /* The hero and the ACCA block are measured in rem; the root scales
@@ -144,11 +142,6 @@
     }
 
     /* ---------- the stack ---------- */
-    .stack { position: relative; background: var(--surface-black); }
-    .layer { position: sticky; top: 0; }
-    .layer-inner { transform-origin: center; }
-    .layer-shade { position: absolute; inset: 0; background: var(--surface-black); opacity: 0; pointer-events: none; }
-    .layer-last { position: relative; z-index: 20; }
 
     /* ---------- the loading veil ---------- */
     .loader {
@@ -554,6 +547,7 @@
       width: 100%;
       background: var(--surface-black);
       color: var(--foreground-on-dark);
+      border-top: 1px solid var(--rule-on-dark);
     }
     .journey-wrap {
       --u: calc(100cqw / 1440);
@@ -1095,308 +1089,293 @@
   </svg>
 
   <main id="main">
-    <div class="stack" data-stack>
+    <!-- ============ 1 · HERO ============ -->
+    <section data-hero aria-label="Introduction">
+      <canvas class="hero-canvas" data-hero-canvas aria-hidden="true"></canvas>
+      <div class="hero-fallback-lines" data-hero-fallback hidden aria-hidden="true"></div>
+      <img class="hero-fallback" data-hero-fallback hidden data-src="img/hero/portrait.png" width="688" height="642" alt="">
+      <noscript><img class="hero-fallback" src="img/hero/portrait.png" width="688" height="642" alt=""></noscript>
+      <div class="hero-fit" aria-hidden="true"><div class="hero-fit-box" data-hero-box></div></div>
+      <div class="hero-ramp" aria-hidden="true"></div>
 
-      <!-- ============ 1 · HERO ============ -->
-      <div class="layer" data-layer style="z-index: 0">
-        <div class="layer-inner" data-inner>
-          <section data-hero aria-label="Introduction">
-            <canvas class="hero-canvas" data-hero-canvas aria-hidden="true"></canvas>
-            <div class="hero-fallback-lines" data-hero-fallback hidden aria-hidden="true"></div>
-            <img class="hero-fallback" data-hero-fallback hidden data-src="img/hero/portrait.png" width="688" height="642" alt="">
-            <noscript><img class="hero-fallback" src="img/hero/portrait.png" width="688" height="642" alt=""></noscript>
-            <div class="hero-fit" aria-hidden="true"><div class="hero-fit-box" data-hero-box></div></div>
-            <div class="hero-ramp" aria-hidden="true"></div>
-
-            <div class="hero-content">
-              <header class="masthead" data-enter="rise" data-enter-at="0">
-                <a class="logo" href="./" aria-label="khadi.uz, home">khadi<span>.</span>uz</a>
-                <nav class="nav" aria-label="Primary">
-                  <ul>
-                    <li><a href="#acca" data-jump>ACCA</a></li>
-                    <li><a href="#journey" data-jump>Journey</a></li>
-                    <li><a href="#education" data-jump>Education</a></li>
-                    <li><a href="#skills" data-jump>Skills</a></li>
-                    <li><a href="#side" data-jump>Side projects</a></li>
-                    <li><a href="#contact" data-jump>Contact</a></li>
-                  </ul>
-                </nav>
-                <div class="mast-end">
-                  <a class="cv-link" href="cv/"><span aria-hidden="true">[ </span>CV<span aria-hidden="true"> → ]</span></a>
-                  <a class="arch-link brackets" href="architecture/" aria-label="Site architecture: how this site is built" data-tip="Architecture"><svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg><svg class="glyph" viewBox="0 0 18 18" aria-hidden="true"><path d="M4.5 4.5L13.5 7M4.5 4.5L8 13.5M13.5 7L8 13.5"/><circle cx="4.5" cy="4.5" r="2"/><circle cx="13.5" cy="7" r="2"/><circle cx="8" cy="13.5" r="2"/></svg></a>
-                  <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" data-burger><span></span><span></span></button>
-                </div>
-              </header>
-
-              <div class="hero-middle">
-                <div class="identity">
-                  <p class="hero-id" data-enter="fade" data-enter-at="180">ACCA student</p>
-                  <h1 class="hero-name" data-enter="words" data-enter-at="180">Xadyatullox Muhammadjonov</h1>
-                  <ul class="hero-meta">
-                    <li data-enter="rise-sm" data-enter-at="440">
-                      <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                      Tashkent, Uzbekistan
-                    </li>
-                    <li data-enter="rise-sm" data-enter-at="570">
-                      <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
-                      Aspiring auditor
-                    </li>
-                    <li data-enter="rise-sm" data-enter-at="700">
-                      <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                      BSc accounting &amp; finance · BMU
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="hero-panels" data-enter="rise" data-enter-at="900">
-                  <div class="bpanel brackets">
-                    <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg>
-                    <svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
-                    <p class="eyebrow">Next exam</p>
-                    <div class="now-row">
-                      <dl class="now-list">
-                        <dt>Financial Management</dt>
-                        <dd>ACCA · FM</dd>
-                        <dd><time datetime="2026-12">December 2026</time></dd>
-                      </dl>
-                      <svg class="now-icon exam-badge" viewBox="0 0 56 56" aria-hidden="true">
-                        <path class="exam-badge-body" d="M0.5 0.5H55.5V47.5L47.5 55.5H0.5Z"/>
-                        <text x="28" y="37" text-anchor="middle">FM</text>
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="bpanel brackets">
-                    <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg>
-                    <svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
-                    <p class="eyebrow">ACCA progress</p>
-                    <dl class="hero-stats">
-                      <div><dt>Passed</dt><dd data-letters data-letters-at="900">1</dd></div>
-                      <div><dt>Exempt</dt><dd data-letters data-letters-at="990">7</dd></div>
-                      <div><dt>To go</dt><dd data-letters data-letters-at="1080">5</dd></div>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-
-              <div class="hero-actions" data-enter="rise" data-enter-at="1500">
-                <a class="trailer" href="cv.pdf" download="Xadyatullox-Muhammadjonov-CV.pdf">
-                  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="16" cy="16" r="15.5"/><path d="M16 9v12m0 0-4.5-4.5M16 21l4.5-4.5M11 23.5h10"/></svg>
-                  <span class="trailer-lines"><b>Download CV</b><span>PDF · A4</span></span>
-                </a>
-                <a class="cta hero-cta" href="cv/">
-                  <svg class="cta-frame" viewBox="0 0 220 50" preserveAspectRatio="none" aria-hidden="true">
-                    <path class="cta-body" d="M220 42L212.932 50H0V0H220V42Z"/>
-                    <path class="cta-flood" d="M220 42L212.932 50H0V0H220V42Z"/>
-                    <path class="cta-ring" d="M220 42L212.932 50H0V0H220V42Z" stroke-opacity="0.25"/>
-                    <path d="M205 49.5H213L219.5 42V36M212 0.5H219.5V7M8 0.5H0.5V7M7.5 49.5H0.5V42.5" style="fill: none; stroke: var(--accent)" vector-effect="non-scaling-stroke"/>
-                  </svg>
-                  View CV
-                  <svg class="cta-arrow" aria-hidden="true"><use href="#arrow"/></svg>
-                </a>
-                <ul class="socials">
-                  <li><a href="https://www.linkedin.com/in/xadyatullo-muxammadjonov-5ba8532a1/" rel="me noopener" target="_blank">LinkedIn</a></li>
-                  <li><a href="https://t.me/hadyatullokh" rel="me noopener" target="_blank">Telegram</a></li>
-                  <li><a href="https://www.instagram.com/hadyatullokh/" rel="me noopener" target="_blank">Inst</a></li>
-                </ul>
-              </div>
-            </div>
-          </section>
-        </div>
-        <div class="layer-shade" data-shade></div>
-      </div>
-
-      <!-- ============ 2 · THE ACCA SO FAR ============ -->
-      <div class="layer" data-layer style="z-index: 10">
-        <div class="layer-inner" data-inner>
-          <section class="acca on-dark" id="acca" data-season aria-labelledby="acca-title">
-            <div class="stage-frame" aria-hidden="true">
-              <div class="stage" data-stage>
-                <svg class="map" data-map viewBox="0 0 1440 800"></svg>
-                <canvas data-trace></canvas>
-              </div>
-            </div>
-            <div class="seam" data-seam="light" aria-hidden="true"></div>
-
-            <div class="acca-copy">
-              <div>
-                <h2 class="season-title" id="acca-title">
-                  <span class="line" data-reveal="words" data-reveal-at="0">The ACCA</span>
-                  <span class="head-row"><span class="line" data-reveal="words" data-reveal-at="130">so far</span></span>
-                </h2>
-                <span class="rule" data-reveal="rule" data-reveal-at="260"></span>
-                <p class="acca-intro" data-reveal="words" data-reveal-at="350" data-stagger="34" data-config="COPY_FAST">Thirteen exams to the qualification. Eight are behind me: Financial Reporting passed, and seven conditional exemptions from my ACCA-accredited degree. Financial Management is next, in December.</p>
-                <p class="acca-status" data-reveal="fade" data-reveal-at="900"><span class="pulse-dot"></span>Next: FM · December 2026 session</p>
-              </div>
-
-              <div class="standings" data-reveal="rise-sm" data-reveal-at="260">
-                <svg class="standings-frame" viewBox="0 0 277 78" preserveAspectRatio="none" aria-hidden="true">
-                  <path d="M0.5 0.5H276.5V69L268 77.5H0.5Z"/><line x1="83" y1="0.5" x2="83" y2="77.5"/>
-                </svg>
-                <div class="badge">
-                  <svg viewBox="0 0 37 23" aria-hidden="true">
-                    <polygon points="18.5,0.5 36.5,11.5 18.5,22.5 0.5,11.5"/>
-                    <line x1="0.5" y1="11.5" x2="36.5" y2="11.5"/>
-                    <polygon points="9.5,11.5 18.5,0.5 27.5,11.5 18.5,22.5"/>
-                  </svg>
-                  <p class="badge-mark"><span data-letters data-letters-at="430">ACCA</span><span class="year" data-letters data-letters-at="490">/ 2026</span></p>
-                </div>
-                <dl class="plate-stats" aria-label="ACCA progress">
-                  <div><dt data-letters data-letters-at="430">8/13</dt><dd data-letters data-letters-at="500">credited</dd></div>
-                  <div><dt data-letters data-letters-at="540">FM</dt><dd data-letters data-letters-at="610">next up</dd></div>
-                  <div><dt data-letters data-letters-at="650">Dec</dt><dd data-letters data-letters-at="720">2026</dd></div>
-                </dl>
-              </div>
-            </div>
-          </section>
-        </div>
-        <div class="layer-shade" data-shade></div>
-      </div>
-
-      <!-- ============ 3 · THE JOURNEY ============ -->
-      <div class="layer-last" data-layer-last>
-        <section class="journey on-dark" id="journey" aria-labelledby="journey-title">
-          <div class="journey-wrap" data-journey>
-            <h2 class="journey-title" id="journey-title">
-              <span class="line" data-reveal="words" data-reveal-at="0">The path</span>
-              <span class="line"><span data-reveal="words" data-reveal-at="130">to audit</span></span>
-            </h2>
-            <div class="rail" data-rail aria-hidden="true"></div>
-
-            <ol class="rows">
-              <li class="row" data-frame="centre">
-                <div class="row-plate">
-                  <figure class="plate">
-                    <div class="plate-fill"><div class="journey-card" data-route data-from="2023-02" data-to="2024-02" data-seed="3">
-                      <p class="card-head"><span class="card-title">Green Group LLC</span><span>Fuel department manager</span><span class="card-when">Feb 2023 – Feb 2024 · 13 months</span></p>
-                      <ul class="card-tags"><li>MPG</li><li>Idle time</li><li>Cost per mile</li></ul>
-                    </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
-                  </figure>
-                  <span class="row-year" data-year>2023</span>
-                </div>
-                <div class="row-copy-layer"><p class="row-copy" style="--cw: 300"><b>Fuel and figures.</b> Fuel department manager at Green Group LLC for a US trucking fleet: fuel cards, prices and stops, reported as MPG, idle time and cost per mile.</p></div>
-              </li>
-
-              <li class="row" data-frame="side" data-align="right">
-                <div class="row-plate">
-                  <figure class="plate">
-                    <div class="plate-fill"><div class="journey-card">
-                      <span class="note-ghost" aria-hidden="true">BSc</span>
-                      <p class="card-head"><span class="card-title"><span class="name-long">British Management University</span><span class="name-short">BMU</span></span><span>BSc accounting and finance</span></p>
-                      <p class="note-mark">Started</p>
-                    </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
-                  </figure>
-                  <span class="row-year" data-year>Sep 2023</span>
-                </div>
-              </li>
-
-              <li class="row" data-frame="centre">
-                <div class="row-plate">
-                  <figure class="plate">
-                    <div class="plate-fill"><div class="journey-card" data-route data-from="2024-02" data-to="2025-09" data-seed="8">
-                      <p class="card-head"><span class="card-title">Green Group LLC</span><span>Business analyst</span><span class="card-when">Feb 2024 – Sep 2025 · 20 months</span></p>
-                      <ul class="card-tags"><li>Requirements</li><li>Dashboards</li><li>Integrations</li></ul>
-                    </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
-                  </figure>
-                  <span class="row-year" data-year>2024</span>
-                </div>
-                <div class="row-copy-layer"><p class="row-copy" style="--cw: 300"><b>Into the data.</b> Business analyst at Green Group: requirements and specifications, data cleaning, reports and dashboards for management, and TMS and CRM integrations.</p></div>
-              </li>
-
-              <li class="row" data-frame="side" data-align="left">
-                <div class="row-plate">
-                  <figure class="plate">
-                    <div class="plate-fill"><div class="journey-card">
-                      <span class="note-ghost" aria-hidden="true">EY</span>
-                      <p class="card-head"><span class="card-title">EY</span><span>Career Launch</span></p>
-                      <p class="note-mark">Finalist</p>
-                    </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
-                  </figure>
-                  <span class="row-year" data-year>Mar 2025</span>
-                </div>
-              </li>
-
-              <li class="row" data-frame="centre">
-                <div class="row-plate">
-                  <figure class="plate">
-                    <div class="plate-fill"><div class="journey-card" data-route data-from="2025-04" data-to="2025-08" data-seed="5">
-                      <p class="card-head"><span class="card-title">T&amp;M Financials</span><span>Co-founder and accountant</span><span class="card-when">Apr 2025 – Aug 2025 · 5 months</span></p>
-                      <ul class="card-tags"><li>Invoicing</li><li>QuickManage</li><li>Amazon Relay</li></ul>
-                    </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
-                  </figure>
-                  <span class="row-year" data-year>2025</span>
-                </div>
-                <div class="row-copy-layer"><p class="row-copy" style="--cw: 290"><b>A firm of my own.</b> Co-founded T&amp;M Financials to invoice for independent US truckers, with Excel trackers for their income, expenses and profit.</p></div>
-              </li>
-
-              <li class="row" data-frame="side" data-align="right">
-                <div class="row-plate">
-                  <figure class="plate">
-                    <div class="plate-fill"><div class="journey-card">
-                      <span class="note-ghost" aria-hidden="true">Case</span>
-                      <p class="card-head"><span class="card-title">Deloitte</span><span>Case Competition</span></p>
-                      <p class="note-mark">High-priority winner</p>
-                    </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
-                  </figure>
-                  <span class="row-year" data-year>Nov 2025</span>
-                </div>
-              </li>
-
-              <li class="row" data-frame="centre">
-                <div class="row-plate">
-                  <figure class="plate">
-                    <div class="plate-fill"><div class="journey-card" data-route data-from="2026-06" data-to="now" data-seed="11">
-                      <p class="card-head"><span class="card-title">Exely</span><span>Technical specialist</span><span class="card-when">Since Jun 2026</span></p>
-                      <ul class="card-tags"><li>Hoteliers</li><li>Setup</li><li>Support</li></ul>
-                    </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
-                  </figure>
-                  <span class="row-year" data-year>Now</span>
-                </div>
-                <div class="row-copy-layer"><p class="row-copy" style="--cw: 280"><b>Supporting hoteliers.</b> Technical specialist at Exely since June 2026, helping hoteliers set up and use its products.</p></div>
-              </li>
-
-              <li class="row" data-frame="side" data-align="left">
-                <div class="row-plate">
-                  <figure class="plate">
-                    <div class="plate-fill"><div class="journey-card">
-                      <span class="note-ghost" aria-hidden="true">FR</span>
-                      <p class="card-head"><span class="card-title">ACCA</span><span>Financial Reporting</span></p>
-                      <p class="note-mark">Passed</p>
-                    </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
-                  </figure>
-                  <span class="row-year" data-year>Sep 2026</span>
-                </div>
-              </li>
-
-              <li class="row" data-frame="centre">
-                <div class="row-plate">
-                  <figure class="plate">
-                    <div class="plate-fill"><div class="journey-card">
-                      <span class="note-ghost exam-ghost" aria-hidden="true">FM</span>
-                      <p class="card-head"><span class="card-title">ACCA · Financial Management</span><span class="card-when">December 2026 session</span></p>
-                      <div class="exam-bar">
-                        <p class="exam-count">8 of 13 credited</p>
-                        <ol class="exam-cells" aria-label="ACCA exams in order: the first eight credited, FM next, four to go"><li class="done">BT</li><li class="done">MA</li><li class="done">FA</li><li class="done">LW</li><li class="done">PM</li><li class="done">TX</li><li class="done">FR</li><li class="done">AA</li><li class="next">FM</li><li>SBL</li><li>SBR</li><li>OPT</li><li>OPT</li></ol>
-                      </div>
-                    </div></div>
-                    <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
-                  </figure>
-                  <span class="row-year" data-year>Next</span>
-                </div>
-                <div class="row-copy-layer"><p class="row-copy" style="--cw: 290"><b>FM, then audit.</b> Financial Management in the December 2026 session, on the way to the full qualification and a career in audit.</p></div>
-              </li>
-            </ol>
+      <div class="hero-content">
+        <header class="masthead" data-enter="rise" data-enter-at="0">
+          <a class="logo" href="./" aria-label="khadi.uz, home">khadi<span>.</span>uz</a>
+          <nav class="nav" aria-label="Primary">
+            <ul>
+              <li><a href="#acca" data-jump>ACCA</a></li>
+              <li><a href="#journey" data-jump>Journey</a></li>
+              <li><a href="#education" data-jump>Education</a></li>
+              <li><a href="#skills" data-jump>Skills</a></li>
+              <li><a href="#side" data-jump>Side projects</a></li>
+              <li><a href="#contact" data-jump>Contact</a></li>
+            </ul>
+          </nav>
+          <div class="mast-end">
+            <a class="cv-link" href="cv/"><span aria-hidden="true">[ </span>CV<span aria-hidden="true"> → ]</span></a>
+            <a class="arch-link brackets" href="architecture/" aria-label="Site architecture: how this site is built" data-tip="Architecture"><svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg><svg class="glyph" viewBox="0 0 18 18" aria-hidden="true"><path d="M4.5 4.5L13.5 7M4.5 4.5L8 13.5M13.5 7L8 13.5"/><circle cx="4.5" cy="4.5" r="2"/><circle cx="13.5" cy="7" r="2"/><circle cx="8" cy="13.5" r="2"/></svg></a>
+            <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" data-burger><span></span><span></span></button>
           </div>
-        </section>
+        </header>
+
+        <div class="hero-middle">
+          <div class="identity">
+            <p class="hero-id" data-enter="fade" data-enter-at="180">ACCA student</p>
+            <h1 class="hero-name" data-enter="words" data-enter-at="180">Xadyatullox Muhammadjonov</h1>
+            <ul class="hero-meta">
+              <li data-enter="rise-sm" data-enter-at="440">
+                <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                Tashkent, Uzbekistan
+              </li>
+              <li data-enter="rise-sm" data-enter-at="570">
+                <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+                Aspiring auditor
+              </li>
+              <li data-enter="rise-sm" data-enter-at="700">
+                <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                BSc accounting &amp; finance · BMU
+              </li>
+            </ul>
+          </div>
+
+          <div class="hero-panels" data-enter="rise" data-enter-at="900">
+            <div class="bpanel brackets">
+              <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg>
+              <svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+              <p class="eyebrow">Next exam</p>
+              <div class="now-row">
+                <dl class="now-list">
+                  <dt>Financial Management</dt>
+                  <dd>ACCA · FM</dd>
+                  <dd><time datetime="2026-12">December 2026</time></dd>
+                </dl>
+                <svg class="now-icon exam-badge" viewBox="0 0 56 56" aria-hidden="true">
+                  <path class="exam-badge-body" d="M0.5 0.5H55.5V47.5L47.5 55.5H0.5Z"/>
+                  <text x="28" y="37" text-anchor="middle">FM</text>
+                </svg>
+              </div>
+            </div>
+            <div class="bpanel brackets">
+              <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg>
+              <svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+              <p class="eyebrow">ACCA progress</p>
+              <dl class="hero-stats">
+                <div><dt>Passed</dt><dd data-letters data-letters-at="900">1</dd></div>
+                <div><dt>Exempt</dt><dd data-letters data-letters-at="990">7</dd></div>
+                <div><dt>To go</dt><dd data-letters data-letters-at="1080">5</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-actions" data-enter="rise" data-enter-at="1500">
+          <a class="trailer" href="cv.pdf" download="Xadyatullox-Muhammadjonov-CV.pdf">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="16" cy="16" r="15.5"/><path d="M16 9v12m0 0-4.5-4.5M16 21l4.5-4.5M11 23.5h10"/></svg>
+            <span class="trailer-lines"><b>Download CV</b><span>PDF · A4</span></span>
+          </a>
+          <a class="cta hero-cta" href="cv/">
+            <svg class="cta-frame" viewBox="0 0 220 50" preserveAspectRatio="none" aria-hidden="true">
+              <path class="cta-body" d="M220 42L212.932 50H0V0H220V42Z"/>
+              <path class="cta-flood" d="M220 42L212.932 50H0V0H220V42Z"/>
+              <path class="cta-ring" d="M220 42L212.932 50H0V0H220V42Z" stroke-opacity="0.25"/>
+              <path d="M205 49.5H213L219.5 42V36M212 0.5H219.5V7M8 0.5H0.5V7M7.5 49.5H0.5V42.5" style="fill: none; stroke: var(--accent)" vector-effect="non-scaling-stroke"/>
+            </svg>
+            View CV
+            <svg class="cta-arrow" aria-hidden="true"><use href="#arrow"/></svg>
+          </a>
+          <ul class="socials">
+            <li><a href="https://www.linkedin.com/in/xadyatullo-muxammadjonov-5ba8532a1/" rel="me noopener" target="_blank">LinkedIn</a></li>
+            <li><a href="https://t.me/hadyatullokh" rel="me noopener" target="_blank">Telegram</a></li>
+            <li><a href="https://www.instagram.com/hadyatullokh/" rel="me noopener" target="_blank">Inst</a></li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- ============ 2 · THE ACCA SO FAR ============ -->
+    <section class="acca on-dark" id="acca" data-season aria-labelledby="acca-title">
+      <div class="stage-frame" aria-hidden="true">
+        <div class="stage" data-stage>
+          <svg class="map" data-map viewBox="0 0 1440 800"></svg>
+          <canvas data-trace></canvas>
+        </div>
+      </div>
+      <div class="seam" data-seam="light" aria-hidden="true"></div>
+
+      <div class="acca-copy">
+        <div>
+          <h2 class="season-title" id="acca-title">
+            <span class="line" data-reveal="words" data-reveal-at="0">The ACCA</span>
+            <span class="head-row"><span class="line" data-reveal="words" data-reveal-at="130">so far</span></span>
+          </h2>
+          <span class="rule" data-reveal="rule" data-reveal-at="260"></span>
+          <p class="acca-intro" data-reveal="words" data-reveal-at="350" data-stagger="34" data-config="COPY_FAST">Thirteen exams to the qualification. Eight are behind me: Financial Reporting passed, and seven conditional exemptions from my ACCA-accredited degree. Financial Management is next, in December.</p>
+          <p class="acca-status" data-reveal="fade" data-reveal-at="900"><span class="pulse-dot"></span>Next: FM · December 2026 session</p>
+        </div>
+
+        <div class="standings" data-reveal="rise-sm" data-reveal-at="260">
+          <svg class="standings-frame" viewBox="0 0 277 78" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0.5 0.5H276.5V69L268 77.5H0.5Z"/><line x1="83" y1="0.5" x2="83" y2="77.5"/>
+          </svg>
+          <div class="badge">
+            <svg viewBox="0 0 37 23" aria-hidden="true">
+              <polygon points="18.5,0.5 36.5,11.5 18.5,22.5 0.5,11.5"/>
+              <line x1="0.5" y1="11.5" x2="36.5" y2="11.5"/>
+              <polygon points="9.5,11.5 18.5,0.5 27.5,11.5 18.5,22.5"/>
+            </svg>
+            <p class="badge-mark"><span data-letters data-letters-at="430">ACCA</span><span class="year" data-letters data-letters-at="490">/ 2026</span></p>
+          </div>
+          <dl class="plate-stats" aria-label="ACCA progress">
+            <div><dt data-letters data-letters-at="430">8/13</dt><dd data-letters data-letters-at="500">credited</dd></div>
+            <div><dt data-letters data-letters-at="540">FM</dt><dd data-letters data-letters-at="610">next up</dd></div>
+            <div><dt data-letters data-letters-at="650">Dec</dt><dd data-letters data-letters-at="720">2026</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3 · THE JOURNEY ============ -->
+    <section class="journey on-dark" id="journey" aria-labelledby="journey-title">
+      <div class="journey-wrap" data-journey>
+        <h2 class="journey-title" id="journey-title">
+          <span class="line" data-reveal="words" data-reveal-at="0">The path</span>
+          <span class="line"><span data-reveal="words" data-reveal-at="130">to audit</span></span>
+        </h2>
+        <div class="rail" data-rail aria-hidden="true"></div>
+
+        <ol class="rows">
+          <li class="row" data-frame="centre">
+            <div class="row-plate">
+              <figure class="plate">
+                <div class="plate-fill"><div class="journey-card" data-route data-from="2023-02" data-to="2024-02" data-seed="3">
+                  <p class="card-head"><span class="card-title">Green Group LLC</span><span>Fuel department manager</span><span class="card-when">Feb 2023 – Feb 2024 · 13 months</span></p>
+                  <ul class="card-tags"><li>MPG</li><li>Idle time</li><li>Cost per mile</li></ul>
+                </div></div>
+                <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+              </figure>
+              <span class="row-year" data-year>2023</span>
+            </div>
+            <div class="row-copy-layer"><p class="row-copy" style="--cw: 300"><b>Fuel and figures.</b> Fuel department manager at Green Group LLC for a US trucking fleet: fuel cards, prices and stops, reported as MPG, idle time and cost per mile.</p></div>
+          </li>
+
+          <li class="row" data-frame="side" data-align="right">
+            <div class="row-plate">
+              <figure class="plate">
+                <div class="plate-fill"><div class="journey-card">
+                  <span class="note-ghost" aria-hidden="true">BSc</span>
+                  <p class="card-head"><span class="card-title"><span class="name-long">British Management University</span><span class="name-short">BMU</span></span><span>BSc accounting and finance</span></p>
+                  <p class="note-mark">Started</p>
+                </div></div>
+                <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+              </figure>
+              <span class="row-year" data-year>Sep 2023</span>
+            </div>
+          </li>
+
+          <li class="row" data-frame="centre">
+            <div class="row-plate">
+              <figure class="plate">
+                <div class="plate-fill"><div class="journey-card" data-route data-from="2024-02" data-to="2025-09" data-seed="8">
+                  <p class="card-head"><span class="card-title">Green Group LLC</span><span>Business analyst</span><span class="card-when">Feb 2024 – Sep 2025 · 20 months</span></p>
+                  <ul class="card-tags"><li>Requirements</li><li>Dashboards</li><li>Integrations</li></ul>
+                </div></div>
+                <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+              </figure>
+              <span class="row-year" data-year>2024</span>
+            </div>
+            <div class="row-copy-layer"><p class="row-copy" style="--cw: 300"><b>Into the data.</b> Business analyst at Green Group: requirements and specifications, data cleaning, reports and dashboards for management, and TMS and CRM integrations.</p></div>
+          </li>
+
+          <li class="row" data-frame="side" data-align="left">
+            <div class="row-plate">
+              <figure class="plate">
+                <div class="plate-fill"><div class="journey-card">
+                  <span class="note-ghost" aria-hidden="true">EY</span>
+                  <p class="card-head"><span class="card-title">EY</span><span>Career Launch</span></p>
+                  <p class="note-mark">Finalist</p>
+                </div></div>
+                <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+              </figure>
+              <span class="row-year" data-year>Mar 2025</span>
+            </div>
+          </li>
+
+          <li class="row" data-frame="centre">
+            <div class="row-plate">
+              <figure class="plate">
+                <div class="plate-fill"><div class="journey-card" data-route data-from="2025-04" data-to="2025-08" data-seed="5">
+                  <p class="card-head"><span class="card-title">T&amp;M Financials</span><span>Co-founder and accountant</span><span class="card-when">Apr 2025 – Aug 2025 · 5 months</span></p>
+                  <ul class="card-tags"><li>Invoicing</li><li>QuickManage</li><li>Amazon Relay</li></ul>
+                </div></div>
+                <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+              </figure>
+              <span class="row-year" data-year>2025</span>
+            </div>
+            <div class="row-copy-layer"><p class="row-copy" style="--cw: 290"><b>A firm of my own.</b> Co-founded T&amp;M Financials to invoice for independent US truckers, with Excel trackers for their income, expenses and profit.</p></div>
+          </li>
+
+          <li class="row" data-frame="side" data-align="right">
+            <div class="row-plate">
+              <figure class="plate">
+                <div class="plate-fill"><div class="journey-card">
+                  <span class="note-ghost" aria-hidden="true">Case</span>
+                  <p class="card-head"><span class="card-title">Deloitte</span><span>Case Competition</span></p>
+                  <p class="note-mark">High-priority winner</p>
+                </div></div>
+                <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+              </figure>
+              <span class="row-year" data-year>Nov 2025</span>
+            </div>
+          </li>
+
+          <li class="row" data-frame="centre">
+            <div class="row-plate">
+              <figure class="plate">
+                <div class="plate-fill"><div class="journey-card" data-route data-from="2026-06" data-to="now" data-seed="11">
+                  <p class="card-head"><span class="card-title">Exely</span><span>Technical specialist</span><span class="card-when">Since Jun 2026</span></p>
+                  <ul class="card-tags"><li>Hoteliers</li><li>Setup</li><li>Support</li></ul>
+                </div></div>
+                <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+              </figure>
+              <span class="row-year" data-year>Now</span>
+            </div>
+            <div class="row-copy-layer"><p class="row-copy" style="--cw: 280"><b>Supporting hoteliers.</b> Technical specialist at Exely since June 2026, helping hoteliers set up and use its products.</p></div>
+          </li>
+
+          <li class="row" data-frame="side" data-align="left">
+            <div class="row-plate">
+              <figure class="plate">
+                <div class="plate-fill"><div class="journey-card">
+                  <span class="note-ghost" aria-hidden="true">FR</span>
+                  <p class="card-head"><span class="card-title">ACCA</span><span>Financial Reporting</span></p>
+                  <p class="note-mark">Passed</p>
+                </div></div>
+                <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+              </figure>
+              <span class="row-year" data-year>Sep 2026</span>
+            </div>
+          </li>
+
+          <li class="row" data-frame="centre">
+            <div class="row-plate">
+              <figure class="plate">
+                <div class="plate-fill"><div class="journey-card">
+                  <span class="note-ghost exam-ghost" aria-hidden="true">FM</span>
+                  <p class="card-head"><span class="card-title">ACCA · Financial Management</span><span class="card-when">December 2026 session</span></p>
+                  <div class="exam-bar">
+                    <p class="exam-count">8 of 13 credited</p>
+                    <ol class="exam-cells" aria-label="ACCA exams in order: the first eight credited, FM next, four to go"><li class="done">BT</li><li class="done">MA</li><li class="done">FA</li><li class="done">LW</li><li class="done">PM</li><li class="done">TX</li><li class="done">FR</li><li class="done">AA</li><li class="next">FM</li><li>SBL</li><li>SBR</li><li>OPT</li><li>OPT</li></ol>
+                  </div>
+                </div></div>
+                <svg class="plate-outline" viewBox="0 0 710.995 462.995" preserveAspectRatio="none" aria-hidden="true"><use href="#plate-path"/></svg>
+              </figure>
+              <span class="row-year" data-year>Next</span>
+            </div>
+            <div class="row-copy-layer"><p class="row-copy" style="--cw: 290"><b>FM, then audit.</b> Financial Management in the December 2026 session, on the way to the full qualification and a career in audit.</p></div>
+          </li>
+        </ol>
+      </div>
+    </section>
 
     <!-- ============ 4 · EDUCATION & RECOGNITION ============ -->
     <section class="education" id="education" aria-labelledby="education-title">
@@ -1904,51 +1883,8 @@
     scaleRoot();
     addEventListener("resize", scaleRoot);
 
-    // ---------------------------------------------------------------
-    // The sticky stack: the covered layer recedes rather than scrolling away.
-    // ---------------------------------------------------------------
-    {
-      const RECEDE_SCALE = 0.9;
-      const RECEDE_SHADE = 0.55;
-      const phone = matchMedia("(max-width: 639px)");
-      const layers = $$("[data-layer]");
-      const pinned = layers.map((layer, i) => ({
-        inner: $("[data-inner]", layer),
-        shade: $("[data-shade]", layer),
-        next: layers[i + 1] || $("[data-layer-last]"),
-      }));
-      let queued = false;
-      const apply = () => {
-        queued = false;
-        const view = innerHeight || 1;
-        const shrink = phone.matches ? 0 : 1 - RECEDE_SCALE;
-        for (const { inner, shade, next } of pinned) {
-          // 0 while the next block is still a full screen away, 1 once it has taken the viewport.
-          const p = Math.min(1, Math.max(0, 1 - next.getBoundingClientRect().top / view));
-          // No transform at rest — it would become the containing block for fixed children.
-          inner.style.transform = p > 0 && shrink > 0 ? `scale(${1 - shrink * p})` : "";
-          inner.style.willChange = p > 0 && shrink > 0 ? "transform" : "";
-          shade.style.opacity = `${RECEDE_SHADE * p}`;
-          inner.style.visibility = p >= 1 ? "hidden" : "visible";
-        }
-      };
-      const queue = () => { if (!queued) { queued = true; requestAnimationFrame(apply); } };
-      addEventListener("scroll", queue, { passive: true });
-      addEventListener("resize", queue);
-      apply();
-    }
-
-    // In-page links: a pinned layer's place is where its flow position would be.
-    function targetTop(el) {
-      const layer = el.closest("[data-layer]");
-      if (layer) {
-        const stack = $("[data-stack]");
-        let top = stack.getBoundingClientRect().top + scrollY;
-        for (const l of $$("[data-layer]")) { if (l === layer) break; top += l.offsetHeight; }
-        return top;
-      }
-      return el.getBoundingClientRect().top + scrollY;
-    }
+    // In-page links: where a block starts on the page.
+    const targetTop = (el) => el.getBoundingClientRect().top + scrollY;
     // Native smooth scrolling; below the hero the target clears the dock.
     function jumpTo(hash) {
       const el = document.getElementById(hash.slice(1));
@@ -2024,14 +1960,14 @@
     // ---------------------------------------------------------------
     {
       const dock = $("[data-dock]");
-      const heroLayer = $("[data-layer]");
+      const hero = $("[data-hero]");
       const links = $$(".dock-nav a", dock);
       const sections = links.map((a) => document.getElementById(a.getAttribute("href").slice(1)));
       const slide = new Spring(0, (v) => { dock.style.transform = `translateY(${(clamp01(v) - 1) * 100}%)`; });
       let shown = false, queued = false;
       const update = () => {
         queued = false;
-        const show = scrollY > heroLayer.offsetHeight * 0.5;
+        const show = scrollY > hero.offsetHeight * 0.5;
         if (show !== shown) {
           shown = show;
           dock.inert = !show;
@@ -2911,7 +2847,7 @@
         matchMedia("(hover: none) and (pointer: coarse)").addEventListener("change", () => { scene.retune(); bindPointer(); applyFit(); });
         onResize();
 
-        // The render loop: only while the hero is uncovered and the tab is visible.
+        // The render loop: only while the hero is on screen and the tab is visible.
         const COVERED_AFTER = 1.15;
         subscribe((time) => {
           if (document.visibilityState !== "visible") return;
