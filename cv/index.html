@@ -23,10 +23,10 @@
   <style>
     /* Static font files, not Google's variable ones: Chrome's PDF export splits words set in the
        variable fonts ("ACCOUNTIN G"), and recruiters' screening software reads the PDF's text. */
+    @font-face { font-family: "Oswald"; font-weight: 500; font-display: swap; src: url(https://cdn.jsdelivr.net/npm/@fontsource/oswald@5.2.8/files/oswald-latin-500-normal.woff2) format("woff2"); }
     @font-face { font-family: "Oswald"; font-weight: 700; font-display: swap; src: url(https://cdn.jsdelivr.net/npm/@fontsource/oswald@5.2.8/files/oswald-latin-700-normal.woff2) format("woff2"); }
     @font-face { font-family: "Space Grotesk"; font-weight: 400; font-display: swap; src: url(https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.2.8/files/space-grotesk-latin-400-normal.woff2) format("woff2"); }
     @font-face { font-family: "Space Grotesk"; font-weight: 500; font-display: swap; src: url(https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.2.8/files/space-grotesk-latin-500-normal.woff2) format("woff2"); }
-    @font-face { font-family: "Space Grotesk"; font-weight: 700; font-display: swap; src: url(https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.2.8/files/space-grotesk-latin-700-normal.woff2) format("woff2"); }
 
     /* ==========================================================
        khadi.uz — CV
@@ -52,7 +52,6 @@
       padding: 0;
       font-size: var(--type-body);
       line-height: var(--leading-flat);
-      text-transform: uppercase;
       text-decoration: none;
       color: var(--foreground);
       background: none; border: 0; cursor: pointer;
@@ -96,7 +95,7 @@
     .cv-photo { width: 84px; height: 92px; object-fit: cover; }
     .cv-head h1 {
       margin: 0;
-      font: 700 2.25rem/0.95 var(--font-display);
+      font: 500 2.25rem/0.95 var(--font-display);
       text-transform: uppercase;
       letter-spacing: 0.005em;
     }
@@ -105,7 +104,6 @@
       font-size: 0.8125rem;
       font-weight: 500;
       letter-spacing: 0.02em;
-      text-transform: uppercase;
       color: var(--accent-ink);
     }
     .cv-contact { display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem; margin: 0; padding: 0; list-style: none; color: var(--foreground-soft); }
@@ -115,9 +113,8 @@
     .cv-section > h2 {
       display: flex; align-items: center; gap: 0.6rem;
       margin: 0 0 0.75rem;
-      font: 700 0.9375rem/1 var(--font-display);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      font: 500 0.9375rem/1 var(--font-display);
+      letter-spacing: 0.01em;
     }
     .cv-section > h2::before { content: ''; width: 14px; height: 2px; background: var(--accent); }
     .cv-section > h2::after { content: ''; flex: 1; height: 1px; background: var(--border-muted); }
@@ -125,7 +122,7 @@
     .item { break-inside: avoid; }
     .item + .item { margin-top: 0.9rem; }
     .item-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; }
-    .item-head h3 { margin: 0; font-size: 0.9375rem; font-weight: 700; }
+    .item-head h3 { margin: 0; font-size: 0.9375rem; font-weight: 500; }
     .item-when { color: var(--foreground-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
     .item-sub { margin: 0 0 0.2rem; color: var(--foreground-soft); }
     .item ul { margin: 0.25rem 0 0; padding-left: 1.1em; }
@@ -134,14 +131,14 @@
 
     .acca { width: 100%; margin-top: 0.5rem; border-collapse: collapse; }
     .acca th, .acca td { padding: 0.25rem 0.5rem 0.25rem 0; text-align: left; border-bottom: 1px solid var(--border-muted); }
-    .acca th { font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--foreground-soft); }
-    .acca td:first-child { font-weight: 700; }
+    .acca th { font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.01em; color: var(--foreground-soft); }
+    .acca td:first-child { font-weight: 500; }
     .acca .pass td { background: rgb(2 210 227 / 0.1); }
     .acca .pass td:first-child { box-shadow: inset 3px 0 0 var(--accent); padding-left: 0.5rem; }
     .acca .next td:first-child { box-shadow: inset 3px 0 0 var(--foreground); padding-left: 0.5rem; }
 
     .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
-    .cols h3 { margin: 0 0 0.25rem; font-size: 0.9375rem; font-weight: 700; }
+    .cols h3 { margin: 0 0 0.25rem; font-size: 0.9375rem; font-weight: 500; }
     .cols ul { margin: 0; padding-left: 1.1em; }
     .cols li::marker { color: var(--accent-ink); }
 

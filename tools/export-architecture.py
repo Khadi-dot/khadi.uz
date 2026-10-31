@@ -102,6 +102,9 @@ def main():
             del node["why"]
 
     names = {n["community"]: n["community_name"] for n in g["nodes"]}
+    # sentence case, keeping acronyms and file names as written
+    keep = {"ACCA", "CV", "404"}
+    names = {k: " ".join(w if (i == 0 or w in keep) else w.lower() for i, w in enumerate(v.split())) for k, v in names.items()}
     sizes = defaultdict(int)
     for node in out_nodes.values():
         sizes[node["area"]] += 1

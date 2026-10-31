@@ -92,9 +92,9 @@
   --leading-flat: 0.9;
   --leading-cap: 0.72;
   --leading-display: 1.1;
-  --tracking-stat: -0.08em;
-  --tracking-label: -0.04em;
-  --tracking-eyebrow: -0.02em;
+  --tracking-stat: -0.02em;
+  --tracking-label: 0;
+  --tracking-eyebrow: 0.01em;   /* small text is never tightened */
 
   --duration-fast: 150ms;
   --duration-normal: 250ms;
@@ -142,7 +142,6 @@ img { display: block; max-width: 100%; }
   position: fixed; left: -999px; top: 0.5rem; z-index: 100;
   padding: 0.75rem 1rem;
   font-size: var(--type-body);
-  text-transform: uppercase;
   color: var(--accent);
   background: var(--surface-dark);
 }
@@ -190,7 +189,6 @@ img { display: block; max-width: 100%; }
   padding: 0 calc(var(--cta-h) * 24 / 50);
   font-size: calc(var(--cta-h) * 20 / 50);
   line-height: var(--leading-flat);
-  text-transform: uppercase;
   white-space: nowrap;
   color: var(--accent);
   text-decoration: none;

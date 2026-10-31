@@ -36,7 +36,7 @@
   <link rel="modulepreload" href="vendor/three/three.core.min.js">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="brand.css">
 
   <style>
@@ -114,8 +114,7 @@
       content: attr(data-tip);
       position: absolute; top: calc(100% + 0.5rem); right: 0;
       padding: 0.45rem 0.6rem;
-      font-size: max(var(--type-eyebrow), var(--type-floor)); font-weight: 500; line-height: 1;
-      text-transform: uppercase; white-space: nowrap;
+      font-size: max(var(--type-eyebrow), var(--type-floor)); font-weight: 500; line-height: 1; white-space: nowrap;
       color: var(--foreground-on-dark);
       background: var(--surface-dark);
       border-top: 2px solid var(--accent);
@@ -129,14 +128,13 @@
     .dock-nav a, .dock-cv {
       font-size: max(var(--type-body), var(--type-floor));
       line-height: var(--leading-flat);
-      text-transform: uppercase;
       text-decoration: none;
       color: var(--foreground-on-dark-muted);
       transition: color var(--duration-fast) var(--ease-entrance);
     }
     .dock-nav a:hover, .dock-cv:hover { color: var(--foreground-on-dark); }
     .dock-nav a[aria-current="true"] { color: var(--accent); }
-    .dock-cv { display: none; font-weight: 700; color: var(--foreground-on-dark); }
+    .dock-cv { display: none; font-weight: 600; color: var(--foreground-on-dark); }
     .dock .burger span { background: var(--foreground-on-dark); }
     @media (min-width: 640px) { .dock { padding: 0 2rem; } }
     @media (min-width: 1280px) {
@@ -171,7 +169,6 @@
       font-size: var(--type-lead);
       line-height: var(--leading-flat);
       letter-spacing: 0.18em;
-      text-transform: uppercase;
       text-align: center;
       opacity: 0;
     }
@@ -212,15 +209,15 @@
     .nav { display: none; }
     .nav ul { display: flex; gap: 4rem; margin: 0; padding: 0; list-style: none; }
     .nav a, .cv-link {
+      white-space: nowrap;
       font-size: var(--type-label);
       line-height: var(--leading-flat);
-      text-transform: uppercase;
       color: var(--foreground);
       text-decoration: none;
       transition: color var(--duration-fast) var(--ease-entrance);
     }
     .nav a:hover, .cv-link:hover { color: var(--accent-ink); }
-    .cv-link { display: none; font-weight: 700; }
+    .cv-link { display: none; font-weight: 600; }
     .burger { padding: 0.5rem; margin-right: -0.5rem; background: none; border: 0; cursor: pointer; }
     .burger span { display: block; width: 1.5rem; height: 1px; background: var(--foreground); }
     .burger span + span { margin-top: 0.3125rem; }
@@ -230,7 +227,6 @@
       margin: 0 0 1rem;
       font-size: var(--type-label);
       line-height: var(--leading-flat);
-      text-transform: uppercase;
       color: var(--foreground-muted);
     }
     /* The surname runs ~7.8em in Oswald, so the name is held to the width the column has. */
@@ -238,7 +234,7 @@
       --name-fit: calc((100vw - 3rem) / 8);
       margin: 0;
       max-width: 7.2em;
-      font: 700 min(var(--name-max, var(--type-name)), var(--name-fit))/var(--leading-headline) var(--font-display);
+      font: 500 min(var(--name-max, var(--type-name)), var(--name-fit))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
     }
     .hero-meta { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0 0; padding: 0; list-style: none; }
@@ -246,9 +242,9 @@
       display: flex; align-items: center; gap: 0.5rem;
       font-size: var(--type-lead);
       line-height: var(--leading-flat);
-      text-transform: uppercase;
     }
     .hero-meta svg { flex: none; }
+    .line-icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 
     .hero-panels { display: none; gap: 2rem; }
     .bpanel { padding: 1rem 1.375rem 1.1875rem; color: var(--foreground); }
@@ -258,8 +254,7 @@
       font-weight: 500;
       line-height: var(--leading-flat);
       letter-spacing: var(--tracking-eyebrow);
-      text-transform: uppercase;
-      color: var(--accent-ink);
+      color: var(--foreground-soft);
     }
     .now-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 1rem; }
     .now-list {
@@ -267,14 +262,13 @@
       margin: 0;
       font-size: var(--type-body);
       line-height: var(--leading-flat);
-      text-transform: uppercase;
     }
-    .now-list dt { font-weight: 700; }
+    .now-list dt { font-weight: 600; }
     .now-list dd { margin: 0; }
     .now-icon { width: 3.5rem; height: 3.5rem; flex: none; }
     .exam-badge { overflow: visible; }
     .exam-badge-body { fill: var(--surface-dark); stroke: var(--accent); stroke-width: 1; vector-effect: non-scaling-stroke; }
-    .exam-badge text { font: 700 22px var(--font-display); fill: var(--accent); }
+    .exam-badge text { font: 500 22px var(--font-display); fill: var(--accent); }
     @media (min-width: 768px) {
       .now-row { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
       .now-icon { width: 3rem; height: 3rem; }
@@ -285,7 +279,6 @@
       font-size: max(var(--type-eyebrow), var(--type-floor));
       line-height: var(--leading-flat);
       letter-spacing: var(--tracking-label);
-      text-transform: uppercase;
       white-space: nowrap;
     }
     .hero-stats dd {
@@ -302,7 +295,7 @@
       text-decoration: none;
     }
     .trailer svg { width: 2rem; height: 2rem; flex: none; }
-    .trailer-lines { display: flex; flex-direction: column; gap: 0.375rem; font-size: var(--type-body); line-height: var(--leading-flat); text-transform: uppercase; }
+    .trailer-lines { display: flex; flex-direction: column; gap: 0.375rem; font-size: var(--type-body); line-height: var(--leading-flat); }
     .trailer-lines b { font-weight: 500; transition: color var(--duration-fast) var(--ease-entrance); }
     .trailer:hover b { color: var(--accent-ink); }
     .trailer-lines span { color: var(--foreground-muted); }
@@ -311,7 +304,6 @@
     .socials a {
       font-size: var(--type-body);
       line-height: var(--leading-flat);
-      text-transform: uppercase;
       text-decoration: none;
       transition: color var(--duration-fast) var(--ease-entrance);
     }
@@ -399,8 +391,7 @@
     .sheet ul { display: flex; flex-direction: column; gap: 1rem; margin: 0; padding: 0; list-style: none; }
     .sheet a.sheet-link {
       display: inline-block;
-      font: 700 var(--type-heading)/var(--leading-headline) var(--font-display);
-      text-transform: uppercase;
+      font: 500 var(--type-heading)/var(--leading-headline) var(--font-display);
       text-decoration: none;
       transition: color var(--duration-fast) var(--ease-entrance);
     }
@@ -455,19 +446,18 @@
     .map .node.lit { fill: var(--accent); opacity: 1; }
     .map .node.pass.lit { fill: var(--foreground-on-dark); }
     .map .node.next { fill: var(--surface-black); stroke: var(--accent); stroke-width: 2.4; opacity: 1; }
-    .map .node-pulse { fill: none; stroke: var(--accent); stroke-width: 1.6; }
     /* labels carry a halo in the ground's colour, so a line passing under them never cuts through */
     .map .exam-code, .map .world-label { paint-order: stroke; stroke-width: calc(var(--map-type, 10px) * 0.35); stroke-linejoin: round; }
-    .map .exam-code { font: 500 var(--map-type, 10px)/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; fill: var(--foreground-on-dark-muted); stroke: var(--map-island-top); transition: fill 300ms; }
+    .map .exam-code { font: 500 var(--map-type, 10px)/1 var(--font-sans); letter-spacing: 0.01em; fill: var(--foreground-on-dark-muted); stroke: var(--map-island-top); transition: fill 300ms; }
     .map .exam-code.lit { fill: var(--foreground-on-dark); }
-    .map .exam-code.next { fill: var(--accent); font-weight: 700; }
+    .map .exam-code.next { fill: var(--accent); font-weight: 600; }
     /* on a phone the map is too small to name all thirteen: it names the exams sat and still to sit */
     .map.is-small .exam-code.exempt { display: none; }
     .map .gate { fill: var(--map-mark); opacity: 0.35; transition: fill 300ms, opacity 300ms; }
     .map .gate.lit { fill: var(--accent); opacity: 1; }
     .map .finish path { fill: none; stroke: var(--foreground-on-dark-muted); stroke-width: 1.4; }
     .map .finish .finish-core { fill: var(--foreground-on-dark-muted); stroke: none; }
-    .map .world-label { font: 500 var(--map-type, 10.5px)/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; fill: var(--foreground-on-dark-muted); stroke: var(--surface-black); }
+    .map .world-label { font: 500 var(--map-type, 10.5px)/1 var(--font-sans); letter-spacing: 0.01em; fill: var(--foreground-on-dark-muted); stroke: var(--surface-black); }
     .map .world-label tspan.n { fill: var(--accent); }
 
     .acca-copy {
@@ -480,12 +470,11 @@
     .acca-copy a { pointer-events: auto; }
     .season-title {
       margin: 0;
-      font: 700 max(3.8194cqw, var(--head-min, 0px))/var(--leading-headline) var(--font-display);
+      font: 500 max(3.8194cqw, var(--head-min, 0px))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--foreground-on-dark);
     }
     .season-title .line, .journey-title .line, .ed-title .line, .contact-title .line { display: block; }
-    .season-title .stop, .journey-title .stop, .contact-title .stop { color: var(--foreground-on-dark); }
     .head-row { display: flex; align-items: flex-end; }
     .rule {
       display: block;
@@ -498,8 +487,7 @@
       margin: max(2.0833cqw, var(--head-air, 0px)) 0 0;
       width: max(22cqw, var(--copy-min-w, 0px));
       font-size: max(1.25cqw, var(--copy-min-size, 0px));
-      line-height: var(--leading-display);
-      text-transform: uppercase;
+      line-height: 1.4;
       --gap: 0.22em;
     }
     .acca-status {
@@ -507,7 +495,6 @@
       margin: max(1.6cqw, 14px) 0 0;
       font-size: max(0.9722cqw, var(--type-floor));
       line-height: var(--leading-flat);
-      text-transform: uppercase;
       color: var(--foreground-on-dark-muted);
     }
     .pulse-dot { position: relative; width: 0.55em; height: 0.55em; border-radius: 50%; background: var(--accent); flex: none; }
@@ -531,7 +518,6 @@
       font-size: var(--plate-eyebrow, max(0.8333cqw, var(--type-floor)));
       line-height: var(--leading-cap);
       letter-spacing: var(--tracking-eyebrow);
-      text-transform: uppercase;
     }
     .badge-mark .year { color: var(--accent); }
     .plate-stats {
@@ -542,7 +528,6 @@
       padding-left: var(--plate-stats-left, 1.1111cqw);
       font-size: var(--plate-body, max(0.9722cqw, var(--type-floor)));
       line-height: var(--leading-cap);
-      text-transform: uppercase;
     }
     .plate-stats > div { display: flex; gap: 0.35em; white-space: nowrap; }
     .plate-stats dt { color: var(--accent); }
@@ -583,10 +568,10 @@
       top: var(--gutter); right: var(--gutter);
       width: calc(420 * var(--u));
       margin: 0;
-      font: 700 max(calc(55 * var(--u)), var(--head-min, 0px))/var(--leading-headline) var(--font-display);
+      font: 500 max(calc(55 * var(--u)), var(--head-min, 0px))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
       text-align: right;
-      color: var(--accent);
+      color: var(--foreground-on-dark);
       --justify: flex-end;
     }
     .journey-title .line { display: flex; justify-content: flex-end; }
@@ -619,10 +604,10 @@
     .row-year {
       position: absolute; left: 50%; top: 50%; z-index: 20;
       transform: translate(-50%, -50%);
-      font: 700 calc(36 * var(--u))/var(--leading-headline) var(--font-display);
+      font: 500 calc(36 * var(--u))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
       width: max-content;
-      color: var(--accent);
+      color: var(--foreground-on-dark);
       pointer-events: none;
       white-space: nowrap;
     }
@@ -631,10 +616,9 @@
       margin: 0;
       width: calc(var(--cw) * var(--u));
       font-size: calc(18 * var(--u));
-      line-height: var(--leading-display);
-      text-transform: uppercase;
+      line-height: 1.4;
     }
-    .row-copy b { font-weight: 700; }
+    .row-copy b { font-weight: 600; }
 
     /* the cards on the plates, set in pixels with a floor so they stay legible at any width */
     .journey-card {
@@ -642,8 +626,7 @@
       position: absolute; inset: 0;
       background: var(--surface-dark);
       font: 500 max(calc(15 * var(--u)), var(--type-floor))/1.35 var(--font-sans);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       color: var(--foreground-on-dark-muted);
     }
     .card-head { position: absolute; z-index: 1; left: var(--pad); right: var(--pad); top: var(--pad); display: flex; flex-direction: column; align-items: flex-start; margin: 0; }
@@ -663,7 +646,7 @@
     .note-ghost {
       position: absolute; left: 50%; top: 52%;
       transform: translate(-50%, -50%);
-      font: 700 calc(150 * var(--u))/1 var(--font-display);
+      font: 500 calc(150 * var(--u))/1 var(--font-display);
       letter-spacing: 0;
       color: var(--foreground-on-dark);
       opacity: 0.06;
@@ -692,8 +675,7 @@
       display: flex; flex-direction: column; gap: 0.25em;
       padding: 0.55em 0.8em;
       font: 500 max(calc(14 * var(--u)), var(--type-floor))/1.2 var(--font-sans);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       white-space: nowrap;
       color: var(--foreground-on-dark-muted);
       background: var(--surface-black);
@@ -703,12 +685,11 @@
       opacity: 0;
       transition: opacity var(--duration-fast) var(--ease-entrance);
     }
-    .route-tip b { font-weight: 700; color: var(--foreground-on-dark); }
+    .route-tip b { font-weight: 600; color: var(--foreground-on-dark); }
     .route-tip.is-on { opacity: 1; }
     @media (hover: hover) {
       .rows:has(.plate:hover) .row { opacity: 0.3; }
       .rows:has(.plate:hover) .row:has(.plate:hover) { opacity: 1; }
-      .side-plate:hover .plate-fill { inset: 5%; }
     }
     @media (max-width: 1279px) {
       .journey-title { width: auto; left: var(--gutter); text-align: center; top: calc(96 * var(--u)); }
@@ -769,10 +750,9 @@
     .ed-title {
       position: absolute; z-index: 20; left: calc(32 * var(--u)); top: calc(32 * var(--u));
       margin: 0;
-      font: 700 calc(96 * var(--u))/var(--leading-headline) var(--font-display);
+      font: 500 calc(96 * var(--u))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
     }
-    .ed-title .stop { color: var(--accent); }
     .ed-title .head-row { display: flex; align-items: flex-end; }
     .ed-intro {
       position: absolute; z-index: 20;
@@ -784,8 +764,7 @@
     .ed-report {
       margin: 0;
       font-size: max(calc(18 * var(--u)), 15px);
-      line-height: var(--leading-display);
-      text-transform: uppercase;
+      line-height: 1.4;
       --gap: 0.22em;
     }
     .ed-cta { --cta-h: calc(50 * var(--u)); }
@@ -799,20 +778,19 @@
     .ed-panel { padding: calc(13 * var(--u)); }
     .ed-panel > .corner { width: calc(10 * var(--u)); height: calc(10 * var(--u)); }
     .ed-panel .eyebrow { font-size: max(calc(12 * var(--u)), var(--type-floor)); }
-    .ed-meet { display: flex; flex-direction: column; gap: calc(6 * var(--u)); margin: calc(12 * var(--u)) 0 0; line-height: var(--leading-flat); text-transform: uppercase; }
-    .ed-meet dt { font-weight: 700; }
+    .ed-meet { display: flex; flex-direction: column; gap: calc(6 * var(--u)); margin: calc(12 * var(--u)) 0 0; line-height: var(--leading-flat); }
+    .ed-meet dt { font-weight: 600; }
     .ed-meet dd { margin: 0; }
     .ed-stats { margin: 0; }
     .ed-stat { display: flex; align-items: flex-end; gap: calc(22 * var(--u)); height: calc(58 * var(--u)); }
     .ed-stat svg { width: calc(31 * var(--u)); height: calc(31 * var(--u)); flex: none; fill: none; stroke: currentColor; stroke-width: 1.4; }
     .ed-stat dt {
       font-size: max(calc(12 * var(--u)), var(--type-floor));
-      letter-spacing: -0.04em;
-      text-transform: uppercase;
+      letter-spacing: 0;
       color: var(--foreground-soft);
       margin-bottom: calc(10 * var(--u));
     }
-    .ed-stat dd { margin: 0; font: 500 calc(38 * var(--u))/var(--leading-cap) var(--font-display); letter-spacing: -0.08em; }
+    .ed-stat dd { margin: 0; font: 500 calc(38 * var(--u))/var(--leading-cap) var(--font-display); letter-spacing: -0.02em; }
     .ed-stat-text { display: flex; flex-direction: column; }
     .ed-rule { height: 1px; margin: calc(16 * var(--u)) 0 calc(15 * var(--u)); background: var(--foreground-muted); transform-origin: left; }
 
@@ -825,11 +803,11 @@
     .ed-card {
       position: absolute; top: calc(40 * var(--u));
       display: flex; flex-direction: column; align-items: center; gap: calc(11 * var(--u));
-      text-align: center; text-transform: uppercase;
+      text-align: center;
     }
-    .ed-card .round, .ed-card .date { font-size: max(calc(12 * var(--u)), var(--type-floor)); letter-spacing: -0.02em; line-height: 1; color: var(--foreground-on-dark-muted); white-space: nowrap; }
+    .ed-card .round, .ed-card .date { font-size: max(calc(12 * var(--u)), var(--type-floor)); letter-spacing: 0; line-height: 1; color: var(--foreground-on-dark-muted); white-space: nowrap; }
     .ed-card .date { font-size: max(calc(14 * var(--u)), 12px); }
-    .ed-card .name { font: 700 max(calc(18 * var(--u)), 15px)/var(--leading-headline) var(--font-display); white-space: nowrap; }
+    .ed-card .name { font: 500 max(calc(18 * var(--u)), 15px)/var(--leading-headline) var(--font-display); white-space: nowrap; }
     .ed-card.live .round, .ed-card.live .date { color: var(--accent); }
     .ed-mark { position: absolute; top: calc(126 * var(--u)); transform: translateX(-50%); display: grid; place-items: center; height: calc(11 * var(--u)); }
     .ed-mark svg { width: calc(11 * var(--u)); height: calc(11 * var(--u)); overflow: visible; }
@@ -887,33 +865,31 @@
     }
     .skills-title {
       margin: 0;
-      font: 700 calc(55 * var(--u))/var(--leading-headline) var(--font-display);
+      font: 500 calc(55 * var(--u))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
     }
     .skills-title .line { display: block; }
     .skills-title .head-row { display: flex; align-items: flex-end; }
-    .skills-title .stop { color: var(--accent); }
     .skills-intro {
       margin: calc(28 * var(--u)) 0 0;
       font-size: max(calc(18 * var(--u)), 15px);
-      line-height: var(--leading-display);
-      text-transform: uppercase;
+      line-height: 1.4;
       color: var(--foreground-soft);
       --gap: 0.22em;
     }
     .skills-body > .eyebrow { margin-bottom: calc(16 * var(--u)); }
     .langs { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(24 * var(--u)); margin: 0; padding: 0; list-style: none; }
-    .lang { display: flex; flex-direction: column; gap: calc(8 * var(--u)); padding: calc(20 * var(--u)); text-transform: uppercase; }
+    .lang { display: flex; flex-direction: column; gap: calc(8 * var(--u)); padding: calc(20 * var(--u)); }
     .lang > .corner { width: calc(10 * var(--u)); height: calc(10 * var(--u)); }
-    .lang-code { margin-bottom: calc(14 * var(--u)); font: 500 calc(72 * var(--u))/var(--leading-cap) var(--font-display); letter-spacing: -0.06em; }
-    .lang-name { font-weight: 700; font-size: max(calc(16 * var(--u)), 14px); line-height: var(--leading-flat); }
+    .lang-code { margin-bottom: calc(14 * var(--u)); font: 500 calc(72 * var(--u))/var(--leading-cap) var(--font-display); letter-spacing: -0.03em; }
+    .lang-name { font-weight: 600; font-size: max(calc(16 * var(--u)), 14px); line-height: var(--leading-flat); }
     .lang-level { font-size: max(calc(14 * var(--u)), var(--type-floor)); line-height: 1.2; color: var(--foreground-soft); }
     .lang-level b { font-weight: 500; color: var(--accent-ink); }
     .skill-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(32 * var(--u)); margin-top: calc(64 * var(--u)); }
-    .skill-group h3 { margin: 0 0 calc(14 * var(--u)); font: 700 max(calc(26 * var(--u)), 20px)/1 var(--font-display); text-transform: uppercase; }
+    .skill-group h3 { margin: 0 0 calc(14 * var(--u)); font: 500 max(calc(26 * var(--u)), 20px)/1 var(--font-display); }
     .skill-group h3 .n { color: var(--accent-ink); }
     .skill-group ul { margin: 0; padding: 0; list-style: none; }
-    .skill-group li { display: flex; flex-direction: column; gap: 0.35em; padding: calc(12 * var(--u)) 0; border-top: 1px solid var(--border-muted); text-transform: uppercase; }
+    .skill-group li { display: flex; flex-direction: column; gap: 0.35em; padding: calc(12 * var(--u)) 0; border-top: 1px solid var(--border-muted); }
     .skill-group li b { font-size: max(calc(15 * var(--u)), 14px); line-height: 1.15; }
     .skill-group li span { font-size: max(calc(13 * var(--u)), var(--type-floor)); line-height: 1.35; color: var(--foreground-soft); }
     .skills-tools {
@@ -922,7 +898,6 @@
       border-top: 1px solid var(--border-muted);
       font-size: max(calc(14 * var(--u)), var(--type-floor));
       line-height: 1.4;
-      text-transform: uppercase;
     }
     .skills-tools .eyebrow { margin-right: 0.55em; }
     /* the dot rides on the word before it, so a wrapped line never starts with one */
@@ -951,18 +926,16 @@
     }
     .side-title {
       margin: 0;
-      font: 700 calc(55 * var(--u))/var(--leading-headline) var(--font-display);
+      font: 500 calc(55 * var(--u))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--foreground-on-dark);
     }
     .side-title .line { display: block; }
     .side-title .head-row { display: flex; align-items: flex-end; }
-    .side-title .stop { color: var(--foreground-on-dark); }
     .side-intro {
       margin: calc(28 * var(--u)) 0 0;
       font-size: max(calc(18 * var(--u)), 15px);
-      line-height: var(--leading-display);
-      text-transform: uppercase;
+      line-height: 1.4;
       color: var(--foreground-on-dark-muted);
       --gap: 0.22em;
     }
@@ -973,8 +946,7 @@
     .side-card h3 {
       display: flex; align-items: center; gap: 0.5em;
       margin: calc(22 * var(--u)) 0 0;
-      font: 700 max(calc(26 * var(--u)), 20px)/1 var(--font-display);
-      text-transform: uppercase;
+      font: 500 max(calc(26 * var(--u)), 20px)/1 var(--font-display);
     }
     .side-card h3 img { width: 1.3em; height: 1.3em; }
     .side-card p {
@@ -982,7 +954,6 @@
       margin: 0.7em 0 0;
       font-size: max(calc(14 * var(--u)), 13px);
       line-height: 1.35;
-      text-transform: uppercase;
       color: var(--foreground-on-dark-muted);
     }
     .side-card .tag { color: var(--accent); }
@@ -1001,11 +972,12 @@
       position: relative; isolation: isolate;
       width: 100%;
       overflow: hidden;
-      background: var(--accent);
+      background: var(--surface-black);
       color: var(--foreground-on-dark);
+      border-top: 1px solid var(--rule-on-dark);
     }
     .contact-frame { --u: calc(100cqw / 1440); --g: calc(32 * var(--u)); position: relative; min-height: max(100lvh, calc(800 * var(--u))); }
-    .contact-panel { position: absolute; inset: calc(16 * var(--u)); overflow: hidden; background: var(--surface-black); }
+    .contact-panel { position: absolute; inset: 0; overflow: hidden; background: var(--surface-black); }
     .contact-figure-group { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
     .contact-figure-layer { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
     .contact-figure {
@@ -1020,9 +992,9 @@
       position: absolute; z-index: 20; top: var(--g); right: var(--g);
       width: calc(420 * var(--u));
       margin: 0;
-      font: 700 calc(55 * var(--u))/var(--leading-headline) var(--font-display);
+      font: 500 calc(55 * var(--u))/var(--leading-headline) var(--font-display);
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--foreground-on-dark);
       text-align: right;
       --justify: flex-end;
     }
@@ -1031,15 +1003,13 @@
       position: absolute; z-index: 20; right: var(--g); top: calc(32 * var(--u) + 2 * 55 * 0.95 * var(--u) + 24 * var(--u));
       margin: 0;
       font-size: max(calc(14 * var(--u)), var(--type-floor));
-      text-transform: uppercase;
     }
     .contact-mail a { text-decoration: none; transition: color var(--duration-fast) var(--ease-entrance); }
     .contact-mail a:hover { color: var(--accent); }
     .contact-nav { position: absolute; z-index: 20; left: var(--g); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: calc(12 * var(--u)); }
     .contact-nav a {
       display: block; width: max-content;
-      font: 700 calc(36 * var(--u))/var(--leading-headline) var(--font-display);
-      text-transform: uppercase;
+      font: 500 calc(36 * var(--u))/var(--leading-headline) var(--font-display);
       text-decoration: none;
       transition: color var(--duration-fast) var(--ease-entrance);
       --gap: 0.2em;
@@ -1051,7 +1021,6 @@
       margin: 0;
       font-size: max(calc(14 * var(--u)), var(--type-floor));
       line-height: var(--leading-display);
-      text-transform: uppercase;
       color: var(--foreground-on-dark-faint);
     }
     .contact-cta { position: absolute; z-index: 20; left: calc(583 * var(--u)); bottom: var(--g); --cta-h: calc(50 * var(--u)); width: calc(var(--cta-h) * 5.5); }
@@ -1061,13 +1030,12 @@
       width: calc(240 * var(--u));
       margin: 0; padding: 0; list-style: none;
       font-size: max(calc(14 * var(--u)), var(--type-floor));
-      text-transform: uppercase;
     }
     .contact-socials a { text-decoration: none; transition: color var(--duration-fast) var(--ease-entrance); }
     .contact-socials a:hover { color: var(--accent); }
     @media (max-width: 1023px) {
       .contact-frame { --u: 1px; --g: 24px; min-height: 0; padding: 16px; }
-      .contact-panel { inset: 16px; }
+      .contact-panel { inset: 0; }
       .contact-inner { position: relative; z-index: 20; display: flex; flex-direction: column; gap: 2rem; padding: 24px 24px 32px; }
       .contact-logo, .contact-title, .contact-mail, .contact-nav, .contact-copy, .contact-cta, .contact-socials { position: relative; left: auto; right: auto; top: auto; bottom: auto; transform: none; }
       .contact-title { width: auto; text-align: left; font-size: clamp(40px, 9vw, 64px); --justify: flex-start; }
@@ -1091,7 +1059,7 @@
   <div class="loader" data-loader role="status" aria-label="Loading khadi.uz">
     <div class="loader-content" data-loader-content>
       <div class="loader-figure" aria-hidden="true"><div class="loader-shell"></div><div class="loader-fill" data-loader-fill></div></div>
-      <p class="loader-name" data-loader-name>xadyatullox muhammadjonov</p>
+      <p class="loader-name" data-loader-name>Xadyatullox Muhammadjonov</p>
     </div>
     <div class="loader-meter" data-loader-meter aria-hidden="true"><div class="loader-meter-fill" data-loader-meter-fill></div></div>
   </div>
@@ -1162,25 +1130,19 @@
 
               <div class="hero-middle">
                 <div class="identity">
-                  <p class="hero-id" data-enter="fade" data-enter-at="180">acca_student</p>
+                  <p class="hero-id" data-enter="fade" data-enter-at="180">ACCA student</p>
                   <h1 class="hero-name" data-enter="words" data-enter-at="180">Xadyatullox Muhammadjonov</h1>
                   <ul class="hero-meta">
                     <li data-enter="rise-sm" data-enter-at="440">
-                      <svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true">
-                        <rect width="18" height="4" fill="#0099b5"/><rect y="4" width="18" height="4" fill="#fff"/><rect y="8" width="18" height="4" fill="#1eb53a"/>
-                        <rect y="3.7" width="18" height="0.6" fill="#ce1126"/><rect y="7.7" width="18" height="0.6" fill="#ce1126"/>
-                        <circle cx="3.2" cy="2" r="1.35" fill="#fff"/><circle cx="3.75" cy="2" r="1.2" fill="#0099b5"/>
-                        <circle cx="5.6" cy="1.2" r="0.28" fill="#fff"/><circle cx="6.6" cy="1.2" r="0.28" fill="#fff"/><circle cx="7.6" cy="1.2" r="0.28" fill="#fff"/>
-                        <circle cx="6.1" cy="2.3" r="0.28" fill="#fff"/><circle cx="7.1" cy="2.3" r="0.28" fill="#fff"/><circle cx="8.1" cy="2.3" r="0.28" fill="#fff"/>
-                      </svg>
+                      <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                       Tashkent, Uzbekistan
                     </li>
                     <li data-enter="rise-sm" data-enter-at="570">
-                      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0.5L9.6 6.4L15.5 8L9.6 9.6L8 15.5L6.4 9.6L0.5 8L6.4 6.4Z" fill="currentColor"/></svg>
-                      ACCA student · Aspiring auditor
+                      <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+                      Aspiring auditor
                     </li>
                     <li data-enter="rise-sm" data-enter-at="700">
-                      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0.5L9.6 6.4L15.5 8L9.6 9.6L8 15.5L6.4 9.6L0.5 8L6.4 6.4Z" fill="none" stroke="currentColor"/></svg>
+                      <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
                       BSc accounting &amp; finance · BMU
                     </li>
                   </ul>
@@ -1259,11 +1221,11 @@
               <div>
                 <h2 class="season-title" id="acca-title">
                   <span class="line" data-reveal="words" data-reveal-at="0">The ACCA</span>
-                  <span class="head-row"><span class="line" data-reveal="words" data-reveal-at="130">so far</span><span class="stop" data-reveal="fade" data-reveal-at="240">.</span></span>
+                  <span class="head-row"><span class="line" data-reveal="words" data-reveal-at="130">so far</span></span>
                 </h2>
                 <span class="rule" data-reveal="rule" data-reveal-at="260"></span>
                 <p class="acca-intro" data-reveal="words" data-reveal-at="350" data-stagger="34" data-config="COPY_FAST">Thirteen exams to the qualification. Eight are behind me: Financial Reporting passed, and seven conditional exemptions from my ACCA-accredited degree. Financial Management is next, in December.</p>
-                <p class="acca-status" data-reveal="fade" data-reveal-at="900"><span class="pulse-dot" data-pulse></span>Next: FM · December 2026 session</p>
+                <p class="acca-status" data-reveal="fade" data-reveal-at="900"><span class="pulse-dot"></span>Next: FM · December 2026 session</p>
               </div>
 
               <div class="standings" data-reveal="rise-sm" data-reveal-at="260">
@@ -1274,14 +1236,14 @@
                   <svg viewBox="0 0 37 23" aria-hidden="true">
                     <polygon points="18.5,0.5 36.5,11.5 18.5,22.5 0.5,11.5"/>
                     <line x1="0.5" y1="11.5" x2="36.5" y2="11.5"/>
-                    <polygon data-spin points="0.5,11.5 18.5,0.5 36.5,11.5 18.5,22.5"/>
+                    <polygon points="9.5,11.5 18.5,0.5 27.5,11.5 18.5,22.5"/>
                   </svg>
                   <p class="badge-mark"><span data-letters data-letters-at="430">ACCA</span><span class="year" data-letters data-letters-at="490">/ 2026</span></p>
                 </div>
                 <dl class="plate-stats" aria-label="ACCA progress">
                   <div><dt data-letters data-letters-at="430">8/13</dt><dd data-letters data-letters-at="500">credited</dd></div>
                   <div><dt data-letters data-letters-at="540">FM</dt><dd data-letters data-letters-at="610">next up</dd></div>
-                  <div><dt data-letters data-letters-at="650">Dec</dt><dd data-letters data-letters-at="720">2026.</dd></div>
+                  <div><dt data-letters data-letters-at="650">Dec</dt><dd data-letters data-letters-at="720">2026</dd></div>
                 </dl>
               </div>
             </div>
@@ -1296,13 +1258,13 @@
           <div class="journey-wrap" data-journey>
             <h2 class="journey-title" id="journey-title">
               <span class="line" data-reveal="words" data-reveal-at="0">The path</span>
-              <span class="line"><span data-reveal="words" data-reveal-at="130">to audit</span><span class="stop" data-reveal="fade" data-reveal-at="240">.</span></span>
+              <span class="line"><span data-reveal="words" data-reveal-at="130">to audit</span></span>
             </h2>
             <div class="rail" data-rail aria-hidden="true"></div>
 
             <ol class="rows">
               <li class="row" data-frame="centre">
-                <div class="row-plate" data-travel="20">
+                <div class="row-plate">
                   <figure class="plate">
                     <div class="plate-fill"><div class="journey-card" data-route data-from="2023-02" data-to="2024-02" data-seed="3">
                       <p class="card-head"><span class="card-title">Green Group LLC</span><span>Fuel department manager</span><span class="card-when">Feb 2023 – Feb 2024 · 13 months</span></p>
@@ -1312,11 +1274,11 @@
                   </figure>
                   <span class="row-year" data-year>2023</span>
                 </div>
-                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 300"><b>Fuel and figures.</b> Fuel department manager at Green Group LLC for a US trucking fleet: fuel cards, prices and stops, reported as MPG, idle time and cost per mile.</p></div>
+                <div class="row-copy-layer"><p class="row-copy" style="--cw: 300"><b>Fuel and figures.</b> Fuel department manager at Green Group LLC for a US trucking fleet: fuel cards, prices and stops, reported as MPG, idle time and cost per mile.</p></div>
               </li>
 
               <li class="row" data-frame="side" data-align="right">
-                <div class="row-plate" data-travel="60">
+                <div class="row-plate">
                   <figure class="plate">
                     <div class="plate-fill"><div class="journey-card">
                       <span class="note-ghost" aria-hidden="true">BSc</span>
@@ -1330,7 +1292,7 @@
               </li>
 
               <li class="row" data-frame="centre">
-                <div class="row-plate" data-travel="20">
+                <div class="row-plate">
                   <figure class="plate">
                     <div class="plate-fill"><div class="journey-card" data-route data-from="2024-02" data-to="2025-09" data-seed="8">
                       <p class="card-head"><span class="card-title">Green Group LLC</span><span>Business analyst</span><span class="card-when">Feb 2024 – Sep 2025 · 20 months</span></p>
@@ -1340,11 +1302,11 @@
                   </figure>
                   <span class="row-year" data-year>2024</span>
                 </div>
-                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 300"><b>Into the data.</b> Business analyst at Green Group: requirements and specifications, data cleaning, reports and dashboards for management, and TMS and CRM integrations.</p></div>
+                <div class="row-copy-layer"><p class="row-copy" style="--cw: 300"><b>Into the data.</b> Business analyst at Green Group: requirements and specifications, data cleaning, reports and dashboards for management, and TMS and CRM integrations.</p></div>
               </li>
 
               <li class="row" data-frame="side" data-align="left">
-                <div class="row-plate" data-travel="60">
+                <div class="row-plate">
                   <figure class="plate">
                     <div class="plate-fill"><div class="journey-card">
                       <span class="note-ghost" aria-hidden="true">EY</span>
@@ -1358,7 +1320,7 @@
               </li>
 
               <li class="row" data-frame="centre">
-                <div class="row-plate" data-travel="20">
+                <div class="row-plate">
                   <figure class="plate">
                     <div class="plate-fill"><div class="journey-card" data-route data-from="2025-04" data-to="2025-08" data-seed="5">
                       <p class="card-head"><span class="card-title">T&amp;M Financials</span><span>Co-founder and accountant</span><span class="card-when">Apr 2025 – Aug 2025 · 5 months</span></p>
@@ -1368,11 +1330,11 @@
                   </figure>
                   <span class="row-year" data-year>2025</span>
                 </div>
-                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 290"><b>A firm of my own.</b> Co-founded T&amp;M Financials to invoice for independent US truckers, with Excel trackers for their income, expenses and profit.</p></div>
+                <div class="row-copy-layer"><p class="row-copy" style="--cw: 290"><b>A firm of my own.</b> Co-founded T&amp;M Financials to invoice for independent US truckers, with Excel trackers for their income, expenses and profit.</p></div>
               </li>
 
               <li class="row" data-frame="side" data-align="right">
-                <div class="row-plate" data-travel="60">
+                <div class="row-plate">
                   <figure class="plate">
                     <div class="plate-fill"><div class="journey-card">
                       <span class="note-ghost" aria-hidden="true">Case</span>
@@ -1386,7 +1348,7 @@
               </li>
 
               <li class="row" data-frame="centre">
-                <div class="row-plate" data-travel="20">
+                <div class="row-plate">
                   <figure class="plate">
                     <div class="plate-fill"><div class="journey-card" data-route data-from="2026-06" data-to="now" data-seed="11">
                       <p class="card-head"><span class="card-title">Exely</span><span>Technical specialist</span><span class="card-when">Since Jun 2026</span></p>
@@ -1396,11 +1358,11 @@
                   </figure>
                   <span class="row-year" data-year>Now</span>
                 </div>
-                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 280"><b>Supporting hoteliers.</b> Technical specialist at Exely since June 2026, helping hoteliers set up and use its products.</p></div>
+                <div class="row-copy-layer"><p class="row-copy" style="--cw: 280"><b>Supporting hoteliers.</b> Technical specialist at Exely since June 2026, helping hoteliers set up and use its products.</p></div>
               </li>
 
               <li class="row" data-frame="side" data-align="left">
-                <div class="row-plate" data-travel="60">
+                <div class="row-plate">
                   <figure class="plate">
                     <div class="plate-fill"><div class="journey-card">
                       <span class="note-ghost" aria-hidden="true">FR</span>
@@ -1414,7 +1376,7 @@
               </li>
 
               <li class="row" data-frame="centre">
-                <div class="row-plate" data-travel="20">
+                <div class="row-plate">
                   <figure class="plate">
                     <div class="plate-fill"><div class="journey-card">
                       <span class="note-ghost exam-ghost" aria-hidden="true">FM</span>
@@ -1428,7 +1390,7 @@
                   </figure>
                   <span class="row-year" data-year>Next</span>
                 </div>
-                <div class="row-copy-layer" data-travel="110"><p class="row-copy" style="--cw: 290"><b>FM, then audit.</b> Financial Management in the December 2026 session, on the way to the full qualification and a career in audit.</p></div>
+                <div class="row-copy-layer"><p class="row-copy" style="--cw: 290"><b>FM, then audit.</b> Financial Management in the December 2026 session, on the way to the full qualification and a career in audit.</p></div>
               </li>
             </ol>
           </div>
@@ -1445,7 +1407,7 @@
 
         <h2 class="ed-title" id="education-title">
           <span class="line" data-reveal="words" data-reveal-at="0">Education &amp;</span>
-          <span class="head-row"><span data-reveal="words" data-reveal-at="130">recognition</span><span class="stop" data-reveal="fade" data-reveal-at="240">.</span></span>
+          <span class="head-row"><span data-reveal="words" data-reveal-at="130">recognition</span></span>
         </h2>
 
         <div class="ed-intro">
@@ -1516,7 +1478,7 @@
         <div class="skills-head">
           <h2 class="skills-title" id="skills-title">
             <span class="line" data-reveal="words" data-reveal-at="0">Skills &amp;</span>
-            <span class="head-row"><span data-reveal="words" data-reveal-at="130">languages</span><span class="stop" data-reveal="fade" data-reveal-at="240">.</span></span>
+            <span class="head-row"><span data-reveal="words" data-reveal-at="130">languages</span></span>
           </h2>
           <p class="skills-intro" data-reveal="words" data-reveal-at="350" data-stagger="30" data-config="COPY_FAST">What I work with, and where I used it: the accounting from the ACCA, the data and systems from four jobs.</p>
         </div>
@@ -1588,7 +1550,7 @@
         <div class="side-head">
           <h2 class="side-title" id="side-title">
             <span class="line" data-reveal="words" data-reveal-at="0">On the</span>
-            <span class="head-row"><span data-reveal="words" data-reveal-at="130">side</span><span class="stop" data-reveal="fade" data-reveal-at="240">.</span></span>
+            <span class="head-row"><span data-reveal="words" data-reveal-at="130">side</span></span>
           </h2>
           <p class="side-intro" data-reveal="words" data-reveal-at="350" data-stagger="30" data-config="COPY_FAST">Two games I build in Godot in my spare time. Both are in progress.</p>
         </div>
@@ -1626,7 +1588,7 @@
           <a class="logo contact-logo" href="./" aria-label="khadi.uz, home" data-reveal="fade" data-reveal-at="120">khadi<span>.</span>uz</a>
           <h2 class="contact-title" id="contact-title">
             <span class="line" data-reveal="words" data-reveal-at="0">Let's work</span>
-            <span class="line"><span data-reveal="words" data-reveal-at="130">together</span><span class="stop" data-reveal="fade" data-reveal-at="240">.</span></span>
+            <span class="line"><span data-reveal="words" data-reveal-at="130">together</span></span>
           </h2>
           <p class="contact-mail" data-reveal="fade" data-reveal-at="360"><a href="mailto:khadyatullokh@gmail.com">khadyatullokh@gmail.com</a></p>
           <nav class="contact-nav" aria-label="Footer">
@@ -2103,9 +2065,8 @@
     function contours(canvas) {
       const context = canvas.getContext("2d");
       const colour = readToken(canvas.dataset.contours);
-      const LINE_SCALE = 3.8, LINE_COUNT = 2.5, WAVE_AMOUNT = 0.37, WAVE_SPEED = 1.66, LINE_OPACITY = 0.85;
+      const LINE_SCALE = 3.8, LINE_COUNT = 2.5, WAVE_AMOUNT = 0.37, LINE_OPACITY = 0.85;
       const CELLS = 96;
-      const start = performance.now();
       const field = (x, y, t) => {
         let f = Math.sin(x * 1.0 + t * 0.6) * 0.5;
         f += Math.sin(y * 0.85 - t * 0.45) * 0.45;
@@ -2113,7 +2074,7 @@
         f += Math.sin((x - y) * 0.95 - t * 0.55) * 0.25;
         return f * 0.5 + 0.5;
       };
-      const draw = (now) => {
+      const draw = () => {
         const ratio = Math.min(devicePixelRatio || 1, 2);
         const width = canvas.clientWidth, height = canvas.clientHeight;
         if (!width || !height) return;
@@ -2122,7 +2083,7 @@
         }
         context.setTransform(ratio, 0, 0, ratio, 0, 0);
         context.clearRect(0, 0, width, height);
-        const t = ((reduced ? start : now) - start) / 1000 * WAVE_SPEED;
+        const t = 0;
         const cols = width >= height ? CELLS : Math.max(8, Math.round((CELLS * width) / height));
         const rows = Math.max(8, Math.round((cols * height) / width));
         const stepX = width / cols, stepY = height / rows, aspect = width / height;
@@ -2161,8 +2122,7 @@
           }
         context.stroke(); context.globalAlpha = 1;
       };
-      if (reduced) { new ResizeObserver(() => draw(start)).observe(canvas); return; }
-      loopInView(canvas, draw, () => 24);
+      new ResizeObserver(draw).observe(canvas);
     }
     $$("[data-contours]").forEach(contours);
 
@@ -2314,7 +2274,7 @@
       pointerLerp: 0.17, pacePeak: 0.029, paceAttack: 0.09, paceRelease: 0.205, paceThreshold: 0.06, paceRamp: 0.15,
       scanPeriod: 3.1, scanStagger: 1.2, scanOpacity: 0.22, scanWidth: 0.15,
       sweepWarp: 0.86, sweepLength: 0.67, sweepRadius: 0.33,
-      bgLineScale: 3.8, bgLineCount: 2.5, bgLineThickness: 1.4, bgLineOpacity: 0.85, bgWaveAmount: 0.37, bgWaveSpeed: 1.66,
+      bgLineScale: 3.8, bgLineCount: 2.5, bgLineThickness: 1.4, bgLineOpacity: 0.85, bgWaveAmount: 0.37, bgWaveSpeed: 0,
       bgRevealLightness: 0.62, bgRevealLightnessAlt: 0.44, bgRevealOpacity: 1,
       introDuration: 4, burnStart: 0.14, burnSoftness: 0.02, burnGlow: 4,
       autoSweepAmount: 0, autoSweepPeriod: 5, autoSweepStroke: 0.45, autoSweepHold: 0,
@@ -3156,10 +3116,8 @@
 
       // exams: exempt as squares, passed as a diamond, the next one as a ring; their codes;
       // the gates into each level and its name; the finish, which is the qualification
-      let nextPulse = null;
       const nodes = EXAM_NODES.map((node) => {
         if (node.state === "next") {
-          nextPulse = el("circle", { class: "node-pulse", cx: fmt(node.x), cy: fmt(node.y), r: 7, opacity: 0 });
           return el("circle", { class: "node next", cx: fmt(node.x), cy: fmt(node.y), r: 7 });
         }
         if (node.state === "pass") return el("rect", { class: "node pass", x: node.x - 5.5, y: node.y - 5.5, width: 11, height: 11, transform: `rotate(45 ${fmt(node.x)} ${fmt(node.y)})` });
@@ -3221,8 +3179,7 @@
         renderTrace();
       };
 
-      // the trace's colours; `armed` turns true once it has cooled, and the next exam starts to pulse
-      let armed = false;
+      // the trace's colours
       const palette = (() => {
         const accent = rgbOf(readToken("--accent")), white = [255, 255, 255];
         const mixRgb = (a, b, t) => a.map((v, k) => Math.round(v + (b[k] - v) * t));
@@ -3230,7 +3187,7 @@
       })();
 
       // ---- the lap: one pass when the block arrives, braking into the next exam ----
-      const LAP_MS = 6000, LINE_WIDTH = 5.9, GLOW_WIDTH = 15, HEAD_UNITS = 210, COOL_MS = 800, MARKER_POP_UNITS = 90;
+      const LAP_MS = 6000, LINE_WIDTH = 5.9, HEAD_UNITS = 210, COOL_MS = 800, MARKER_POP_UNITS = 90;
       const traceContext = traceCanvas.getContext("2d");
       let lap = 0, heat = 1;
       const rgba = ([r, g, b], alpha) => `rgb(${r} ${g} ${b} / ${alpha})`;
@@ -3254,11 +3211,6 @@
       const drawTrail = (context, pts) => {
         if (pts.length < 2) return;
         context.lineCap = "round"; context.lineJoin = "round";
-        context.save();
-        context.globalCompositeOperation = "lighter";
-        context.strokeStyle = rgba(palette.accent, 0.05 * heat + 0.02); context.lineWidth = GLOW_WIDTH; stroke(context, pts);
-        context.strokeStyle = rgba(palette.accent, 0.1 * heat + 0.03); context.lineWidth = GLOW_WIDTH * 0.45; stroke(context, pts);
-        context.restore();
         const head = Math.max(2, Math.round(HEAD_UNITS / CIRCUIT_STEP));
         const from = Math.max(0, pts.length - head);
         const tip = pts[pts.length - 1];
@@ -3324,7 +3276,7 @@
       const easeInOutSine = (x) => -(Math.cos(Math.PI * x) - 1) / 2;
       const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
       const lapSpring = new Spring(0, (v) => { lap = v; renderTrace(); });
-      const heatSpring = new Spring(1, (v) => { heat = v; renderTrace(); if (v <= 0.0001) armed = true; });
+      const heatSpring = new Spring(1, (v) => { heat = v; renderTrace(); });
       // The lap's clock at the next exam, so the run brakes into it and stops there.
       const stopTime = (() => {
         const i = CUMULATIVE.findIndex((c) => c >= STOP_AT);
@@ -3342,25 +3294,6 @@
         lapSpring.to(stopTime, { config: { duration: runMs, easing: easeInOutSine } });
         setTimeout(() => heatSpring.to(0, { config: { duration: COOL_MS, easing: easeOutCubic } }), runMs + 30);
       }, { threshold: 0.35 }).observe(frame);
-
-      // the spinning badge and the pulses — paused off screen
-      const SPIN_MS = 10000;
-      const spin = $("[data-spin]", section);
-      const pulse = $("[data-pulse]", section);
-      const loopFrame = (time) => {
-        const turn = ((time % SPIN_MS) / SPIN_MS) * Math.PI * 2;
-        const rx = Math.max(0.5, Math.abs(Math.cos(turn)) * 18);
-        spin.setAttribute("points", `${18.5 - rx},11.5 18.5,0.5 ${18.5 + rx},11.5 18.5,22.5`);
-        const pv = (time % 3200) / 3200;
-        pulse.style.boxShadow = `0 0 0 ${pv * 0.6}em rgb(2 210 227 / ${0.5 * (1 - pv) * (1 - pv)})`;
-        // the next exam pulses once the trace has arrived at it
-        if (nextPulse && armed) {
-          const pe = 1 - (1 - pv) * (1 - pv);
-          nextPulse.setAttribute("r", `${7 + pe * 7 * 3}`);
-          nextPulse.setAttribute("opacity", `${0.6 * (1 - pe) * (1 - pe)}`);
-        }
-      };
-      if (!reduced) loopInView(section, loopFrame, () => 0);
 
       new ResizeObserver(fit).observe(frame);
       fit();
@@ -3397,14 +3330,14 @@
         mark = svg.querySelector(".rail-mark");
         setRun(runValue);
       };
-      // The marker turns five times over the run and comes to rest on the last entry.
+      // The marker runs down the rail and comes to rest on the last entry.
       let runValue = 0;
       const setRun = (p) => {
         runValue = p;
         if (!thread) return;
         const run = p * restAt;
         thread.setAttribute("height", run);
-        mark.setAttribute("transform", `translate(8 ${run}) rotate(${(run / restAt) * 1800})`);
+        mark.setAttribute("transform", `translate(8 ${run})`);
       };
       build();
       narrow.addEventListener("change", build);
@@ -3500,10 +3433,10 @@
           });
           const first = points[0], last = points[points.length - 1];
           labels = [el("text", { x: fmt(first.x - size), y: fmt(first.y - size - 10) })];
-          labels[0].textContent = monthName(from, true).toUpperCase();
+          labels[0].textContent = monthName(from, true);
           if (count > 1) {
             labels.push(el("text", { x: fmt(last.x + size), y: fmt(last.y - size - 10), "text-anchor": "end" }));
-            labels[1].textContent = monthName(to, true).toUpperCase();
+            labels[1].textContent = monthName(to, true);
           }
           active = -1;
           tip.classList.remove("is-on");
@@ -3562,22 +3495,9 @@
         return { play: (delay) => draw.to(1, { config: CONFIG.REVEAL, delay }) };
       };
 
-      // Three parallax layers per row: each passes its design position mid-screen.
-      const stacked = matchMedia("(max-width: 1023px)");
       for (const row of rowsEls) {
-        const layers = $$("[data-travel]", row);
         const route = $("[data-route]", row);
         const routeIn = route ? routeCard(route) : null;
-        scrub(row, "top_bottom", "bottom_top", (p) => {
-          const unit = section.clientWidth / 1440;
-          for (const layer of layers) {
-            if (stacked.matches) { layer.style.top = ""; layer.style.bottom = ""; continue; }
-            const travel = Number(layer.dataset.travel) * unit;
-            const offset = travel - 2 * travel * p;
-            layer.style.top = `${offset}px`;
-            layer.style.bottom = `${-offset}px`;
-          }
-        });
 
         // Years assemble letter by letter, then a centre row's settles back to 40%.
         const year = $("[data-year]", row);
@@ -3604,7 +3524,7 @@
     {
       const section = $("#education");
       const strip = $("[data-strip]");
-      // In order; the `live` entry is the one ahead, and the connectors crawl toward it.
+      // In order; the `live` entry is the one ahead.
       const LOG = [
         { round: "EY · Mar 2025", name: "Career Launch", date: "Finalist", mark: "done" },
         { round: "Tashkent · Apr 2025", name: "World Scholar's Cup", date: "Co-organizer", mark: "done" },
@@ -3621,7 +3541,6 @@
         link.className = "ed-link";
         link.style.left = u(c + 34);
         link.style.width = u(CENTRES[i + 1] - c - 68);
-        link.dataset.dir = i < live ? "1" : "-1";
         strip.append(link); links.push(link);
       });
       LOG.forEach((entry, i) => {
@@ -3635,7 +3554,7 @@
         mark.className = "ed-mark";
         mark.style.left = u(CENTRES[i]);
         mark.innerHTML = entry.mark === "done" ? `<span class="done"></span>`
-          : entry.mark === "live" ? `<svg viewBox="0 0 11 11"><circle data-live-pulse cx="5.5" cy="5.5" r="5.5" style="fill: none; stroke: var(--accent)" vector-effect="non-scaling-stroke"/><circle cx="5.5" cy="5.5" r="5.5" style="fill: var(--accent)"/></svg>`
+          : entry.mark === "live" ? `<svg viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5.5" style="fill: var(--accent)"/></svg>`
           : `<svg viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5" fill="none" stroke="#fff" vector-effect="non-scaling-stroke"/></svg>`;
         strip.append(mark); marks.push(mark);
       });
@@ -3661,27 +3580,7 @@
       ];
       forward(strip, () => items.forEach(({ r, at }) => r.play(at)), () => items.forEach(({ r }) => r.reset()));
 
-      // The connectors crawl toward the live round; the live marker pulses.
-      const CRAWL_MS = 5200, PULSE_MS = 3200, PULSE_REACH = 3.4;
-      const livePulse = $("[data-live-pulse]", strip);
-      if (!reduced) {
-        loopInView(strip, (time) => {
-          const unit = section.clientWidth / 1440;
-          const shift = ((time % CRAWL_MS) / CRAWL_MS) * 11.45 * unit;
-          for (const link of links) link.style.backgroundPositionX = `${Number(link.dataset.dir) * shift}px`;
-          const v = (time % PULSE_MS) / PULSE_MS, e = 1 - (1 - v) * (1 - v);
-          livePulse.setAttribute("r", `${5.5 + e * 5.5 * PULSE_REACH}`);
-          livePulse.setAttribute("opacity", `${0.5 * (1 - e) * (1 - e)}`);
-        }, () => 0);
-      }
 
-      // The figure drifts up only, over the block's crossing.
-      const figure = $("[data-ed-figure]");
-      const wide = matchMedia("(min-width: 1024px)");
-      scrub(section, "top_bottom", "bottom_top", (p) => {
-        figure.style.top = wide.matches ? `${-p * 48 * (section.clientWidth / 1440)}px` : "";
-        figure.style.bottom = wide.matches ? `${p * 48 * (section.clientWidth / 1440)}px` : "";
-      });
       revealBlock(section);
     }
 
@@ -3692,16 +3591,10 @@
     revealBlock($("#side"));
 
     // ---------------------------------------------------------------
-    // 7 · Contact: the figure rides back into place as the page bottoms out.
+    // 7 · Contact.
     // ---------------------------------------------------------------
     {
       const section = $("#contact");
-      const layer = $("[data-foot-figure]");
-      scrub(section, "top_bottom", "bottom_bottom", (p) => {
-        const offset = (1 - p) * 60 * (section.clientWidth / 1440);
-        layer.style.top = `${offset}px`;
-        layer.style.bottom = `${-offset}px`;
-      });
       revealBlock(section);
     }
   </script>
