@@ -19,6 +19,11 @@
   --raw-color-ink-alpha-60: rgb(9 10 11 / 0.6);
   --raw-color-cyan-400: #02d2e3;      /* the accent */
   --raw-color-cyan-700: #007a85;      /* the accent as text on light ground (AA) */
+  --raw-color-cyan-600: #00a6b5;      /* architecture map: rendering */
+  --raw-color-amber-400: #f0b44c;
+  --raw-color-amber-600: #bc8126;     /* architecture map: content and career */
+  --raw-color-violet-300: #b9a8f7;
+  --raw-color-violet-500: #8a72e0;    /* architecture map: infrastructure and styling */
   --raw-color-cyan-alpha-25: rgb(2 210 227 / 0.25);
   --raw-color-stone-600: #535450;     /* journey: plate outline */
   --raw-color-white-alpha-10: rgb(255 255 255 / 0.1);
@@ -64,6 +69,13 @@
   --map-island-side: var(--raw-color-ink-900);
   --map-island-edge: var(--raw-color-white-alpha-10);
   --map-mark: var(--raw-color-ice-50);
+  /* architecture map domains: the deeper tone marks the scene, the lighter one sets their numbers */
+  --domain-rendering: var(--raw-color-cyan-600);
+  --domain-rendering-text: var(--raw-color-cyan-400);
+  --domain-content: var(--raw-color-amber-600);
+  --domain-content-text: var(--raw-color-amber-400);
+  --domain-infrastructure: var(--raw-color-violet-500);
+  --domain-infrastructure-text: var(--raw-color-violet-300);
   --timeline-outline: var(--raw-color-stone-600);
   --timeline-fill: var(--raw-color-white-alpha-10);
   --timeline-rail: var(--raw-color-white-alpha-20);

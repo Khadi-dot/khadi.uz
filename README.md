@@ -58,7 +58,7 @@ The photos arrived at 768×1024, smaller than the page shows them on a Retina sc
 
 ## Refresh the architecture map
 
-The map is a snapshot. After changing the site, rebuild it in Claude Code with `/graphify . --update` (or `/graphify .` for a full rebuild), then run `python3 tools/export-architecture.py` and commit `architecture/graph.json`. graphify's own output stays in `graphify-out/`, which is never committed. The export joins the same real-world thing named in several files into one part, and `FIXES` in the script corrects any note graphify got wrong.
+The map is a snapshot. After changing the site, rebuild it in Claude Code with `/graphify . --update` (or `/graphify .` for a full rebuild), then run `python3 tools/export-architecture.py` and commit `architecture/graph.json`. graphify's own output stays in `graphify-out/`, which is never committed. The export joins the same real-world thing named in several files into one part, and `FIXES` in the script corrects any note graphify got wrong. `DOMAINS` in the script puts each area in one of three colour-coded domains (rendering, content and career, infrastructure and styling); a new area that graphify adds needs a line there.
 
 ## Update the CV
 

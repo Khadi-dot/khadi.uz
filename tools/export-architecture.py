@@ -38,6 +38,23 @@ RELATIONS = {
 KINDS = {"code": "code", "document": "page", "paper": "page", "image": "page", "concept": "idea", "rationale": "reason"}
 
 
+# Each area belongs to one of three domains, which colour it on the page. Keyed by the
+# area's name as graphify labelled it (in sentence case); a new area falls to "infrastructure".
+DOMAINS = {
+    "rendering": ["Motion engine & reveals", "Hero boot & fallback", "Shaders, contours & tokens"],
+    "content": ["Brand system & CV page", "Page sections & career facts", "ACCA map & side games", "CV content & journey cards"],
+    "infrastructure": ["Hosting, assets & 404", "Brand motion principles", "Menu sheet navigation", "Soft seams", "Root scaling"],
+}
+
+
+def domain_of(name):
+    for domain, names in DOMAINS.items():
+        if name in names:
+            return domain
+    print(f"note: area {name!r} has no domain in DOMAINS; using infrastructure")
+    return "infrastructure"
+
+
 def base_label(label):
     """The name without its parenthetical: 'Exely (Technical Specialist)' -> 'exely'."""
     return re.sub(r"\s*\(.*$", "", label).strip().lower()
@@ -108,7 +125,7 @@ def main():
     sizes = defaultdict(int)
     for node in out_nodes.values():
         sizes[node["area"]] += 1
-    areas = [{"id": a, "name": names[a], "size": sizes[a]} for a in sorted(sizes, key=lambda a: -sizes[a])]
+    areas = [{"id": a, "name": names[a], "size": sizes[a], "domain": domain_of(names[a])} for a in sorted(sizes, key=lambda a: -sizes[a])]
 
     sets = [{"label": h["label"], "nodes": sorted({canon(i) for i in h["nodes"] if canon(i) in out_nodes})}
             for h in g["graph"].get("hyperedges", [])]

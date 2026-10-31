@@ -52,7 +52,7 @@
       color: var(--foreground-on-dark);
       text-shadow: 0 0 6px var(--surface-black), 0 0 14px var(--surface-black);
     }
-    .area-lbl b { margin-right: 0.35em; color: var(--accent); }
+    .area-lbl b { margin-right: 0.35em; color: var(--domain-text, var(--accent)); }
 
     .eyebrow {
       margin: 0;
@@ -149,11 +149,15 @@
     }
     .row:hover, .row:focus-visible, .row.is-on { color: var(--accent); }
     .results .row { padding: 0.6rem 0.9rem; border-bottom-color: var(--border-on-dark); }
-    .row .n { flex: none; width: 1.6rem; font-family: var(--font-display); font-weight: 500; color: var(--accent); }
+    .row .n { flex: none; width: 1.6rem; font-family: var(--font-display); font-weight: 500; color: var(--domain-text, var(--accent)); }
     .row .name { flex: 1; min-width: 0; }
     .row .count { flex: none; color: var(--foreground-on-dark-muted); font-variant-numeric: tabular-nums; }
     .areas .row { width: 100%; }
 
+    .domains { display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+    .domains li { display: flex; align-items: center; gap: 0.55rem; font-size: max(var(--type-eyebrow), var(--type-floor)); color: var(--foreground-on-dark-muted); }
+    .domains i { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--domain); box-shadow: 0 0 0 3px color-mix(in srgb, var(--domain) 25%, transparent); }
+    .area-link i { display: inline-block; width: 8px; height: 8px; margin-right: 0.5em; border-radius: 50%; background: var(--domain); vertical-align: 1px; }
     .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem 1rem; margin: 1rem 0 0; padding: 0; list-style: none; }
     .legend li { display: flex; align-items: center; gap: 0.55rem; font-size: max(var(--type-eyebrow), var(--type-floor)); color: var(--foreground-on-dark-muted); }
     .legend svg { flex: none; width: 16px; height: 16px; overflow: visible; }
@@ -225,7 +229,7 @@
     .list h2 { margin: 0 0 2rem; font: 500 3rem/var(--leading-headline) var(--font-display); text-transform: uppercase; color: var(--foreground-on-dark); }
     .list-areas { display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: 2.5rem 2rem; }
     .list h3 { margin: 0 0 0.5rem; font: 500 1.25rem/1 var(--font-display); }
-    .list h3 span { color: var(--accent); }
+    .list h3 span { color: var(--domain-text, var(--accent)); }
     .list ul { margin: 0; padding: 0; list-style: none; }
     .list .row { width: 100%; }
     .list .close { top: 1.25rem; right: 1.5rem; }
@@ -288,6 +292,7 @@
       <details class="key" data-key open>
         <summary>Areas and key</summary>
         <ol class="areas" data-areas></ol>
+        <ul class="domains" data-domains aria-label="Domains"></ul>
         <ul class="legend" aria-label="Key">
           <li><svg viewBox="-8 -8 16 16" aria-hidden="true"><circle r="6" fill="#b6c1c8"/></svg>Code</li>
           <li><svg viewBox="-8 -8 16 16" aria-hidden="true"><rect x="-5.5" y="-5.5" width="11" height="11" fill="#ffffff"/></svg>Page or doc</li>
@@ -335,6 +340,10 @@
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const token = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     const COLOR = { ink: token("--foreground-on-dark"), steel: token("--foreground-on-dark-muted"), accent: token("--accent"), ground: token("--surface-black") };
+    // Three domains colour the areas: `mark` tints the scene, `text` sets the numbers. Validated as a
+    // categorical palette for the dark ground (lightness band, chroma, colour-blind separation).
+    const DOMAIN = Object.fromEntries([["rendering", "Rendering"], ["content", "Content and career"], ["infrastructure", "Infrastructure and styling"]]
+      .map(([id, name]) => [id, { id, name, mark: token(`--domain-${id}`), text: token(`--domain-${id}-text`) }]));
     const KIND = { code: { name: "Code" }, page: { name: "Page or doc" }, idea: { name: "Idea or entity" }, reason: { name: "Design reason" } };
     // a link read from the other end
     const REVERSE = { "calls": "called by", "refers to": "referred to by", "implements": "implemented by", "explains": "explained by" };
@@ -367,7 +376,7 @@
     // ---------------------------------------------------------------
     const nodes = data.nodes;
     const byId = new Map(nodes.map((n) => [n.id, n]));
-    const areas = data.areas.map((a, i) => ({ ...a, i, members: [] }));
+    const areas = data.areas.map((a, i) => ({ ...a, i, members: [], dom: DOMAIN[a.domain] || DOMAIN.infrastructure }));
     const areaById = new Map(areas.map((a) => [a.id, a]));
     const links = data.links.map((l) => ({ ...l, s: byId.get(l.source), t: byId.get(l.target) }));
     for (const n of nodes) {
@@ -414,12 +423,12 @@
       for (let step = 0; step < 320; step += 1) {
         for (let i = 0; i < m.length; i += 1) for (let j = i + 1; j < m.length; j += 1) {
           const p = m[i], q = m[j];
-          const dx = q.x - p.x, dy = q.y - p.y, dz = q.z - p.z, d2 = Math.max(1, dx * dx + dy * dy + dz * dz), k = 70 * alpha / d2;
+          const dx = q.x - p.x, dy = q.y - p.y, dz = q.z - p.z, d2 = Math.max(1, dx * dx + dy * dy + dz * dz), k = 130 * alpha / d2;
           p.vx -= dx * k; p.vy -= dy * k; p.vz -= dz * k; q.vx += dx * k; q.vy += dy * k; q.vz += dz * k;
-          separate(p, q, p.r + q.r + 12);
+          separate(p, q, p.r + q.r + 18);
         }
         for (const l of inside) {
-          const dx = l.t.x - l.s.x, dy = l.t.y - l.s.y, dz = l.t.z - l.s.z, d = Math.hypot(dx, dy, dz) || 1, f = ((d - (l.s.r + l.t.r + 16)) / d) * 0.08 * alpha;
+          const dx = l.t.x - l.s.x, dy = l.t.y - l.s.y, dz = l.t.z - l.s.z, d = Math.hypot(dx, dy, dz) || 1, f = ((d - (l.s.r + l.t.r + 22)) / d) * 0.08 * alpha;
           l.s.vx += dx * f; l.s.vy += dy * f; l.s.vz += dz * f; l.t.vx -= dx * f; l.t.vy -= dy * f; l.t.vz -= dz * f;
         }
         for (const n of m) {
@@ -440,7 +449,7 @@
         const last = order[order.length - 1];
         order.push(areas.filter((a) => !order.includes(a)).sort((a, b) => (weight[last.i][b.i] - weight[last.i][a.i]) || (b.size - a.size))[0]);
       }
-      const GAP = 34;
+      const GAP = 46;
       const total = order.reduce((t, a) => t + 2 * a.R + GAP, 0);
       const ringR = total / (Math.PI * 2);
       let along = 0;
@@ -487,6 +496,7 @@
     scene.add(key);
 
     const accent = new THREE.Color(COLOR.accent), steel = new THREE.Color(COLOR.steel), white = new THREE.Color(COLOR.ink);
+    for (const a of areas) { a.mark = new THREE.Color(a.dom.mark); a.light = new THREE.Color(a.dom.text); }
     const shellVertex = `
       varying vec3 vNormal;
       varying vec3 vView;
@@ -527,12 +537,12 @@
     for (const n of nodes) {
       n.group = new THREE.Group();
       n.shell = new THREE.Mesh(shellGeometry, new THREE.ShaderMaterial({
-        uniforms: { uColor: { value: steel.clone() }, uAccent: { value: accent }, uLit: { value: 0 }, uOpacity: { value: 1 } },
+        uniforms: { uColor: { value: steel.clone().lerp(n.areaRef.mark, 0.45) }, uAccent: { value: n.areaRef.light }, uLit: { value: 0 }, uOpacity: { value: 1 } },
         vertexShader: shellVertex, fragmentShader: shellFragment, transparent: true, depthWrite: false,
       }));
       n.shell.renderOrder = 2;
       n.core = new THREE.Mesh(coreGeometry[n.kind], new THREE.MeshStandardMaterial({
-        color: n.kind === "page" ? white : steel, roughness: 0.35, metalness: 0.15, emissive: accent, emissiveIntensity: 0, transparent: true,
+        color: n.kind === "page" ? white : steel, roughness: 0.35, metalness: 0.15, emissive: n.areaRef.light, emissiveIntensity: 0, transparent: true,
       }));
       n.core.scale.setScalar(0.42);
       n.core.rotation.set(random() * 6, random() * 6, 0);
@@ -542,25 +552,53 @@
       n.lit = 0; n.fade = 1;
     }
 
-    // links: faint threads between bubbles, cyan around the one in focus; inferred ones dashed
+    // links: faint threads, quieter still between clusters; inferred ones dashed. Around the part in focus
+    // they light as a gradient from its colour to each neighbour's, with a soft glow along them.
     const buildLines = (list, material) => {
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(list.length * 6), 3));
-      geometry.setAttribute("color", new THREE.BufferAttribute(new Float32Array(list.length * 6), 3));
+      geometry.setAttribute("color", new THREE.BufferAttribute(new Float32Array(list.length * 8), 4));
       const lines = new THREE.LineSegments(geometry, material);
       lines.frustumCulled = false;
       scene.add(lines);
       return { list, lines, geometry };
     };
-    const solid = buildLines(links.filter((l) => !l.inferred), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
-    const dashed = buildLines(links.filter((l) => l.inferred), new THREE.LineDashedMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, dashSize: 2, gapSize: 2.2 }));
+    const solid = buildLines(links.filter((l) => !l.inferred), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false }));
+    const dashed = buildLines(links.filter((l) => l.inferred), new THREE.LineDashedMaterial({ vertexColors: true, transparent: true, depthWrite: false, dashSize: 2, gapSize: 2.2 }));
 
-    // pulses that run along lit links, from the part that does to the part done to
-    const pulseGeometry = new THREE.BufferGeometry();
-    pulseGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(64 * 3), 3));
-    const pulses = new THREE.Points(pulseGeometry, new THREE.PointsMaterial({ color: accent, size: 5, sizeAttenuation: false, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
-    pulses.frustumCulled = false;
-    scene.add(pulses);
+    // a soft round spot, for the glow along lit links, the pulses and the hulls
+    const softSpot = (() => {
+      const c = document.createElement("canvas");
+      c.width = c.height = 128;
+      const g = c.getContext("2d"), grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+      grad.addColorStop(0, "rgba(255,255,255,0.9)"); grad.addColorStop(0.35, "rgba(255,255,255,0.42)");
+      grad.addColorStop(0.7, "rgba(255,255,255,0.1)"); grad.addColorStop(1, "rgba(255,255,255,0)");
+      g.fillStyle = grad; g.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(c);
+    })();
+    const spotPoints = (count, size, opacity) => {
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(count * 3), 3));
+      geometry.setAttribute("color", new THREE.BufferAttribute(new Float32Array(count * 3), 3));
+      geometry.setDrawRange(0, 0);
+      const points = new THREE.Points(geometry, new THREE.PointsMaterial({ map: softSpot, vertexColors: true, size, sizeAttenuation: false, transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false }));
+      points.frustumCulled = false;
+      scene.add(points);
+      return { points, geometry, count };
+    };
+    const GLOW_STEPS = 10;
+    const glow = spotPoints(64 * GLOW_STEPS, 16, 0.32);   // the glow along each lit link
+    const pulses = spotPoints(64, 13, 0.95);             // a pulse running from the part that does to the part done to
+
+    // hulls: a faint blurred glow and a thin boundary in each area's colour, so the clusters read as modules
+    for (const a of areas) {
+      a.hullGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: softSpot, color: a.mark, transparent: true, opacity: 0.1, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending }));
+      a.hullGlow.renderOrder = -2;
+      a.hullEdge = new THREE.Mesh(new THREE.RingGeometry(1, 1.012, 96), new THREE.MeshBasicMaterial({ color: a.mark, transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthTest: false, depthWrite: false }));
+      a.hullEdge.renderOrder = -1;
+      a.hullLift = 0;
+      scene.add(a.hullGlow, a.hullEdge);
+    }
 
     // a ring that breathes around the chosen bubble, always facing you
     const ring = new THREE.Mesh(new THREE.RingGeometry(1, 1.07, 64), new THREE.MeshBasicMaterial({ color: accent, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
@@ -588,11 +626,13 @@
       n.tag = document.createElement("span");
       n.tag.className = "lbl";
       n.tag.textContent = n.text.length > 38 ? `${n.text.slice(0, 37)}…` : n.text;
+      n.tagAlpha = 0;
       labelLayer.append(n.tag);
     }
     for (const a of areas) {
       a.tag = document.createElement("span");
       a.tag.className = "area-lbl";
+      a.tag.style.setProperty("--domain-text", a.dom.text);
       a.tag.innerHTML = `<b>${two(a.i)}</b>${escape(a.name)}`;
       labelLayer.append(a.tag);
     }
@@ -661,7 +701,7 @@
     // ---------------------------------------------------------------
     // State: what is pointed at, chosen, or picked out by area.
     // ---------------------------------------------------------------
-    let hover = null, selected = null, hoverArea = null, introStart = null;
+    let hover = null, selected = null, hoverArea = null, hoverCluster = null, introStart = null;
     const focusNode = () => hover || selected;
     const isLit = (n) => {
       const f = focusNode();
@@ -670,15 +710,26 @@
       return true;
     };
     let linesDirty = true;
+    // link alphas: 6% between clusters and 18% inside one; around the part in focus a gradient from its
+    // colour at full strength to the neighbour's colour; with a part or an area picked, the rest nearly vanish
+    const LINK_ACROSS = 0.06, LINK_INSIDE = 0.18, LINK_AWAY = 0.025;
     const paintLines = () => {
       const f = focusNode();
-      const quiet = new THREE.Color(0x1c2226), inside = new THREE.Color(0x3a434a), off = new THREE.Color(0x0d1012);
+      const put = (arr, i, colour, alpha) => { arr[i] = colour.r; arr[i + 1] = colour.g; arr[i + 2] = colour.b; arr[i + 3] = alpha; };
       for (const set of [solid, dashed]) {
         const colours = set.geometry.attributes.color.array;
         set.list.forEach((l, i) => {
-          const on = f ? (l.s === f || l.t === f) : hoverArea ? (l.s.areaRef === hoverArea && l.t.areaRef === hoverArea) : false;
-          const c = on ? accent : (f || hoverArea) ? off : l.s.areaRef === l.t.areaRef ? inside : quiet;
-          c.toArray(colours, i * 6); c.toArray(colours, i * 6 + 3);
+          const o = i * 8;
+          if (f && (l.s === f || l.t === f)) {
+            const near = l.s === f ? 0 : 4, far = 4 - near, other = l.s === f ? l.t : l.s;
+            put(colours, o + near, f.areaRef.light, 1);
+            put(colours, o + far, other.areaRef.mark, 0.55);
+          } else if (!f && hoverArea && l.s.areaRef === hoverArea && l.t.areaRef === hoverArea) {
+            put(colours, o, hoverArea.light, 0.6); put(colours, o + 4, hoverArea.light, 0.6);
+          } else {
+            const alpha = f || hoverArea ? LINK_AWAY : l.s.areaRef === l.t.areaRef ? LINK_INSIDE : LINK_ACROSS;
+            put(colours, o, steel, alpha); put(colours, o + 4, steel, alpha);
+          }
         });
         set.geometry.attributes.color.needsUpdate = true;
       }
@@ -762,22 +813,55 @@
       solid.lines.material.opacity = dashed.lines.material.opacity = intro01;
 
       const f = focusNode();
-      const p = pulseGeometry.attributes.position.array;
-      let count = 0;
-      if (f && !reduced && arrive >= 1) {
+      const tint = new THREE.Color();
+      let glowCount = 0, pulseCount = 0;
+      if (f && arrive >= 1) {
+        const gp = glow.geometry.attributes.position.array, gc = glow.geometry.attributes.color.array;
+        const pp = pulses.geometry.attributes.position.array, pc = pulses.geometry.attributes.color.array;
         const phase = (time % 1600) / 1600;
         for (const l of links) {
-          if ((l.s !== f && l.t !== f) || count >= 64) continue;
-          v.lerpVectors(l.s.cur, l.t.cur, phase).toArray(p, count * 3);
-          count += 1;
+          if (l.s !== f && l.t !== f) continue;
+          const other = l.s === f ? l.t : l.s;
+          for (let k = 0; k < GLOW_STEPS && glowCount < glow.count; k += 1) {
+            const u = k / (GLOW_STEPS - 1);
+            v.lerpVectors(f.cur, other.cur, u).toArray(gp, glowCount * 3);
+            tint.copy(f.areaRef.light).lerp(other.areaRef.mark, u).multiplyScalar(1 - 0.55 * u).toArray(gc, glowCount * 3);
+            glowCount += 1;
+          }
+          if (!reduced && pulseCount < pulses.count) {
+            v.lerpVectors(l.s.cur, l.t.cur, phase).toArray(pp, pulseCount * 3);
+            tint.copy(l.s.areaRef.light).lerp(l.t.areaRef.light, phase).toArray(pc, pulseCount * 3);
+            pulseCount += 1;
+          }
         }
-        moving = true;
+        if (!reduced) moving = true;
       }
-      pulseGeometry.setDrawRange(0, count);
-      pulseGeometry.attributes.position.needsUpdate = true;
+      for (const [set, count] of [[glow, glowCount], [pulses, pulseCount]]) {
+        set.geometry.setDrawRange(0, count);
+        set.geometry.attributes.position.needsUpdate = true;
+        set.geometry.attributes.color.needsUpdate = true;
+      }
+
+      // hulls ride with their cluster's sway; picked clusters brighten, unrelated ones fade back
+      for (const a of areas) {
+        const on = hoverCluster === a || hoverArea === a || (f && f.areaRef === a);
+        const away = (f && ![...f.near].some((m) => m.areaRef === a)) || (hoverArea && hoverArea !== a);
+        const target = on ? 1 : away ? -1 : 0;
+        a.hullLift += (target - a.hullLift) * (reduced ? 1 : 0.15);
+        if (Math.abs(target - a.hullLift) > 0.01) moving = true;
+        v.copy(a.anchor).add(a.sway);
+        a.hullGlow.position.copy(v); a.hullEdge.position.copy(v);
+        a.hullGlow.scale.setScalar(a.R * 2.7);
+        a.hullEdge.scale.setScalar(a.R * 1.02);
+        a.hullEdge.quaternion.copy(camera.quaternion);
+        const intro = clamp01((arrive - 0.3) / 0.7);
+        a.hullGlow.material.opacity = intro * (0.1 + 0.08 * Math.max(0, a.hullLift) - 0.07 * Math.max(0, -a.hullLift));
+        a.hullEdge.material.opacity = intro * (0.16 + 0.24 * Math.max(0, a.hullLift) - 0.12 * Math.max(0, -a.hullLift));
+      }
 
       ring.visible = Boolean(selected);
       if (selected) {
+        ring.material.color.copy(selected.areaRef.light);
         const grow = reduced ? 0 : (time % 1800) / 1800;
         ring.position.copy(selected.cur);
         ring.quaternion.copy(camera.quaternion);
@@ -787,7 +871,7 @@
       if (!reduced) dust.rotation.y += dt * 0.01;
 
       renderer.render(scene, camera);
-      placeLabels(arrive);
+      if (placeLabels(arrive)) moving = true;
       running = moving;
       if (moving) requestAnimationFrame(loop);
     }
@@ -816,7 +900,7 @@
         const swayed = v.clone(), at = project(swayed), d = depthOf(swayed);
         at.y -= (a.R * k) / d + 4;
         const w = a.tag.offsetWidth, h = a.tag.offsetHeight;
-        const on = hoverArea === a || (f && f.areaRef === a);
+        const on = hoverArea === a || hoverCluster === a || (f && f.areaRef === a);
         const ax = Math.max(R.left + 4, Math.min(at.x - w / 2, R.right - w - 4));
         if (!at.front || d < 1 || !inRoom(at) || !free(ax - 4, at.y - h, w + 8, h + 4) && !on) { hide(a.tag); continue; }
         show(a.tag, ax, at.y - h, (anyFocus && !on ? 0.3 : on ? 1 : 0.85) * depthFade(d));
@@ -824,10 +908,18 @@
       for (const n of nodes) n.placed = false;
       if (arrive >= 1) {
         const wanted = [];
-        if (f) wanted.push(f, ...[...f.near].filter((n) => n !== f).sort((a, b) => b.degree - a.degree));
-        else if (hoverArea) wanted.push(...[...hoverArea.members].sort((a, b) => b.degree - a.degree));
-        else wanted.push(...nodes.filter((n) => n.degree >= 8 || orbit.dist < spread * 1.2).sort((a, b) => b.degree - a.degree));
+        const byDegree = (list) => [...list].sort((a, b) => b.degree - a.degree);
+        if (f) wanted.push(f, ...byDegree([...f.near].filter((n) => n !== f)));
+        for (const a of [hoverArea, hoverCluster]) if (a) wanted.push(...byDegree(a.members));
+        // a cluster opens once it is large on screen, as when zoomed into
+        const OPEN = wide.matches ? 170 : 120;
+        for (const a of areas) {
+          v.copy(a.anchor).add(a.sway);
+          const c = v.clone(), at = project(c), d = depthOf(c);
+          if (at.front && d > 1 && inRoom(at) && (a.R * k) / d > OPEN) wanted.push(...byDegree(a.members));
+        }
         for (const n of wanted) {
+          if (n.placed) continue;
           const at = project(n.cur), d = depthOf(n.cur);
           if (!at.front || d < 1 || (!inRoom(at) && n !== f)) continue;
           const rpx = (n.r * k) / d;
@@ -837,10 +929,21 @@
           n.placed = true;
           n.tag.classList.toggle("is-self", n === f);
           n.tag.classList.toggle("is-hot", anyFocus && n !== f);
-          show(n.tag, x, y, depthFade(d));
+          n.tagTarget = depthFade(d);
+          n.tag.style.transform = `translate(${Math.max(R.left + 4, x).toFixed(1)}px, ${y.toFixed(1)}px)`;
         }
       }
-      for (const n of nodes) if (!n.placed) hide(n.tag);
+      // names fade in and out rather than popping; returns true while any is still fading
+      let fading = false;
+      for (const n of nodes) {
+        const target = n.placed ? n.tagTarget : 0;
+        n.tagAlpha += (target - n.tagAlpha) * (reduced ? 1 : 0.2);
+        if (Math.abs(target - n.tagAlpha) > 0.01) fading = true; else n.tagAlpha = target;
+        if (n.tagAlpha < 0.01) { hide(n.tag); continue; }
+        n.tag.style.opacity = n.tagAlpha.toFixed(3);
+        n.tag.style.visibility = "visible";
+      }
+      return fading;
     }
 
     // ---------------------------------------------------------------
@@ -878,6 +981,18 @@
       }
       return best;
     };
+    const clusterAt = (x, y) => {
+      let best = null, bestDepth = Infinity;
+      const k = focal();
+      for (const a of areas) {
+        v.copy(a.anchor).add(a.sway);
+        const c = v.clone(), at = project(c), d = depthOf(c);
+        if (!at.front || d < 1) continue;
+        if (Math.hypot(at.x - x, at.y - y) < (a.R * k) / d && d < bestDepth) { best = a; bestDepth = d; }
+      }
+      return best;
+    };
+    const setCluster = (a) => { if (a !== hoverCluster) { hoverCluster = a; kick(); } };
     const showTip = (n, x, y) => {
       if (!n) { tip.hidden = true; return; }
       tip.innerHTML = `<b>${escape(n.text)}</b><span>${KIND[n.kind].name} · ${escape(n.areaRef.name)} · ${n.degree} link${n.degree === 1 ? "" : "s"}</span>`;
@@ -905,6 +1020,7 @@
         if (e.pointerType === "touch") return;
         const n = nodeAt(e.clientX, e.clientY);
         setHover(n);
+        setCluster(n ? n.areaRef : clusterAt(e.clientX, e.clientY));
         showTip(n, e.clientX, e.clientY);
         return;
       }
@@ -914,8 +1030,7 @@
       idleSince = performance.now();
       if (gesture.type === "pinch" && pointers.size === 2) {
         const [a, b] = [...pointers.values()];
-        orbit.dist = Math.min(spread * 8, Math.max(40, gesture.dist * (gesture.d / Math.hypot(a.x - b.x, a.y - b.y))));
-        userMoved = true; flight = null; kick();
+        zoomBy(gesture.dist * (gesture.d / Math.hypot(a.x - b.x, a.y - b.y)) / orbit.dist, (a.x + b.x) / 2, (a.y + b.y) / 2);
         return;
       }
       gesture.moved += Math.hypot(dx, dy);
@@ -941,12 +1056,22 @@
     canvas.addEventListener("pointercancel", release);
     canvas.addEventListener("pointerleave", (e) => {
       if (e.pointerType !== "mouse" || gesture) return;
-      setHover(null); tip.hidden = true;
+      setHover(null); setCluster(null); tip.hidden = true;
     });
+    // zooming in over a cluster drifts the view toward it, so a cluster can be zoomed into and opened
+    const zoomBy = (factor, x, y) => {
+      const before = orbit.dist;
+      orbit.dist = Math.min(spread * 8, Math.max(40, orbit.dist * factor));
+      const into = clusterAt(x, y);
+      if (into && orbit.dist < before) {
+        v.copy(into.anchor).add(into.sway);
+        orbit.target.lerp(v, Math.min(0.35, (1 - orbit.dist / before) * 2.2));
+      }
+      userMoved = true; flight = null; idleSince = performance.now(); kick();
+    };
     canvas.addEventListener("wheel", (e) => {
       e.preventDefault();
-      orbit.dist = Math.min(spread * 8, Math.max(40, orbit.dist * Math.exp(e.deltaY * (e.ctrlKey ? 0.01 : 0.0012))));
-      userMoved = true; flight = null; idleSince = performance.now(); kick();
+      zoomBy(Math.exp(e.deltaY * (e.ctrlKey ? 0.01 : 0.0012)), e.clientX, e.clientY);
     }, { passive: false });
     $$("[data-zoom]").forEach((b) => b.addEventListener("click", () => {
       if (b.dataset.zoom === "in") fly(orbit.target, Math.max(40, orbit.dist / 1.4));
@@ -987,7 +1112,7 @@
       $("[data-detail-body]").innerHTML = `
         <p class="eyebrow kind"><svg viewBox="-8 -8 16 16" aria-hidden="true">${kindIcon(n.kind)}</svg>${KIND[n.kind].name}</p>
         <h2 id="detail-title">${escape(n.text)}</h2>
-        <button class="area-link" type="button" data-area="${n.areaRef.id}">${two(n.areaRef.i)} · ${escape(n.areaRef.name)}</button>
+        <button class="area-link" type="button" data-area="${n.areaRef.id}" style="--domain: ${n.areaRef.dom.mark}"><i aria-hidden="true"></i>${two(n.areaRef.i)} · ${escape(n.areaRef.name)} · ${escape(n.areaRef.dom.name)}</button>
         ${n.why ? `<p class="why">${escape(n.why)}</p>` : ""}
         <div class="group"><h3 class="eyebrow">In the source</h3><ul class="sources">${sources}</ul></div>
         ${n.sets.length ? `<div class="group"><h3 class="eyebrow">Part of</h3><ul>${n.sets.map((s) => `<li class="row" style="cursor: default">${escape(s)}</li>`).join("")}</ul></div>` : ""}
@@ -1027,8 +1152,9 @@
     // Areas: point to pick one out, choose to fly to it.
     // ---------------------------------------------------------------
     const showArea = (a) => { userMoved = true; fly(a.anchor, fitDistance(a.R) * 1.1); };
+    $("[data-domains]").innerHTML = Object.values(DOMAIN).map((d) => `<li style="--domain: ${d.mark}"><i aria-hidden="true"></i>${escape(d.name)} · ${areas.filter((a) => a.dom === d).map((a) => two(a.i)).join(", ")}</li>`).join("");
     const areaList = $("[data-areas]");
-    areaList.innerHTML = areas.map((a) => `<li><button class="row" type="button" data-area-row="${a.id}"><span class="n">${two(a.i)}</span><span class="name">${escape(a.name)}</span><span class="count">${a.size}</span></button></li>`).join("");
+    areaList.innerHTML = areas.map((a) => `<li><button class="row" type="button" data-area-row="${a.id}" style="--domain-text: ${a.dom.text}"><span class="n">${two(a.i)}</span><span class="name">${escape(a.name)}</span><span class="count">${a.size}</span></button></li>`).join("");
     $$("[data-area-row]", areaList).forEach((b) => {
       const a = areaById.get(Number(b.dataset.areaRow));
       const pick = (on) => { hoverArea = on ? a : null; linesDirty = true; kick(); };
@@ -1072,7 +1198,7 @@
     const list = $("[data-list]");
     $("[data-list-areas]").innerHTML = areas.map((a) => `
       <section aria-labelledby="list-area-${a.id}">
-        <h3 id="list-area-${a.id}"><span>${two(a.i)}</span> ${escape(a.name)}</h3>
+        <h3 id="list-area-${a.id}" style="--domain-text: ${a.dom.text}"><span>${two(a.i)}</span> ${escape(a.name)}</h3>
         <ul>${[...a.members].sort((x, y) => y.degree - x.degree).map((n) => `
           <li><button class="row" type="button" data-go="${n.id}"><span class="name">${escape(n.text)}</span><span class="count">${KIND[n.kind].name}</span></button></li>`).join("")}
         </ul>
